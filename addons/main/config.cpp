@@ -9,13 +9,13 @@ class CfgPatches
 };
 
 class cfgFunctions {
-	#include "\AICommand\cfgfunctions.hpp"
-	#include "\AICommand\cfgfunctionsaddon.hpp"
+	#include "cfgfunctions.hpp"
+	#include "cfgfunctionsaddon.hpp"
 };
 
 class CfgNotifications
 {
-	#include "\AICommand\cfgnotifications.hpp"
+	#include "cfgnotifications.hpp"
 };
 
 class CfgVehicles

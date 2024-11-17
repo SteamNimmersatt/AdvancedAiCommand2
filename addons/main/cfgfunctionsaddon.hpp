@@ -4,7 +4,7 @@ class AICommandAddon
 	
 	class Main
 	{
-		file = "AICommand\functions";	
+		file = "\z\aicommand2\addons\main\functions";	
 		class initAICommandAddon {description = ""; postInit = 1;};
 	};
 

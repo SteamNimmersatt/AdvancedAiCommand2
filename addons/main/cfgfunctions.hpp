@@ -4,14 +4,14 @@ class AICommand
 	
 	class Main
 	{
-		file = "AICommand\functions";	
+		file = "\z\aicommand2\addons\main\functions";	
 		class initAICommand {description = ""};
 		class initAICommandClient {description = ""};
 	};
 	
 	class MapIcon
 	{
-		file = "AICommand\functions\mapIcon";	
+		file = "\z\aicommand2\addons\main\functions\mapIcon";	
 		class createMapIcon {description = ""};
 		class drawMapIcon {description = ""};
 		class mapIconDefinitions {description = ""};
@@ -19,7 +19,7 @@ class AICommand
 	
 	class GroupData
 	{
-		file = "AICommand\functions\groupData";
+		file = "\z\aicommand2\addons\main\functions\groupData";
 		class addWaypoint {description = ""};	
 		class getAllWaypoints {description = ""};
 		class getWaypoint {description = ""};
@@ -39,7 +39,7 @@ class AICommand
 
 	class CommandMenu
 	{
-		file = "AICommand\functions\commandMenu";
+		file = "\z\aicommand2\addons\main\functions\commandMenu";
 		class commandMenuManager {description = "";};
 		class showCommandMenu {description = "";};
 		class showGroupCommandMenu {description = "";};
@@ -50,7 +50,7 @@ class AICommand
 
 	class EventHandler
 	{
-		file = "AICommand\functions\eventHandler";
+		file = "\z\aicommand2\addons\main\functions\eventHandler";
 		class addManagedEventHandler {description = "";};
 		class addEventHandler {description = "";};
 		class removeEventHandler {description = "";};
@@ -59,7 +59,7 @@ class AICommand
 	
 	class Actions
 	{
-		file = "AICommand\functions\actions";
+		file = "\z\aicommand2\addons\main\functions\actions";
 		class commandMenuActionsInit {description = "";};
 		class selectGroupControlGroup {description = "";};
 		class selectGroupControlPosition {description = "";};
@@ -70,7 +70,7 @@ class AICommand
 	
 	class RemoteCamera
 	{
-		file = "AICommand\functions\remoteCamera";
+		file = "\z\aicommand2\addons\main\functions\remoteCamera";
 		class disable3rdPersonCamera {description = "";};
 		class enable3rdPersonCamera {description = "";};
 		class cameraMouseMoveHandler {description = "";};
@@ -80,7 +80,7 @@ class AICommand
 
 	class CR
 	{
-		file = "AICommand\functions\cr";
+		file = "\z\aicommand2\addons\main\functions\cr";
 		class createCommandRadio {description = ""};
 		class commandRadioSyncLoop {description = ""};
 		class enableCommandRadioTask {description = ""};
@@ -100,7 +100,7 @@ class AICommand
 	
 	class VehicleIcon
 	{
-		file = "AICommand\functions\vehicleIcon";
+		file = "\z\aicommand2\addons\main\functions\vehicleIcon";
 		class getVehicleIconPath {description = "";};
 		class getVehicleMapIconSet {description = "";};
 		class createVehicleInteractiveIcon {description = "";};
@@ -109,7 +109,7 @@ class AICommand
 	class MapElements
 	{
 
-		file = "AICommand\functions\mapElements";
+		file = "\z\aicommand2\addons\main\functions\mapElements";
 		class createMapElement {description = "";};
 		class setMapElementEnabled {description = "";};
 		class setMapElementVisible {description = "";};
@@ -120,7 +120,7 @@ class AICommand
 
 	class InputControlMapElement
 	{
-		file = "AICommand\functions\mapElements\inputControl";
+		file = "\z\aicommand2\addons\main\functions\mapElements\inputControl";
 		class inputControlEventHandler {description = "";};
 		class createInputControl {description = "";};
 		class drawInputControl {description = "";};
@@ -130,7 +130,7 @@ class AICommand
 	
 	class InteractiveIconMapElement
 	{
-		file = "AICommand\functions\mapElements\interactiveIcon";
+		file = "\z\aicommand2\addons\main\functions\mapElements\interactiveIcon";
 		class interactiveIconManager {description = ""};
 		class createInteractiveIcon {description = ""};
 		class drawInteractiveIcon {description = ""};
@@ -143,7 +143,7 @@ class AICommand
 	
 	class GroupControlMapElement
 	{
-		file = "AICommand\functions\mapElements\groupControl";
+		file = "\z\aicommand2\addons\main\functions\mapElements\groupControl";
 		class getGroupIconType {description = ""};
 		class getGroupControlIconSet {description = ""};
 		class getGroupControlWpIconSet {description = ""};
@@ -159,7 +159,7 @@ class AICommand
 	
 	class CommandControlMapElement
 	{
-		file = "AICommand\functions\mapElements\commandControl";
+		file = "\z\aicommand2\addons\main\functions\mapElements\commandControl";
 		class commandControlManager {description = ""};
 		class createCommandControl {description = ""};
 		class drawCommandControl {description = ""};
@@ -172,7 +172,7 @@ class AICommand
 	
 	class Util
 	{
-		file = "AICommand\functions\util";
+		file = "\z\aicommand2\addons\main\functions\util";
 		class getInVehicle {description = "";};
 	};
 	
