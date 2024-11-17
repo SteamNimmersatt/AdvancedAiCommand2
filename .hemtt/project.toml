@@ -1,0 +1,24 @@
+name = "Advanced AI Command 2"
+prefix = "aicommand2"
+mainprefix = "z"
+author = "Nimmersatt"
+
+[version]
+major = 2
+minor = 1
+patch = 0
+build = 0
+
+[files]
+include = [
+    "LICENSE",
+    "logo_ca.paa",
+    "logo_co.paa",
+    "mod.cpp"
+]
+exclude = [
+    "*.psd",
+    "*.md",
+    "*.sh",
+    ".*" # dot files
+]
