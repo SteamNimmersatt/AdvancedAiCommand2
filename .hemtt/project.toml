@@ -12,8 +12,7 @@ build = 0
 [files]
 include = [
     "LICENSE",
-    "logo_ca.paa",
-    "logo_co.paa",
+    "logo.paa",
     "mod.cpp"
 ]
 exclude = [
