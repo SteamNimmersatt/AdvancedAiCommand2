@@ -114,6 +114,11 @@ if(isDedicated || !hasInterface) exitWith {};
 					} forEach (crew _x);
 					if(_hasOtherGroups) then {
 						_newGroupsAsDrivers pushBack _groupControlId;
+
+						if (isNull _group) then {
+							continue;
+						};
+
 						_group setVariable ["AIC_Has_Group_Cargo",true];
 					};
 				};
@@ -126,6 +131,11 @@ if(isDedicated || !hasInterface) exitWith {};
 		} forEach _groupControls;
 		{
 			_group = AIC_fnc_getGroupControlGroup(_x);
+
+			if (isNull _group) then {
+				continue;
+			};
+
 			_group setVariable ["AIC_Has_Group_Cargo",false];
 		} forEach (_groupsAsDrivers - _newGroupsAsDrivers);
 		_groupsAsDrivers = _newGroupsAsDrivers;
