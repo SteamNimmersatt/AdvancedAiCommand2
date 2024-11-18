@@ -22,4 +22,9 @@
 
 private ["_group"];
 _group = param [0];
+
+if (isNull _group) then {
+	nil;
+};
+
 _group getVariable ["AIC_Waypoints",[0,[]]];
