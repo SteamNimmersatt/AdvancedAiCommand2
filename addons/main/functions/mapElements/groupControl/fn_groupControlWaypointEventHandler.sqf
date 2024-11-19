@@ -32,6 +32,7 @@ if( _event == "SELECTED" ) then {
 	[_groupControlId,_waypointId] spawn AIC_fnc_showGroupWaypointReport;
 };
 
+// TODO event "DELETE_WAYPOINT_SELECTED" is not used anywhere?
 if( _event == "DELETE_WAYPOINT_SELECTED" || _event == "KEY_DOWN_211" ) then {
 	[_group,_waypointId] call AIC_fnc_disableWaypoint;
 	showCommandingMenu "";
@@ -47,30 +48,6 @@ if( _event == "DROPPED" ) then {
 	_waypoint = [_group, _waypointId] call AIC_fnc_getWaypoint;
 	_position = _params select 0;
 	_waypoint set [1,_position];
-	[_group, _waypoint] call AIC_fnc_setWaypoint;
-	[_groupControlId,"REFRESH_WAYPOINTS",[]] call AIC_fnc_groupControlEventHandler;
-};
-
-if( _event == "NO_GO_CODE_SELECTED" ) then {
-	private ["_waypoint"];
-	_waypoint = [_group, _waypointId] call AIC_fnc_getWaypoint;
-	_waypoint set [3,"MOVE"];
-	[_group, _waypoint] call AIC_fnc_setWaypoint;
-	[_groupControlId,"REFRESH_WAYPOINTS",[]] call AIC_fnc_groupControlEventHandler;
-};
-
-if( _event == "ALPHA_GO_CODE_SELECTED" ) then {
-	private ["_waypoint"];
-	_waypoint = [_group, _waypointId] call AIC_fnc_getWaypoint;
-	_waypoint set [3,"ALPHA"];
-	[_group, _waypoint] call AIC_fnc_setWaypoint;
-	[_groupControlId,"REFRESH_WAYPOINTS",[]] call AIC_fnc_groupControlEventHandler;
-};
-
-if( _event == "BRAVO_GO_CODE_SELECTED" ) then {
-	private ["_waypoint"];
-	_waypoint = [_group, _waypointId] call AIC_fnc_getWaypoint;
-	_waypoint set [3,"BRAVO"];
 	[_group, _waypoint] call AIC_fnc_setWaypoint;
 	[_groupControlId,"REFRESH_WAYPOINTS",[]] call AIC_fnc_groupControlEventHandler;
 };

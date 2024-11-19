@@ -136,7 +136,7 @@ if(isServer) then {
 
 	[] spawn {
 		while {true} do {
-			private ["_group","_groupControl","_lastWpRevision","_groupWaypoints","_groupControlWaypoints","_currentWpRevision","_groupControlWaypointArray","_wp","_goCodeWpFound","_wpType","_waitForCode","_wpActionScript","_wpCondition","_wpTimeout"];
+			private ["_group","_groupControl","_lastWpRevision","_groupWaypoints","_groupControlWaypoints","_currentWpRevision","_groupControlWaypointArray","_wp","_wpType","_waitForCode","_wpActionScript","_wpCondition","_wpTimeout"];
 			{
 				_group = _x;
 				_lastWpRevision = _group getVariable ["AIC_Server_Last_Wp_Revision",0];

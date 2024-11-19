@@ -26,8 +26,6 @@ class AICommand
 		class setWaypoint {description = "";};
 		class disableWaypoint {description = "";};
 		class disableAllWaypoints {description = "";};
-		class waitForWaypointGoCode {description = "";};
-		class sendWaypointGoCode {description = "";};
 		class setGroupColor {description = "";};
 		class getGroupColor {description = "";};
 		class getAllActiveWaypoints {description = "";};
@@ -76,26 +74,6 @@ class AICommand
 		class cameraMouseMoveHandler {description = "";};
 		class cameraMouseZoomHandler {description = "";};
 		class cameraUpdatePosition {description = "";};
-	};
-
-	class CR
-	{
-		file = "\z\aicommand2\addons\main\functions\cr";
-		class createCommandRadio {description = "";};
-		class commandRadioSyncLoop {description = "";};
-		class enableCommandRadioTask {description = "";};
-		class takeCommandRadio {description = "";};
-		class setRadioOwner {description = "";};
-		class getRadioOwner {description = "";};
-		class getRadioOwners {description = "";};
-		class getOwnerRadio {description = "";};
-		class isRadioOwner {description = "";};
-		class taskDropRadio {description = "";};
-		class syncCommandRadioTasksLocal {description = "";};
-		class showCommandRadioMenu {description = "";};
-		class showCommandRadioMenuLocal {description = "";};
-		class setPublicVariable {description = "";};
-		class getPublicVariable {description = "";};
 	};
 	
 	class VehicleIcon
@@ -167,7 +145,6 @@ class AICommand
 		class commandControlRemoveGroup {description = "";};
 		class commandControlEventHandler {description = "";};
 		class showCommandControl {description = "";};
-		class sendGoCode {description = "";};
 	};
 	
 	class Util

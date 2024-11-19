@@ -19,12 +19,11 @@ _groupControlId = param [0];
 
 if!(AIC_fnc_getMapElementVisible(_groupControlId)) exitWith {};
 
-private ["_group","_icon","_groupPosition","_goCode"];
+private ["_group","_icon","_groupPosition"];
 
 _group = AIC_fnc_getGroupControlGroup(_groupControlId);
 _groupPosition = position leader _group;
 _icon = AIC_fnc_getGroupControlInteractiveIcon(_groupControlId);
-_goCode = AIC_fnc_getGroupGoCode(_group);
 
 // Set current position to group's position
 
@@ -33,17 +32,6 @@ AIC_fnc_setInteractiveIconPosition(_icon,_groupPosition);
 // Draw the interactive icon at the group's position
 
 [_icon] call AIC_fnc_drawInteractiveIcon;
-
-// Draw go code on top of the icon if group is waiting for go code
-
-if(!isNil "_goCode") then {
-	if(_goCode == "ALPHA") then {
-		[A_GO_CODE_ICON,_groupPosition,AIC_fnc_getMapElementForeground(_groupControlId)] call AIC_fnc_drawMapIcon;
-	};
-	if(_goCode == "BRAVO") then {
-		[B_GO_CODE_ICON,_groupPosition,AIC_fnc_getMapElementForeground(_groupControlId)] call AIC_fnc_drawMapIcon;
-	};
-};
 
 // Draw waypoints
 
