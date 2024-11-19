@@ -19,12 +19,12 @@ _interactiveIconId = param [0];
 
 [_interactiveIconId] call AIC_fnc_deleteMapElement;
 
-AIC_fnc_setInteractiveIconIconSet(_interactiveIconId, nil);
-AIC_fnc_setInteractiveIconPosition(_interactiveIconId, nil);
-AIC_fnc_setInteractiveIconState(_interactiveIconId, nil);
-AIC_fnc_setInteractiveIconDimensions(_interactiveIconId, nil);
-AIC_fnc_setInteractiveIconEventHandlerScript(_interactiveIconId, nil);
-AIC_fnc_setInteractiveIconEventHandlerScriptParams(_interactiveIconId, nil);
+AIC_fnc_removeInteractiveIconIconSet(_interactiveIconId);
+AIC_fnc_removeInteractiveIconPosition(_interactiveIconId);
+AIC_fnc_removeInteractiveIconState(_interactiveIconId);
+AIC_fnc_removeInteractiveIconDimensions(_interactiveIconId);
+AIC_fnc_removeInteractiveIconEventHandlerScript(_interactiveIconId);
+AIC_fnc_removeInteractiveIconEventHandlerScriptParams(_interactiveIconId);
 
 _interactiveIcons = AIC_fnc_getInteractiveIcons();
 _interactiveIcons = _interactiveIcons - [_interactiveIconId];

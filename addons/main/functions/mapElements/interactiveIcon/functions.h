@@ -9,6 +9,7 @@
 */
 #define AIC_fnc_getInteractiveIconIconSet(_interactiveIconId) missionNamespace getVariable [format ["AIC_Interactive_Icon_%1_Icons",(_interactiveIconId)],nil]
 #define AIC_fnc_setInteractiveIconIconSet(_interactiveIconId,_iconSet) missionNamespace setVariable [format ["AIC_Interactive_Icon_%1_Icons",(_interactiveIconId)],_iconSet]
+#define AIC_fnc_removeInteractiveIconIconSet(_interactiveIconId) missionNamespace setVariable [format ["AIC_Interactive_Icon_%1_Icons",(_interactiveIconId)], nil]
 
 /*
 	Gets and sets the position of the interactive icon
@@ -16,6 +17,7 @@
 */
 #define AIC_fnc_getInteractiveIconPosition(_interactiveIconId) missionNamespace getVariable [format ["AIC_Interactive_Icon_%1_Position",(_interactiveIconId)],nil]
 #define AIC_fnc_setInteractiveIconPosition(_interactiveIconId,_iconPosition) missionNamespace setVariable [format ["AIC_Interactive_Icon_%1_Position",(_interactiveIconId)],_iconPosition]
+#define AIC_fnc_removeInteractiveIconPosition(_interactiveIconId) missionNamespace setVariable [format ["AIC_Interactive_Icon_%1_Position",(_interactiveIconId)], nil]
 
 /*
 	Gets and sets the state of the interactive icon
@@ -23,6 +25,7 @@
 */
 #define AIC_fnc_getInteractiveIconState(_interactiveIconId) missionNamespace getVariable [format ["AIC_Interactive_Icon_%1_State",(_interactiveIconId)],nil]
 #define AIC_fnc_setInteractiveIconState(_interactiveIconId,_iconState) missionNamespace setVariable [format ["AIC_Interactive_Icon_%1_State",(_interactiveIconId)],_iconState]
+#define AIC_fnc_removeInteractiveIconState(_interactiveIconId) missionNamespace setVariable [format ["AIC_Interactive_Icon_%1_State",(_interactiveIconId)], nil]
 
 /*
 	Gets and sets the dimensions of the interactive icon
@@ -33,6 +36,7 @@
 */
 #define AIC_fnc_getInteractiveIconDimensions(_interactiveIconId) missionNamespace getVariable [format ["AIC_Interactive_Icon_%1_Dimensions",(_interactiveIconId)],nil]
 #define AIC_fnc_setInteractiveIconDimensions(_interactiveIconId,_iconDimensions) missionNamespace setVariable [format ["AIC_Interactive_Icon_%1_Dimensions",(_interactiveIconId)],_iconDimensions]
+#define AIC_fnc_removeInteractiveIconDimensions(_interactiveIconId) missionNamespace setVariable [format ["AIC_Interactive_Icon_%1_Dimensions",(_interactiveIconId)],_iconDimensions]
 
 /*
 	Gets and sets if the interactive icon event handler script
@@ -40,6 +44,7 @@
 */
 #define AIC_fnc_getInteractiveIconEventHandlerScript(_interactiveIconId) missionNamespace getVariable [format ["AIC_Interactive_Icon_%1_Event_Handler",(_interactiveIconId)],{}]
 #define AIC_fnc_setInteractiveIconEventHandlerScript(_interactiveIconId,_script) missionNamespace setVariable [format ["AIC_Interactive_Icon_%1_Event_Handler",(_interactiveIconId)],_script]
+#define AIC_fnc_removeInteractiveIconEventHandlerScript(_interactiveIconId) missionNamespace setVariable [format ["AIC_Interactive_Icon_%1_Event_Handler",(_interactiveIconId)], nil]
 
 /*
 	Gets and sets if the interactive icon event handler script params
@@ -47,6 +52,7 @@
 */
 #define AIC_fnc_getInteractiveIconEventHandlerScriptParams(_interactiveIconId) missionNamespace getVariable [format ["AIC_Interactive_Icon_%1_Event_Handler_Params",(_interactiveIconId)],[]]
 #define AIC_fnc_setInteractiveIconEventHandlerScriptParams(_interactiveIconId,_scriptParams) missionNamespace setVariable [format ["AIC_Interactive_Icon_%1_Event_Handler_Params",(_interactiveIconId)],_scriptParams]
+#define AIC_fnc_removeInteractiveIconEventHandlerScriptParams(_interactiveIconId) missionNamespace setVariable [format ["AIC_Interactive_Icon_%1_Event_Handler_Params",(_interactiveIconId)], nil]
 
 /*
 	Gets and sets all of the interactive icons
@@ -56,3 +62,4 @@
 */
 #define AIC_fnc_getInteractiveIcons() missionNamespace getVariable ["AIC_Interactive_Icons",[]]
 #define AIC_fnc_setInteractiveIcons(_interactiveIcons) missionNamespace setVariable ["AIC_Interactive_Icons",_interactiveIcons]
+#define AIC_fnc_removeInteractiveIcons(_interactiveIcons) missionNamespace setVariable ["AIC_Interactive_Icons", nil]
