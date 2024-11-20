@@ -36,8 +36,8 @@ _eventHandlerScript = {
 	[_groupControlId, _event, _params] spawn AIC_fnc_groupControlEventHandler;
 };
 
-AIC_fnc_setInteractiveIconEventHandlerScript(_interactiveGroupIcon, _eventHandlerScript);
-AIC_fnc_setInteractiveIconEventHandlerScriptParams(_interactiveGroupIcon, _groupControlId);
+AIC_fnc_setInteractiveIconEventHandlerScript(_interactiveGroupIcon,_eventHandlerScript);
+AIC_fnc_setInteractiveIconEventHandlerScriptParams(_interactiveGroupIcon,_groupControlId);
 
 AIC_fnc_setGroupControlGroup(_groupControlId,_group);
 AIC_fnc_setGroupControlInteractiveIcon(_groupControlId,_interactiveGroupIcon);

@@ -131,8 +131,8 @@ if(isNil "_groupControlId") then {
 					[_groupControlId, _waypointId, _event, _params] spawn AIC_fnc_groupControlWaypointEventHandler;
 				};
 				_eventHandlerScriptParams = [_groupControlId,_x select 0];
-				AIC_fnc_setInteractiveIconEventHandlerScript(_wpIconId, _eventHandlerScript);
-				AIC_fnc_setInteractiveIconEventHandlerScriptParams(_wpIconId, _eventHandlerScriptParams);
+				AIC_fnc_setInteractiveIconEventHandlerScript(_wpIconId,_eventHandlerScript);
+				AIC_fnc_setInteractiveIconEventHandlerScriptParams(_wpIconId,_eventHandlerScriptParams);
 			} else {
 				_waypointIcon = _waypointIcons select _waypointIconIndex;
 				_interactiveIconId = _waypointIcon select 1;
@@ -140,7 +140,7 @@ if(isNil "_groupControlId") then {
 				AIC_fnc_setInteractiveIconPosition(_interactiveIconId,_interactiveIconPosition);
 				AIC_fnc_setInteractiveIconIconSet(_interactiveIconId,_waypointIconSet);
 				_eventHandlerScriptParams = [_groupControlId,_x select 0];
-				AIC_fnc_setInteractiveIconEventHandlerScriptParams(_interactiveIconId, _eventHandlerScriptParams);
+				AIC_fnc_setInteractiveIconEventHandlerScriptParams(_interactiveIconId,_eventHandlerScriptParams);
 				//diag_log format ["Setting Waypoints: %1, %2, %3", _x, _interactiveIconId, _eventHandlerScriptParams];
 				_waypointIcons set [_waypointIconIndex,_waypointIcon];
 			};
