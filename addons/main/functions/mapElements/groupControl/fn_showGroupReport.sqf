@@ -107,12 +107,23 @@
 			_typeCount = {
 				_veh = _x;
 				_parents = ([configFile >> "cfgvehicles" >> typeOf _veh,true] call bis_fnc_returnParents) - [_class];
-
-				if (_veh isKindOf _class) then {
+	
+				if (!(_veh isKindOf _class)) then {
 					_limitValue = {_class isKindOf _x} count (_classes - [_class]);
-					if ({_x in _parents} count _classes == _limitvalue) then {true} else {false};
-				} else {false};
-
+		
+					// count matching parent classes with the specified class
+					_matchingParentsCount = ({
+						_x in _parents
+					} count _classes);
+		
+					// Check if the number of matching parents matches the limit value and store result in a variable
+					_conditionResult = (_matchingParentsCount == _limitValue);
+		
+					// Use the condition result with select
+					[false, true] select _conditionResult;
+				} else {
+					false
+				}
 			} count _vehicles;
 
 			if (_typeCount > 0) then {
