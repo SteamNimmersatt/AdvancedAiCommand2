@@ -93,9 +93,9 @@ AIC_fnc_setGroupAutoCombatActionHandler = {
 	_group = AIC_fnc_getGroupControlGroup(_groupControlId);
 	_actionParams params ["_mode"];
 	if (_mode == "On") then {
-		{_x enableAI "AUTOCOMBAT"} foreach (units _group);
+		{_x enableAI "AUTOCOMBAT"} forEach (units _group);
 	} else {
-		{_x disableAI "AUTOCOMBAT"} foreach (units _group);
+		{_x disableAI "AUTOCOMBAT"} forEach (units _group);
 	};
 	hint ("AutoCombat " + toLower _mode);
 };
@@ -106,9 +106,9 @@ AIC_fnc_setGroupEnableAttackActionHandler = {
 	_group = AIC_fnc_getGroupControlGroup(_groupControlId);
 	_actionParams params ["_mode"];
 	if (_mode == "On") then {
-		{_x enableAttack true} foreach (units _group);
+		{_x enableAttack true} forEach (units _group);
 	} else {
-		{_x enableAttack false} foreach (units _group);
+		{_x enableAttack false} forEach (units _group);
 	};
 	hint ("Autonomous attacking " + toLower _mode);
 };
@@ -635,7 +635,7 @@ AIC_fnc_rappelActionHandler = {
 	if(count _selectedPosition > 0) then {
 		{
 			if(_x isKindOf "Helicopter") then {
-				[_x,25,AGLtoASL [_selectedPosition select 0, _selectedPosition select 1, 0]] call AR_Rappel_All_Cargo;
+				[_x,25,AGLToASL [_selectedPosition select 0, _selectedPosition select 1, 0]] call AR_Rappel_All_Cargo;
 			};
 		} forEach ([_group] call AIC_fnc_getGroupAssignedVehicles);
 		[_group] spawn {

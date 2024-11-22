@@ -24,9 +24,9 @@ if(!isNil "_wpFlyInHeight") then {
 	_wpInfo = _wpInfo + format [_textSmall,"Height (meters)", _wpFlyInHeight,_sizeSmall];
 };
 
-_text = parsetext (
+_text = parseText (
 	"<t size='1.3' color='#ffffff' font='PuristaMedium' underline='true' align='left'>SITREP</t>" + 
-	format ["<t size='0.9' align='right'>%1</t><br /><br />",[daytime] call bis_fnc_timetostring] + 
+	format ["<t size='0.9' align='right'>%1</t><br /><br />",[dayTime] call bis_fnc_timetostring] + 
 	format ["<t>%1</t>",_wpInfo] + 
 	""
 );

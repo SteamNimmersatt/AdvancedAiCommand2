@@ -122,7 +122,7 @@ if(isServer) then {
 				{
 					_group = _x;
 					_units = [];
-					{if (alive _x) then {_units = _units + [_x]}} foreach (units _group);
+					{if (alive _x) then {_units = _units + [_x]}} forEach (units _group);
 					if(count _units == 0) then {
 						[_commandControlId, _group] call AIC_fnc_commandControlRemoveGroup;
 					};			
@@ -160,7 +160,7 @@ if(isServer) then {
 							_wp setWaypointStatements [format ["true && ((group this) getVariable ['AIC_WP_DURATION_REMANING',0]) <= 0 && {%1}",_wpCondition], "[group this, "+str (_x select 0)+"] call AIC_fnc_disableWaypoint;" + _wpActionScript];
 							_wp setWaypointType _wpType;
 							if(!isNil "_wpTimeout") then {
-								_wp setWaypointTimeOut [_wpTimeout,_wpTimeout,_wpTimeout];
+								_wp setWaypointTimeout [_wpTimeout,_wpTimeout,_wpTimeout];
 							}; 
 							if(!isNil "_wpFormation") then {
 								_wp setWaypointFormation _wpFormation;
