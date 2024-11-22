@@ -536,7 +536,8 @@ AIC_fnc_unassignVehicleActionHandler = {
 	_canUnassign = false;
 	_canUnassign = (count ([_group] call AIC_fnc_getGroupAssignedVehicles) > 0);
 	{
-		if( _x != vehicle _x ) then {
+		private _isVehicle = !isNull objectParent _x;
+		if (_isVehicle) then {
 			_canUnassign = true;
 		};
 	} forEach (units _group);
@@ -644,7 +645,8 @@ AIC_fnc_rappelActionHandler = {
 			while {_unitsInVehicle} do {
 				_unitsInVehicle = false;
 				{
-					if(vehicle _x != _x) then {
+					private _isVehicle = !isNull objectParent _x;
+					if(_isVehicle) then {
 						_unitsInVehicle = true;
 					};
 				} forEach (units _groupRappelling);
