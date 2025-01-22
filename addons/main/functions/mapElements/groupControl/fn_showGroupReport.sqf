@@ -20,7 +20,7 @@
 		};
 	};
 
-	_showlimit = 5;
+	_showlimit = 30;
 
 	_allunits = [];
 	_textIcons = "";
