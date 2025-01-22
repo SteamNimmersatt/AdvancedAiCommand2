@@ -1,7 +1,7 @@
 #include "..\..\functions.h"
 
 params ["_groupControlId","_waypointId"];
-_group = AIC_fnc_getGroupControlGroup(_groupControlId);
+_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 _waypoint = [_group, _waypointId] call AIC_fnc_getWaypoint;
 _waypoint params ["_wpIndex","_wpPosition","_wpDisabled",["_wpType","MOVE"],["_wpActionScript",""],["_wpCondition","true"],"_wpTimeout","_wpFormation","_wpCompletionRadius",["_wpDuration",0],"_wpLoiterRadius","_wpLoiterDirection","_wpFlyInHeight"];
 							

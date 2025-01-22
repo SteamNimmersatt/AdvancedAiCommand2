@@ -1,16 +1,5 @@
-/*
-	Gets and sets the group associated to the group control
-	Data type: GROUP
-*/
-#define AIC_fnc_getGroupControlGroup(_controlId) missionNamespace getVariable [format ["AIC_Group_Control_%1_Group",(_controlId)],nil]
-#define AIC_fnc_setGroupControlGroup(_controlId,_controlGroup) missionNamespace setVariable [format ["AIC_Group_Control_%1_Group",(_controlId)],_controlGroup]
 
-/*
-	Gets and sets the interactive icon associated to the group control
-	Data type: STRING - interactive icon id
-*/
-#define AIC_fnc_getGroupControlInteractiveIcon(_controlId) missionNamespace getVariable [format ["AIC_Group_Control_%1_Icon",(_controlId)],nil]
-#define AIC_fnc_setGroupControlInteractiveIcon(_controlId,_interactiveGroupIcon) missionNamespace setVariable [format ["AIC_Group_Control_%1_Icon",(_controlId)],_interactiveGroupIcon]
+
 
 /*
 	Gets and sets group control wp interactive icons

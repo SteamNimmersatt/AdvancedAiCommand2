@@ -1,4 +1,11 @@
-- Menu does not work any more after remote controlling AI
-- Add CBA settings (e.g. default mode for groups)
+
+- Flight above ground + Fligh above sea level
+- Neue Waypoints: Land, Dismount other groups
+- Landing da wo man klickt? Sucht gerade Random Heli Platz aus, oft nicht der welcher angeklickt ist
+- "Forget Targets" Funktion
+- "Forbid Dismount"
+- Create artillery support group
 - Show squad names on map ("Alpha 1-5")
-- Allow to name a squad. Show custom name on the map.
+- Show name of the squad on the map
+- Callouts in the chat when enemies are spotted (like the Drongos mod does)
+- Add CBA settings (e.g. default mode for groups)

@@ -37,7 +37,7 @@ if(_inputType == "GROUP") then {
 	private ["_nearGroupIcons", "_iconSet", "_interactiveGroupIcon", "_params"];
 	
 	_groupControlId = _parameters select 0;
-	_group = AIC_fnc_getGroupControlGroup(_groupControlId);
+	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 	_groupPosition = position (leader _group);
 	_color = AIC_fnc_getGroupControlColor(_groupControlId);
 	_nearGroups = [];
@@ -82,7 +82,7 @@ if(_inputType == "VEHICLE") then {
 	private ["_groupControlId", "_group", "_groupPosition", "_nearVehicles","_nearIcon","_nearVehicleIcons","_eventHandlerScript","_params","_color"];
 	
 	_groupControlId = _parameters select 0;
-	_group = AIC_fnc_getGroupControlGroup(_groupControlId);
+	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 	_groupPosition = position (leader _group);
 	_nearVehicles = nearestObjects [_groupPosition, ["LandVehicle","Boat","Air"], 300];
 	_color = AIC_fnc_getGroupControlColor(_groupControlId);

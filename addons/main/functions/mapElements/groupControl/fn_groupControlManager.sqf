@@ -30,7 +30,7 @@ if(isDedicated || !hasInterface) exitWith {};
 		_groupControls = AIC_fnc_getGroupControls();
 		{
 			_groupControlId = _x;
-			_group = AIC_fnc_getGroupControlGroup(_groupControlId);
+			_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 			_lastWpRevision = AIC_fnc_getGroupControlWaypointRevision(_groupControlId);  
 			_waypoints = [_group] call AIC_fnc_getAllWaypoints;
 			_currentWpRevision = _waypoints select 0;
@@ -50,7 +50,7 @@ if(isDedicated || !hasInterface) exitWith {};
 		_groupControls = AIC_fnc_getGroupControls();
 		{
 			_groupControlId = _x;
-			_group = AIC_fnc_getGroupControlGroup(_groupControlId);
+			_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 			_currentGroupType = AIC_fnc_getGroupControlType(_groupControlId); 
 			_groupType = _group call AIC_fnc_getGroupIconType;
 			if(_groupType != _currentGroupType) then {
@@ -69,7 +69,7 @@ if(isDedicated || !hasInterface) exitWith {};
 		_groupControls = AIC_fnc_getGroupControls();
 		{
 			_groupControlId = _x;
-			_group = AIC_fnc_getGroupControlGroup(_groupControlId);
+			_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 			_currentControlColor = AIC_fnc_getGroupControlColor(_groupControlId);  
 			_currentGroupColor = [_group] call AIC_fnc_getGroupColor;
 			if((_currentControlColor select 0) != (_currentGroupColor select 0)) then {
@@ -102,7 +102,7 @@ if(isDedicated || !hasInterface) exitWith {};
 		_groupControls = AIC_fnc_getGroupControls();
 		{
 			_groupControlId = _x;
-			_group = AIC_fnc_getGroupControlGroup(_groupControlId);
+			_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 			_groupLeader = leader _group;
 			{
 				if( _groupLeader in _x && (group driver _x) == _group ) then {
@@ -130,8 +130,7 @@ if(isDedicated || !hasInterface) exitWith {};
 			} forEach ([_group] call AIC_fnc_getGroupAssignedVehicles);
 		} forEach _groupControls;
 		{
-			_group = AIC_fnc_getGroupControlGroup(_x);
-
+			_group = [_x] call AIC_fnc_getGroupControlGroup;
 			if (isNull _group) then {
 				continue;
 			};

@@ -20,7 +20,7 @@ params ["_commandMenuType",["_menuParams",[]],["_actionIndex",-1],["_pathPositio
 
 private ["_index","_pathLabel","_actionString","_seenMenuLabels"];
 
-//_group = AIC_fnc_getGroupControlGroup(_groupControlId);
+//_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 _actions = AIC_fnc_getCommandMenuActions();
 _seenMenuLabels = [];
 

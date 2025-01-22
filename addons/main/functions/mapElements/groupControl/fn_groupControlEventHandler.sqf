@@ -65,7 +65,7 @@ if(isNil "_groupControlId") then {
 
 	private ["_group"];
 
-	_group = AIC_fnc_getGroupControlGroup(_groupControlId);
+	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 	
 	if( _event == "SELECTED" ) then {
 		[_groupControlId] call AIC_fnc_showGroupCommandMenu;
@@ -89,7 +89,7 @@ if(isNil "_groupControlId") then {
 		private ["_color","_iconSet","_interactiveIconId"];
 		_color = AIC_fnc_getGroupControlColor(_groupControlId); 
 		_iconSet = [_group,_color] call AIC_fnc_getGroupControlIconSet;
-		_interactiveIconId = AIC_fnc_getGroupControlInteractiveIcon(_groupControlId);
+		_interactiveIconId = [_groupControlId] call AIC_fnc_getGroupControlInteractiveIcon;
 		AIC_fnc_setInteractiveIconIconSet(_interactiveIconId,_iconSet);
 		AIC_fnc_setGroupControlType(_groupControlId,(_group call AIC_fnc_getGroupIconType));
 	};

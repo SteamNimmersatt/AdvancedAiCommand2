@@ -25,7 +25,7 @@ _params = param [3,[]];
 
 private ["_group"];
 
-_group = AIC_fnc_getGroupControlGroup(_groupControlId);
+_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 
 if( _event == "SELECTED" ) then {
 	[_groupControlId,_waypointId] call AIC_fnc_showGroupWpCommandMenu;

@@ -15,7 +15,7 @@
 
 params ["_groupControlId"];
 private ["_group","_groupControls","_inputControl","_output","_selectedVehicle"];
-_group = AIC_fnc_getGroupControlGroup(_groupControlId);
+_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 _groupControls = AIC_fnc_getGroupControls();
 {		
 	[_x,false] call AIC_fnc_setMapElementVisible;

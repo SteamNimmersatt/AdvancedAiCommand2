@@ -122,17 +122,25 @@ class AICommand
 	class GroupControlMapElement
 	{
 		file = "\z\aicommand2\addons\main\functions\mapElements\groupControl";
-		class getGroupIconType {description = "";};
-		class getGroupControlIconSet {description = "";};
-		class getGroupControlWpIconSet {description = "";};
 		class createGroupControl {description = "";};
 		class drawGroupControl {description = "";};
+
+		class getGroupControlGroup {description = "";};
+		class getGroupControlIconSet {description = "";};
+		class getGroupControlInteractiveIcon {description = "";};
+		class getGroupControlWpIconSet {description = "";};
+		class getGroupIconType {description = "";};
+		
 		class groupControlEventHandler {description = "";};
-		class groupControlWaypointEventHandler {description = "";};
 		class groupControlManager {description = "";};
+		class groupControlWaypointEventHandler {description = "";};
+
+		class removeGroupControl {description = "";};
+		class setGroupControlGroup {description = "";};
+		class setGroupControlInteractiveIcon {description = "";};
+
 		class showGroupReport {description = "";};
 		class showGroupWaypointReport {description = "";};
-		class removeGroupControl {description = "";};
 	};
 	
 	class CommandControlMapElement

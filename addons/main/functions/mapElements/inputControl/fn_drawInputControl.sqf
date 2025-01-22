@@ -30,7 +30,7 @@ if(_inputType == "VEHICLE") then {
 	_contolData = AIC_fnc_getInputControlData(_inputControlId);
 	_parameters = AIC_fnc_getInputControlParameters(_inputControlId);
 	_groupControlId = _parameters select 0;
-	_groupControlInteractiveIconId = AIC_fnc_getGroupControlInteractiveIcon(_groupControlId);
+	_groupControlInteractiveIconId = [_groupControlId] call AIC_fnc_getGroupControlInteractiveIcon;
 	_groupControlPosition = AIC_fnc_getInteractiveIconPosition(_groupControlInteractiveIconId); 
 	
 	_vehicleIcons = _contolData select 0;
@@ -59,7 +59,7 @@ if(_inputType == "GROUP") then {
 	_contolData = AIC_fnc_getInputControlData(_inputControlId);
 	_parameters = AIC_fnc_getInputControlParameters(_inputControlId);
 	_groupControlId = _parameters select 0;
-	_groupControlInteractiveIconId = AIC_fnc_getGroupControlInteractiveIcon(_groupControlId);
+	_groupControlInteractiveIconId = [_groupControlId] call AIC_fnc_getGroupControlInteractiveIcon;
 	_groupControlPosition = AIC_fnc_getInteractiveIconPosition(_groupControlInteractiveIconId); 
 	
 	_groupIcons = _contolData select 0;
@@ -84,7 +84,7 @@ if(_inputType == "POSITION") then {
 
 	_parameters = AIC_fnc_getInputControlParameters(_inputControlId);
 	_groupControlId = _parameters select 0;
-	_groupControlInteractiveIconId = AIC_fnc_getGroupControlInteractiveIcon(_groupControlId);
+	_groupControlInteractiveIconId = [_groupControlId] call AIC_fnc_getGroupControlInteractiveIcon;
 	_groupControlPosition = AIC_fnc_getInteractiveIconPosition(_groupControlInteractiveIconId); 
 
 	_lineColor = ((AIC_fnc_getGroupControlColor(_groupControlId)) select 1) + [1];

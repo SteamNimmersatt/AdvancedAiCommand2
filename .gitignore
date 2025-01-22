@@ -3,3 +3,5 @@
 *.pbo
 hemtt
 /releases
+.aider.chat.history.md
+.aider*

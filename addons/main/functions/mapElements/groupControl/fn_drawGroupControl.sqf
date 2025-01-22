@@ -21,9 +21,9 @@ if!(AIC_fnc_getMapElementVisible(_groupControlId)) exitWith {};
 
 private ["_group","_icon","_groupPosition"];
 
-_group = AIC_fnc_getGroupControlGroup(_groupControlId);
+_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 _groupPosition = position leader _group;
-_icon = AIC_fnc_getGroupControlInteractiveIcon(_groupControlId);
+_icon = [_groupControlId] call AIC_fnc_getGroupControlInteractiveIcon;
 
 // Set current position to group's position
 

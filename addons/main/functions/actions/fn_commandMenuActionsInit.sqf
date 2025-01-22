@@ -24,7 +24,7 @@ AIC_fnc_addWaypointsActionHandler = {
 	params ["_menuParams","_actionParams"];
 	_menuParams params ["_groupControlId"];
 	private ["_group"];
-	_group = AIC_fnc_getGroupControlGroup(_groupControlId);
+	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 	AIC_fnc_setGroupControlAddingWaypoints(_groupControlId,true);
 };
 
@@ -40,7 +40,7 @@ AIC_fnc_clearAllWaypointsActionHandler = {
 	params ["_menuParams","_actionParams"];
 	_menuParams params ["_groupControlId"];
 	private ["_group"];
-	_group = AIC_fnc_getGroupControlGroup(_groupControlId);
+	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 	[_group] call AIC_fnc_disableAllWaypoints;	
 	[_groupControlId,"REFRESH_WAYPOINTS",[]] call AIC_fnc_groupControlEventHandler;
 	hint ("All waypoints cleared");
@@ -58,7 +58,7 @@ AIC_fnc_setGroupCombatModeActionHandler = {
 	params ["_menuParams","_actionParams"];
 	_menuParams params ["_groupControlId"];
 	private ["_group"];
-	_group = AIC_fnc_getGroupControlGroup(_groupControlId);
+	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 	_actionParams params ["_mode","_modeLabel"];
 	[_group,_mode] remoteExec ["setCombatMode", leader _group]; 
 	hint ("Combat mode set to " + toLower _modeLabel);
@@ -81,7 +81,7 @@ AIC_fnc_setGroupBehaviourActionHandler = {
 	params ["_menuParams","_actionParams"];
 	_menuParams params ["_groupControlId"];
 	private ["_group"];
-	_group = AIC_fnc_getGroupControlGroup(_groupControlId);
+	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 	_actionParams params ["_mode"];
 	[_group,_mode] remoteExec ["setBehaviour", leader _group]; 
 	hint ("Behaviour set to " + toLower _mode);
@@ -90,7 +90,7 @@ AIC_fnc_setGroupAutoCombatActionHandler = {
 	params ["_menuParams","_actionParams"];
 	_menuParams params ["_groupControlId"];
 	private ["_group"];
-	_group = AIC_fnc_getGroupControlGroup(_groupControlId);
+	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 	_actionParams params ["_mode"];
 	if (_mode == "On") then {
 		{_x enableAI "AUTOCOMBAT"} forEach (units _group);
@@ -103,7 +103,7 @@ AIC_fnc_setGroupEnableAttackActionHandler = {
 	params ["_menuParams","_actionParams"];
 	_menuParams params ["_groupControlId"];
 	private ["_group"];
-	_group = AIC_fnc_getGroupControlGroup(_groupControlId);
+	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 	_actionParams params ["_mode"];
 	if (_mode == "On") then {
 		{_x enableAttack true} forEach (units _group);
@@ -134,7 +134,7 @@ AIC_fnc_setGroupSpeedActionHandler = {
 	params ["_menuParams","_actionParams"];
 	_menuParams params ["_groupControlId"];
 	private ["_group"];
-	_group = AIC_fnc_getGroupControlGroup(_groupControlId);
+	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 	_actionParams params ["_speed","_label"];
 	[_group,_speed] remoteExec ["setSpeedMode", leader _group]; 
 	hint ("Speed set to " + _label);
@@ -144,7 +144,7 @@ AIC_fnc_setGroupFormationActionHandler = {
 	params ["_menuParams","_actionParams"];
 	_menuParams params ["_groupControlId"];
 	private ["_group"];
-	_group = AIC_fnc_getGroupControlGroup(_groupControlId);
+	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 	_actionParams params ["_mode"];
 	[_group,_mode] remoteExec ["setFormation", leader _group]; 
 	hint ("Formation set to " + toLower _mode);
@@ -173,7 +173,7 @@ AIC_fnc_setGroupFormationActionHandler = {
 AIC_fnc_commandMenuIsAir = {
 	params ["_menuParams","_actionParams"];
 	_menuParams params ["_groupControlId"];
-	_group = AIC_fnc_getGroupControlGroup(_groupControlId);
+	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 	_hasAir = false;
 	{
 		if(_x isKindOf "Air") then {
@@ -187,7 +187,7 @@ AIC_fnc_setFlyInHeightActionHandler = {
 	params ["_menuParams","_actionParams"];
 	_menuParams params ["_groupControlId"];
 	private ["_group"];
-	_group = AIC_fnc_getGroupControlGroup(_groupControlId);
+	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 	_actionParams params ["_height"];
 	{
 		if(_x isKindOf "Air") then {
@@ -221,7 +221,7 @@ AIC_fnc_remoteViewActionHandler = {
 	params ["_menuParams","_actionParams"];
 	_menuParams params ["_groupControlId"];
 	private ["_group"];
-	_group = AIC_fnc_getGroupControlGroup(_groupControlId);
+	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 	private ["_fromUnit","_rcUnit","_exitingRcUnit"];
 
 	private _remoteControlActive = !isNull (missionNamespace getVariable ["AIC_Remote_Control_From_Unit",objNull]);
@@ -265,7 +265,7 @@ AIC_fnc_terminateRemoteView = {
 ["GROUP","Remote View",["Remote"],AIC_fnc_remoteViewActionHandler,[],{
 	params ["_groupControlId"];
 	private ["_group"];
-	_group = AIC_fnc_getGroupControlGroup(_groupControlId);
+	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 	private ["_canControl"];
 	_canControl = false;
 	if(player != leader _group) then {
@@ -278,7 +278,7 @@ AIC_fnc_remoteControlActionHandler = {
 	params ["_menuParams","_actionParams"];
 	_menuParams params ["_groupControlId"];
 	private ["_group"];
-	_group = AIC_fnc_getGroupControlGroup(_groupControlId);
+	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 	private ["_fromUnit","_rcUnit","_exitingRcUnit"];
 
 	private _remoteViewActive = !isNull (missionNamespace getVariable ["AIC_Remote_View_From_Unit",objNull]);
@@ -330,7 +330,7 @@ AIC_fnc_terminateRemoteControl = {
 ["GROUP","Remote Control",["Remote"],AIC_fnc_remoteControlActionHandler,[],{
 	params ["_groupControlId"];
 	private ["_group"];
-	_group = AIC_fnc_getGroupControlGroup(_groupControlId);
+	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 	private ["_canControl"];
 	_canControl = true;
 	if(!alive leader _group) then {
@@ -353,7 +353,7 @@ AIC_fnc_setGroupColorActionHandler = {
 	params ["_menuParams","_actionParams"];
 	_menuParams params ["_groupControlId"];
 	private ["_group"];
-	_group = AIC_fnc_getGroupControlGroup(_groupControlId);
+	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 	_actionParams params ["_color"];
 	[_group,_color] call AIC_fnc_setGroupColor;
 	AIC_fnc_setGroupControlColor(_groupControlId,_color);
@@ -384,7 +384,7 @@ AIC_fnc_joinGroupActionHandler = {
 	params ["_menuParams","_actionParams"];
 	_menuParams params ["_groupControlId"];
 	private ["_group"];
-	_group = AIC_fnc_getGroupControlGroup(_groupControlId);
+	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 	private ["_selectedGroup"];
 	_selectedGroup = [_groupControlId] call AIC_fnc_selectGroupControlGroup;
 	if(!isNull _selectedGroup) then {
@@ -400,7 +400,7 @@ AIC_fnc_splitGroupHalfActionHandler = {
 	params ["_menuParams","_actionParams"];
 	_menuParams params ["_groupControlId"];
 	private ["_group"];
-	_group = AIC_fnc_getGroupControlGroup(_groupControlId);
+	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 	_group2 = createGroup (side _group);
 	_joinNewGroup = false;
 	{
@@ -416,7 +416,7 @@ AIC_fnc_splitGroupHalfActionHandler = {
 ["GROUP","In Half",["Join / Split Group","Split Group"],AIC_fnc_splitGroupHalfActionHandler,[],{
 	params ["_groupControlId"];
 	private ["_group"];
-	_group = AIC_fnc_getGroupControlGroup(_groupControlId);
+	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 	count units _group > 1;
 }] call AIC_fnc_addCommandMenuAction;
 
@@ -424,7 +424,7 @@ AIC_fnc_splitGroupUnitsActionHandler = {
 	params ["_menuParams","_actionParams"];
 	_menuParams params ["_groupControlId"];
 	private ["_group"];
-	_group = AIC_fnc_getGroupControlGroup(_groupControlId);
+	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 	
 	// Find all command controls to update with new split groups
 	_commandControlsToUpdate = [];
@@ -451,7 +451,7 @@ AIC_fnc_splitGroupUnitsActionHandler = {
 ["GROUP","Into Individual Units",["Join / Split Group","Split Group"],AIC_fnc_splitGroupUnitsActionHandler,[],{
 	params ["_groupControlId"];
 	private ["_group"];
-	_group = AIC_fnc_getGroupControlGroup(_groupControlId);
+	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 	count units _group > 1;
 }] call AIC_fnc_addCommandMenuAction;
 
@@ -466,7 +466,7 @@ AIC_fnc_assignVehicleActionHandler = {
 	params ["_menuParams","_actionParams"];
 	_menuParams params ["_groupControlId"];
 	private ["_group"];
-	_group = AIC_fnc_getGroupControlGroup(_groupControlId);
+	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 	private ["_selectedVehicle"];
 	_selectedVehicle = [_groupControlId] call AIC_fnc_selectGroupControlVehicle;
 	if(!isNull _selectedVehicle) then {
@@ -520,7 +520,7 @@ AIC_fnc_unassignVehicleActionHandler = {
 	params ["_menuParams","_actionParams"];
 	_menuParams params ["_groupControlId"];
 	private ["_group"];
-	_group = AIC_fnc_getGroupControlGroup(_groupControlId);
+	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 	{
 		[_group,_x] remoteExec ["leaveVehicle", leader _group];
 	} forEach ([_group] call AIC_fnc_getGroupAssignedVehicles);
@@ -531,7 +531,7 @@ AIC_fnc_unassignVehicleActionHandler = {
 ["GROUP","Unassign All Vehicle(s)",[],AIC_fnc_unassignVehicleActionHandler,[],{
 	params ["_groupControlId"];
 	private ["_group"];
-	_group = AIC_fnc_getGroupControlGroup(_groupControlId);
+	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 	private ["_canUnassign"];
 	_canUnassign = false;
 	_canUnassign = (count ([_group] call AIC_fnc_getGroupAssignedVehicles) > 0);
@@ -548,7 +548,7 @@ AIC_fnc_unloadOtherGroupsActionHandler = {
 	params ["_menuParams","_actionParams"];
 	_menuParams params ["_groupControlId"];
 	private ["_group"];
-	_group = AIC_fnc_getGroupControlGroup(_groupControlId);
+	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 	private ["_vehicle","_unloadedGroups","_assignedVehicles"];
 	_unloadedGroups = [];
 	{
@@ -571,7 +571,7 @@ AIC_fnc_unloadOtherGroupsActionHandler = {
 ["GROUP","Unload Other Group(s)",[],AIC_fnc_unloadOtherGroupsActionHandler,[],{
 	params ["_groupControlId"];
 	private ["_group"];
-	_group = AIC_fnc_getGroupControlGroup(_groupControlId);
+	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 	_group getVariable ["AIC_Has_Group_Cargo",false];
 }] call AIC_fnc_addCommandMenuAction;	
 
@@ -586,7 +586,7 @@ AIC_fnc_landActionHandler = {
 	params ["_menuParams","_actionParams"];
 	_menuParams params ["_groupControlId"];
 	private ["_group"];
-	_group = AIC_fnc_getGroupControlGroup(_groupControlId);
+	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 	private ["_selectedPosition"];
 	_selectedPosition = [_groupControlId] call AIC_fnc_selectGroupControlPosition;
 	if(count _selectedPosition > 0) then {
@@ -607,7 +607,7 @@ AIC_fnc_landActionHandler = {
 ["GROUP","Land",[],AIC_fnc_landActionHandler,[],{
 	params ["_groupControlId"];
 	private ["_group"];
-	_group = AIC_fnc_getGroupControlGroup(_groupControlId);
+	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 	_hasAir = false;
 	{
 		if(_x isKindOf "Air") then {
@@ -630,7 +630,7 @@ AIC_fnc_rappelActionHandler = {
 	params ["_menuParams","_actionParams"];
 	_menuParams params ["_groupControlId"];
 	private ["_group"];
-	_group = AIC_fnc_getGroupControlGroup(_groupControlId);
+	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 	private ["_selectedPosition"];
 	_selectedPosition = [_groupControlId] call AIC_fnc_selectGroupControlPosition;
 	if(count _selectedPosition > 0) then {
@@ -660,7 +660,7 @@ AIC_fnc_rappelActionHandler = {
 ["GROUP","Rappel Other Group(s)",[],AIC_fnc_rappelActionHandler,[],{
 	params ["_groupControlId"];
 	private ["_group"];
-	_group = AIC_fnc_getGroupControlGroup(_groupControlId);
+	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 	_hasAir = false;
 	{
 		if(_x isKindOf "Helicopter") then {
@@ -683,7 +683,7 @@ AIC_fnc_deleteWaypointHandler = {
 	params ["_menuParams","_actionParams"];
 	_menuParams params ["_groupControlId","_waypointId"];
 	private ["_group"];
-	_group = AIC_fnc_getGroupControlGroup(_groupControlId);
+	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 	[_group,_waypointId] call AIC_fnc_disableWaypoint;
 	[_groupControlId,"REFRESH_WAYPOINTS",[]] call AIC_fnc_groupControlEventHandler;
 };
@@ -694,7 +694,7 @@ AIC_fnc_setWaypointFormationActionHandler = {
 	params ["_menuParams","_actionParams"];
 	_menuParams params ["_groupControlId","_waypointId"];
 	private ["_group","_waypoint"];
-	_group = AIC_fnc_getGroupControlGroup(_groupControlId);
+	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 	_waypoint = [_group, _waypointId] call AIC_fnc_getWaypoint;
 	_actionParams params ["_mode"];
 	_waypoint set [7,_mode];
@@ -717,7 +717,7 @@ AIC_fnc_setWaypointTypeActionHandler = {
 	params ["_menuParams","_actionParams"];
 	_menuParams params ["_groupControlId","_waypointId"];
 	private ["_group","_waypoint"];
-	_group = AIC_fnc_getGroupControlGroup(_groupControlId);
+	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 	_waypoint = [_group, _waypointId] call AIC_fnc_getWaypoint;
 	_actionParams params ["_mode","_label"];
 	_waypoint set [3,_mode];
@@ -731,7 +731,7 @@ AIC_fnc_setLoiterTypeActionHandler = {
 	_menuParams params ["_groupControlId","_waypointId"];
 	_actionParams params ["_radius","_clockwise"];
 	private ["_group","_waypoint"];
-	_group = AIC_fnc_getGroupControlGroup(_groupControlId);
+	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 	_waypoint = [_group, _waypointId] call AIC_fnc_getWaypoint;
 	_waypoint set [3,"LOITER"];
 	_waypoint set [10,_radius];
@@ -784,7 +784,7 @@ AIC_fnc_setWaypointFlyInHeightActionHandler = {
 	_menuParams params ["_groupControlId","_waypointId"];
   _actionParams params ["_height"];
 	private ["_group","_waypoint"];
-	_group = AIC_fnc_getGroupControlGroup(_groupControlId);
+	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 	_waypoint = [_group, _waypointId] call AIC_fnc_getWaypoint;
   _script = format ["[group this, %1] call AIC_fnc_setWaypointFlyInHeightActionHandlerScript",_height];
 	_waypoint set [4,_script];
@@ -807,7 +807,7 @@ AIC_fnc_setWaypointDurationActionHandler = {
 	_menuParams params ["_groupControlId","_waypointId"];
   _actionParams params ["_duration"];
 	private ["_group","_waypoint"];
-	_group = AIC_fnc_getGroupControlGroup(_groupControlId);
+	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 	_waypoint = [_group, _waypointId] call AIC_fnc_getWaypoint;
 	_waypoint set [9,_duration * 60];
 	[_group, _waypoint] call AIC_fnc_setWaypoint;

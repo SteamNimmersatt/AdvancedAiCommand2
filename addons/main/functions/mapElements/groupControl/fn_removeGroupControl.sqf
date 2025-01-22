@@ -19,14 +19,14 @@ _groupControlId = param [0];
 
 [_groupControlId] call AIC_fnc_deleteMapElement;
 
-[AIC_fnc_getGroupControlInteractiveIcon(_groupControlId)] call AIC_fnc_removeInteractiveIcon;
+[[_groupControlId] call AIC_fnc_getGroupControlInteractiveIcon] call AIC_fnc_removeInteractiveIcon;
 
 {
 	[_x] call AIC_fnc_removeInteractiveIcon;
 } forEach (AIC_fnc_getGroupControlWaypointIcons(_groupControlId));
 
-AIC_fnc_setGroupControlGroup(_groupControlId,nil);
-AIC_fnc_setGroupControlInteractiveIcon(_groupControlId,nil);
+[_groupControlId, nil] call AIC_fnc_setGroupControlGroup;
+[_groupControlId, nil] call AIC_fnc_setGroupControlInteractiveIcon;
 AIC_fnc_setGroupControlWaypointIcons(_groupControlId,nil);
 AIC_fnc_setGroupControlAddingWaypoints(_groupControlId,nil);
 AIC_fnc_setGroupControlWaypointRevision(_groupControlId,nil);

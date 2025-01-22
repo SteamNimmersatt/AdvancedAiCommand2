@@ -36,7 +36,7 @@ if(_event == "REFRESH_GROUP_CONTROLS") then {
 		_group = _x;
 		{
 			_groupControl = _x;
-			_groupControlGroup = AIC_fnc_getGroupControlGroup(_groupControl);
+			_groupControlGroup = [_groupControl] call AIC_fnc_getGroupControlGroup;
 			if(_groupControlGroup == _group) then {
 				_newGroupControls pushBack _groupControl;
 				_groupFound = true;
