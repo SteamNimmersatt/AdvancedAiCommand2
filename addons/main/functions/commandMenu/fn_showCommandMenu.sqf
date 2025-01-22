@@ -25,7 +25,7 @@ _actions = AIC_fnc_getCommandMenuActions();
 _seenMenuLabels = [];
 
 if(_actionIndex < 0) then {
-	AIC_Group_Control_Menu = [["Command Menu",false]];
+	AIC_Group_Control_Menu = [["AAC2 Command Menu",false]];
 	_index = 0;
 	{
 		_x params ["_type","_label","_path","_actionHandlerScript","_actionHandlerParams","_isEnabledScript"];
