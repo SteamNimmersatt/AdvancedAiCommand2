@@ -183,7 +183,7 @@ AIC_fnc_commandMenuIsAir = {
 	_hasAir;
 };
 
-AIC_fnc_setFlyInHeightActionHandler = {
+AIC_fnc_setFlyInHeightAglActionHandler = {
 	params ["_menuParams","_actionParams"];
 	_menuParams params ["_groupControlId"];
 	private ["_group"];
@@ -191,24 +191,55 @@ AIC_fnc_setFlyInHeightActionHandler = {
 	_actionParams params ["_height"];
 	{
 		if(_x isKindOf "Air") then {
-			[_x,_height] remoteExec ["flyInHeight", _x]; 
+			[_x, _height] remoteExec ["flyInHeight", _x];
+			[_x, [10, 10, 10]] remoteExec ["flyInHeightASL", _x]; // set to a low value because arma will use the higher value of flyInHeight and flyInHeightASL.
 		};
 	} forEach ([_group] call AIC_fnc_getGroupAssignedVehicles);
-	hint ("Fly in height set to " + (str _height) + " meters");
+	hint ("Fly in height set to " + (str _height) + " meters above ground");
 };
 
-["GROUP","10 meters",["Set Fly in Height"],AIC_fnc_setFlyInHeightActionHandler,[10],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
-["GROUP","25 meters",["Set Fly in Height"],AIC_fnc_setFlyInHeightActionHandler,[25],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
-["GROUP","50 meters",["Set Fly in Height"],AIC_fnc_setFlyInHeightActionHandler,[50],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
-["GROUP","100 meters",["Set Fly in Height"],AIC_fnc_setFlyInHeightActionHandler,[100],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
-["GROUP","250 meters",["Set Fly in Height"],AIC_fnc_setFlyInHeightActionHandler,[250],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
-["GROUP","500 meters",["Set Fly in Height"],AIC_fnc_setFlyInHeightActionHandler,[500],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
-["GROUP","750 meters",["Set Fly in Height"],AIC_fnc_setFlyInHeightActionHandler,[750],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
-["GROUP","1000 meters",["Set Fly in Height"],AIC_fnc_setFlyInHeightActionHandler,[1000],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
-["GROUP","1500 meters",["Set Fly in Height"],AIC_fnc_setFlyInHeightActionHandler,[1500],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
-["GROUP","2000 meters",["Set Fly in Height"],AIC_fnc_setFlyInHeightActionHandler,[2000],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;	
-["GROUP","2500 meters",["Set Fly in Height"],AIC_fnc_setFlyInHeightActionHandler,[2500],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
-["GROUP","3000 meters",["Set Fly in Height"],AIC_fnc_setFlyInHeightActionHandler,[3000],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
+AIC_fnc_setFlyInHeightAslActionHandler = {
+	params ["_menuParams","_actionParams"];
+	_menuParams params ["_groupControlId"];
+	private ["_group"];
+	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
+	_actionParams params ["_height"];
+	{
+		if(_x isKindOf "Air") then {
+			[_x, 10] remoteExec ["flyInHeight", _x]; // set to a low value because arma will use the higher value of flyInHeight and flyInHeightASL.
+			[_x, [_height, _height, _height]] remoteExec ["flyInHeightASL", _x];
+		};
+	} forEach ([_group] call AIC_fnc_getGroupAssignedVehicles);
+	hint ("Fly in height set to " + (str _height) + " meters above sea level");
+};
+
+// Fly above ground
+["GROUP","10 meters (above ground)",["Fly in Height (above ground)"],AIC_fnc_setFlyInHeightAglActionHandler,[10],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
+["GROUP","25 meters (above ground)",["Fly in Height (above ground)"],AIC_fnc_setFlyInHeightAglActionHandler,[25],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
+["GROUP","50 meters (above ground)",["Fly in Height (above ground)"],AIC_fnc_setFlyInHeightAglActionHandler,[50],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
+["GROUP","100 meters (above ground)",["Fly in Height (above ground)"],AIC_fnc_setFlyInHeightAglActionHandler,[100],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
+["GROUP","250 meters (above ground)",["Fly in Height (above ground)"],AIC_fnc_setFlyInHeightAglActionHandler,[250],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
+["GROUP","500 meters (above ground)",["Fly in Height (above ground)"],AIC_fnc_setFlyInHeightAglActionHandler,[500],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
+["GROUP","750 meters (above ground)",["Fly in Height (above ground)"],AIC_fnc_setFlyInHeightAglActionHandler,[750],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
+["GROUP","1000 meters (above ground)",["Fly in Height (above ground)"],AIC_fnc_setFlyInHeightAglActionHandler,[1000],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
+["GROUP","1500 meters (above ground)",["Fly in Height (above ground)"],AIC_fnc_setFlyInHeightAglActionHandler,[1500],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
+["GROUP","2000 meters (above ground)",["Fly in Height (above ground)"],AIC_fnc_setFlyInHeightAglActionHandler,[2000],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;	
+["GROUP","2500 meters (above ground)",["Fly in Height (above ground)"],AIC_fnc_setFlyInHeightAglActionHandler,[2500],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
+["GROUP","3000 meters (above ground)",["Fly in Height (above ground)"],AIC_fnc_setFlyInHeightAglActionHandler,[3000],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
+
+// Fly above sea level
+["GROUP","10 meters (above sea lvl)",["Fly in Height (above sea)"],AIC_fnc_setFlyInHeightAslActionHandler,[10],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
+["GROUP","25 meters (above sea lvl)",["Fly in Height (above sea)"],AIC_fnc_setFlyInHeightAslActionHandler,[25],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
+["GROUP","50 meters (above sea lvl)",["Fly in Height (above sea)"],AIC_fnc_setFlyInHeightAslActionHandler,[50],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
+["GROUP","100 meters (above sea lvl)",["Fly in Height (above sea)"],AIC_fnc_setFlyInHeightAslActionHandler,[100],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
+["GROUP","250 meters (above sea lvl)",["Fly in Height (above sea)"],AIC_fnc_setFlyInHeightAslActionHandler,[250],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
+["GROUP","500 meters (above sea lvl)",["Fly in Height (above sea)"],AIC_fnc_setFlyInHeightAslActionHandler,[500],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
+["GROUP","750 meters (above sea lvl)",["Fly in Height (above sea)"],AIC_fnc_setFlyInHeightAslActionHandler,[750],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
+["GROUP","1000 meters (above sea lvl)",["Fly in Height (above sea)"],AIC_fnc_setFlyInHeightAslActionHandler,[1000],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
+["GROUP","1500 meters (above sea lvl)",["Fly in Height (above sea)"],AIC_fnc_setFlyInHeightAslActionHandler,[1500],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
+["GROUP","2000 meters (above sea lvl)",["Fly in Height (above sea)"],AIC_fnc_setFlyInHeightAslActionHandler,[2000],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;	
+["GROUP","2500 meters (above sea lvl)",["Fly in Height (above sea)"],AIC_fnc_setFlyInHeightAslActionHandler,[2500],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
+["GROUP","3000 meters (above sea lvl)",["Fly in Height (above sea)"],AIC_fnc_setFlyInHeightAslActionHandler,[3000],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
 
 
 /*
@@ -505,7 +536,11 @@ AIC_fnc_assignVehicleActionHandler = {
 			_unitIndex = _unitIndex + 1;
 		} forEach (units _group);
 		if(_selectedVehicle isKindOf "Air") then {
-			[_selectedVehicle,100] remoteExec ["flyInHeight", _selectedVehicle]; 
+		
+			// Default height for air vehicles to fly in
+			[_selectedVehicle,100] remoteExec ["flyInHeight", _selectedVehicle];
+			[_x, [10, 10, 10]] remoteExec ["flyInHeightASL", _x]; // set to a low value because arma will use the higher value of flyInHeight and flyInHeightASL.
+			
 		};
 		_vehicleName = getText (configFile >> "CfgVehicles" >> typeOf _selectedVehicle >> "displayName");
 		hint ("Vehicle assigned: " + _vehicleName);
@@ -769,43 +804,107 @@ AIC_fnc_setLoiterTypeActionHandler = {
 ["WAYPOINT","3000M Radius",["Set Waypoint Type","Loiter (C-Clockwise)"],AIC_fnc_setLoiterTypeActionHandler,[3000,false]] call AIC_fnc_addCommandMenuAction;
 ["WAYPOINT","4000M Radius",["Set Waypoint Type","Loiter (C-Clockwise)"],AIC_fnc_setLoiterTypeActionHandler,[4000,false]] call AIC_fnc_addCommandMenuAction;
 
-AIC_fnc_setWaypointFlyInHeightActionHandlerScript = {
+
+/*
+
+	Waypoint -Fly in Height above Ground
+
+*/
+
+AIC_fnc_setWaypointFlyInHeightAglActionHandlerScript = {
 	params ["_group","_height"]; 
-  { 
-  	if(_x isKindOf "Air") then { 
-    	[_x,_height] remoteExec ["flyInHeight", _x];
-    };
-  } forEach ([_group] call AIC_fnc_getGroupAssignedVehicles);
+	{ 
+		if(_x isKindOf "Air") then { 
+			[_x, _height] remoteExec ["flyInHeight", _x];
+			[_x, [10, 10, 10]] remoteExec ["flyInHeightASL", _x]; // set to a low value because arma will use the higher value of flyInHeight and flyInHeightASL.
+		};
+	} forEach ([_group] call AIC_fnc_getGroupAssignedVehicles);
 };
 
-AIC_fnc_setWaypointFlyInHeightActionHandler = {
+AIC_fnc_setWaypointFlyInHeightAglActionHandler = {
 	private ["_script"];
 	params ["_menuParams","_actionParams"];
 	_menuParams params ["_groupControlId","_waypointId"];
-  _actionParams params ["_height"];
+	_actionParams params ["_height"];
 	private ["_group","_waypoint"];
 	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 	_waypoint = [_group, _waypointId] call AIC_fnc_getWaypoint;
-  _script = format ["[group this, %1] call AIC_fnc_setWaypointFlyInHeightActionHandlerScript",_height];
+	_script = format ["[group this, %1] call AIC_fnc_setWaypointFlyInHeightAglActionHandlerScript",_height];
 	_waypoint set [4,_script];
 	_waypoint set [12,_height];
 	[_group, _waypoint] call AIC_fnc_setWaypoint;
-	hint ("Waypoint fly in height set to " + (str _height) + " meters");
+	hint ("Waypoint 'Fly in Height (above ground)' set to " + (str _height) + " meters");
 };
 
-["WAYPOINT","10 meters",["Set Fly in Height"],AIC_fnc_setWaypointFlyInHeightActionHandler,[10],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
-["WAYPOINT","20 meters",["Set Fly in Height"],AIC_fnc_setWaypointFlyInHeightActionHandler,[20],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
-["WAYPOINT","40 meters",["Set Fly in Height"],AIC_fnc_setWaypointFlyInHeightActionHandler,[40],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
-["WAYPOINT","100 meters",["Set Fly in Height"],AIC_fnc_setWaypointFlyInHeightActionHandler,[100],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
-["WAYPOINT","250 meters",["Set Fly in Height"],AIC_fnc_setWaypointFlyInHeightActionHandler,[250],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
-["WAYPOINT","500 meters",["Set Fly in Height"],AIC_fnc_setWaypointFlyInHeightActionHandler,[500],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
-["WAYPOINT","1000 meters",["Set Fly in Height"],AIC_fnc_setWaypointFlyInHeightActionHandler,[1000],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
-["WAYPOINT","2000 meters",["Set Fly in Height"],AIC_fnc_setWaypointFlyInHeightActionHandler,[2000],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
+["WAYPOINT","10 meters",["Fly in Height (above ground)"],AIC_fnc_setWaypointFlyInHeightAglActionHandler,[10],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
+["WAYPOINT","20 meters",["Fly in Height (above ground)"],AIC_fnc_setWaypointFlyInHeightAglActionHandler,[20],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
+["WAYPOINT","50 meters",["Fly in Height (above ground)"],AIC_fnc_setWaypointFlyInHeightAglActionHandler,[50],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
+["WAYPOINT","100 meters",["Fly in Height (above ground)"],AIC_fnc_setWaypointFlyInHeightAglActionHandler,[100],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
+["WAYPOINT","250 meters",["Fly in Height (above ground)"],AIC_fnc_setWaypointFlyInHeightAglActionHandler,[250],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
+["WAYPOINT","500 meters",["Fly in Height (above ground)"],AIC_fnc_setWaypointFlyInHeightAglActionHandler,[500],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
+["WAYPOINT","750 meters",["Fly in Height (above ground)"],AIC_fnc_setWaypointFlyInHeightAglActionHandler,[750],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
+["WAYPOINT","1000 meters",["Fly in Height (above ground)"],AIC_fnc_setWaypointFlyInHeightAglActionHandler,[1000],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
+["WAYPOINT","1500 meters",["Fly in Height (above ground)"],AIC_fnc_setWaypointFlyInHeightAglActionHandler,[1500],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
+["WAYPOINT","2000 meters",["Fly in Height (above ground)"],AIC_fnc_setWaypointFlyInHeightAglActionHandler,[2000],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
+["WAYPOINT","2500 meters",["Fly in Height (above ground)"],AIC_fnc_setWaypointFlyInHeightAglActionHandler,[2500],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
+["WAYPOINT","3000 meters",["Fly in Height (above ground)"],AIC_fnc_setWaypointFlyInHeightAglActionHandler,[3000],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
+
+
+/*
+
+	Waypoint - Fly in Height above Sea
+
+*/
+
+AIC_fnc_setWaypointFlyInHeightAslActionHandlerScript = {
+	params ["_group","_height"]; 
+	{
+		if(_x isKindOf "Air") then {
+			[_x, 10] remoteExec ["flyInHeight", _x]; // set to a low value because arma will use the higher value of flyInHeight and flyInHeightASL.
+			[_x, [_height, _height, _height]] remoteExec ["flyInHeightASL", _x];
+		};
+	} forEach ([_group] call AIC_fnc_getGroupAssignedVehicles);
+};
+
+AIC_fnc_setWaypointFlyInHeightAslActionHandler = {
+	private ["_script"];
+	params ["_menuParams","_actionParams"];
+	_menuParams params ["_groupControlId","_waypointId"];
+	_actionParams params ["_height"];
+	private ["_group","_waypoint"];
+	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
+	_waypoint = [_group, _waypointId] call AIC_fnc_getWaypoint;
+	_script = format ["[group this, %1] call AIC_fnc_setWaypointFlyInHeightAslActionHandlerScript",_height];
+	_waypoint set [4,_script];
+	_waypoint set [12,_height];
+	[_group, _waypoint] call AIC_fnc_setWaypoint;
+	hint ("Waypoint 'Fly in Height (above sea)' set to " + (str _height) + " meters");
+};
+
+["WAYPOINT","10 meters",["Fly in Height (above sea lvl)"],AIC_fnc_setWaypointFlyInHeightAslActionHandler,[10],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
+["WAYPOINT","20 meters",["Fly in Height (above sea lvl)"],AIC_fnc_setWaypointFlyInHeightAslActionHandler,[20],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
+["WAYPOINT","50 meters",["Fly in Height (above sea lvl)"],AIC_fnc_setWaypointFlyInHeightAslActionHandler,[50],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
+["WAYPOINT","100 meters",["Fly in Height (above sea lvl)"],AIC_fnc_setWaypointFlyInHeightAslActionHandler,[100],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
+["WAYPOINT","250 meters",["Fly in Height (above sea lvl)"],AIC_fnc_setWaypointFlyInHeightAslActionHandler,[250],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
+["WAYPOINT","500 meters",["Fly in Height (above sea lvl)"],AIC_fnc_setWaypointFlyInHeightAslActionHandler,[500],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
+["WAYPOINT","750 meters",["Fly in Height (above sea lvl)"],AIC_fnc_setWaypointFlyInHeightAslActionHandler,[750],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
+["WAYPOINT","1000 meters",["Fly in Height (above sea lvl)"],AIC_fnc_setWaypointFlyInHeightAslActionHandler,[1000],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
+["WAYPOINT","1500 meters",["Fly in Height (above sea lvl)"],AIC_fnc_setWaypointFlyInHeightAslActionHandler,[1500],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
+["WAYPOINT","2000 meters",["Fly in Height (above sea lvl)"],AIC_fnc_setWaypointFlyInHeightAslActionHandler,[2000],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
+["WAYPOINT","2500 meters",["Fly in Height (above sea lvl)"],AIC_fnc_setWaypointFlyInHeightAslActionHandler,[2500],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
+["WAYPOINT","3000 meters",["Fly in Height (above sea lvl)"],AIC_fnc_setWaypointFlyInHeightAslActionHandler,[3000],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
+
+
+/*
+
+	Waypoint - Duration
+
+*/
 
 AIC_fnc_setWaypointDurationActionHandler = {
 	params ["_menuParams","_actionParams"];
 	_menuParams params ["_groupControlId","_waypointId"];
-  _actionParams params ["_duration"];
+	_actionParams params ["_duration"];
 	private ["_group","_waypoint"];
 	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 	_waypoint = [_group, _waypointId] call AIC_fnc_getWaypoint;
