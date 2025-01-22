@@ -10,7 +10,7 @@
 			_dots = "";
 			for "_i" from 0 to (_n % 3) do {_dots = _dots + "."};
 			_text = parseText (
-				"<t size='1.3' color='#ffffff' font='PuristaMedium' underline='true' align='left'>SITREP</t>      " + 
+				"<t size='1.3' color='#ffffff' font='PuristaMedium' underline='true' align='left'>Group Report</t>      " + 
 				format ["<t size='0.9'>Preparing %1</t><br /> ",_dots] + 
 				""
 			);
