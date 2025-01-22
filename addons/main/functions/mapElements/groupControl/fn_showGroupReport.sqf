@@ -10,7 +10,7 @@
 			_dots = "";
 			for "_i" from 0 to (_n % 3) do {_dots = _dots + "."};
 			_text = parseText (
-				"<t size='1.3' color='#ffffff' font='PuristaMedium' underline='true' align='left'>Group Report</t>      " + 
+				"<t size='1.3' color='#ffffff' font='PuristaMedium' underline='true' align='left'>AAC2 Group Report</t>      " + 
 				format ["<t size='0.9'>Preparing %1</t><br /> ",_dots] + 
 				""
 			);
@@ -175,7 +175,7 @@
 	//--- Display text
 	terminate _loading;
 	_text = parseText (
-		"<t size='1.3' color='#ffffff' font='PuristaMedium' underline='true' align='left'>Group Report</t>" + 
+		"<t size='1.3' color='#ffffff' font='PuristaMedium' underline='true' align='left'>AAC2 Group Report</t>" + 
 		format ["<t size='0.9' align='right'>%1</t><br />",[dayTime] call bis_fnc_timetostring] + 
 	 	_textIcons + "<br />" + 
 		format ["<t>%1</t>",_unitInfo] + 
