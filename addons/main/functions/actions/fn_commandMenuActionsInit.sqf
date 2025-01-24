@@ -64,6 +64,23 @@ AIC_fnc_setGroupCombatModeActionHandler = {
 	hint ("Combat mode set to " + toLower _modeLabel);
 };
 
+AIC_fnc_forgetTargetsActionHandler = {
+	params ["_menuParams","_actionParams"];
+	_menuParams params ["_groupControlId"];
+	private ["_group"];
+	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
+	private _leader = leader _group;
+	private _targetsLeader = _leader targets []; // all targets the leader knows about
+	
+	// Forget all targets
+	{
+		_group forgetTarget _x;
+	} forEach (_targetsLeader);
+		
+	hint ("Group forgot all targets!");
+};
+
+["GROUP","Forget all current targets",["Combat Mode"],AIC_fnc_forgetTargetsActionHandler] call AIC_fnc_addCommandMenuAction;
 ["GROUP","BLUE - Never Fire, Disengage",["Combat Mode"],AIC_fnc_setGroupCombatModeActionHandler,["BLUE","Never Fire, Disengage"]] call AIC_fnc_addCommandMenuAction;
 ["GROUP","GREEN - Hold Fire, Disengage",["Combat Mode"],AIC_fnc_setGroupCombatModeActionHandler,["GREEN","Hold Fire, Disengage"]] call AIC_fnc_addCommandMenuAction;
 ["GROUP","WHITE - Hold Fire, Engage At Will",["Combat Mode"],AIC_fnc_setGroupCombatModeActionHandler,["WHITE","Hold Fire, Engage At Will"]] call AIC_fnc_addCommandMenuAction;
