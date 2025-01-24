@@ -110,7 +110,7 @@
 
 				if (_veh isKindOf _class) then {
 					_limitValue = {_class isKindOf _x} count (_classes - [_class]);
-					if ({_x in _parents} count _classes == _limitvalue) then {true} else {false};
+					({ _x in _parents } count _classes == _limitvalue)
 				} else {false};
 
 			} count _vehicles;
