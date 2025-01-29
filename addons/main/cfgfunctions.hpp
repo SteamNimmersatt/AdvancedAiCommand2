@@ -4,9 +4,10 @@ class AICommand
 	
 	class Main
 	{
-		file = "\z\aicommand2\addons\main\functions\main";	
+		file = "\z\aicommand2\addons\main\functions\main";
 		class initAICommand {description = "";};
 		class initAICommandClient {description = "";};
+		class log {description = "";};
 	};
 	
 	class MapIcon
