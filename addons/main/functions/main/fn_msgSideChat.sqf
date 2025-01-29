@@ -27,7 +27,7 @@ if (!_hasRadio) then {
 };
 
 // Send message
-_msgFormatted=format["%1 %2", "[AdvancedAiCommand2]", _msg];
+_msgFormatted=format["%1 %2", "[AAC2]", _msg];
 _leader sideChat _msgFormatted;
 
 // Remove radio again if it was not present before
