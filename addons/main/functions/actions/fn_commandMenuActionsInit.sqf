@@ -617,14 +617,78 @@ AIC_fnc_landActionHandler = {
 			};
 		} forEach ([_group] call AIC_fnc_getGroupAssignedVehicles);
 		if(_hasAir) then {
-			[_group] call AIC_fnc_disableAllWaypoints;	
+		
+			// Remove all waypoints
+			[_group] call AIC_fnc_disableAllWaypoints;
+			
+			// Forget targets (we want to land now!)
+			private _leader = leader _group;
+			private _targetsLeader = _leader targets [];
+			{
+				_group forgetTarget _x;
+			} forEach (_targetsLeader);
+			
 			[_group, [_selectedPosition,false,"MOVE","{ if((vehicle _x) isKindOf 'Air') then { (vehicle this) land 'LAND'; }; } forEach (units (group this))"]] call AIC_fnc_addWaypoint;
+			
+			// Refresh/Redraw waypoints
 			[_groupControlId,"REFRESH_WAYPOINTS",[]] call AIC_fnc_groupControlEventHandler;
 		};
 	};
 };
 
-["GROUP","Land",[],AIC_fnc_landActionHandler,[],{
+["GROUP","Land nearby (search spot within 500m)",["Land now"],AIC_fnc_landActionHandler,[],{
+	params ["_groupControlId"];
+	private ["_group"];
+	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
+	_hasAir = false;
+	{
+		if(_x isKindOf "Air") then {
+			if(((position _x) select 2) > 1) then {
+				_hasAir = true;
+			};
+		};
+	} forEach ([_group] call AIC_fnc_getGroupAssignedVehicles);
+	_hasAir;	
+}] call AIC_fnc_addCommandMenuAction;
+
+AIC_fnc_landExactPosActionHandler = {
+	params ["_menuParams","_actionParams"];
+	_menuParams params ["_groupControlId"];
+	private ["_group"];
+	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
+	private ["_selectedPosition"];
+	_selectedPosition = [_groupControlId] call AIC_fnc_selectGroupControlPosition;
+	if(count _selectedPosition > 0) then {
+		_hasAir = false;
+		{
+			if(_x isKindOf "Air") then {
+				_hasAir = true;
+			};
+		} forEach ([_group] call AIC_fnc_getGroupAssignedVehicles);
+		if(_hasAir) then {
+		
+			// Remove all waypoints
+			[_group] call AIC_fnc_disableAllWaypoints;
+			
+			// Forget targets (we want to land now!)
+			private _leader = leader _group;
+			private _targetsLeader = _leader targets [];
+			{
+				_group forgetTarget _x;
+			} forEach (_targetsLeader);
+			
+			// Create invisible landing pad
+			_pad = "Land_HelipadEmpty_F" createVehicle _selectedPosition;
+			
+			[_group, [_selectedPosition,false,"MOVE","{ if((vehicle _x) isKindOf 'Air') then { (vehicle this) land 'LAND'; }; } forEach (units (group this))"]] call AIC_fnc_addWaypoint;
+			
+			// Refresh/Redraw waypoints
+			[_groupControlId,"REFRESH_WAYPOINTS",[]] call AIC_fnc_groupControlEventHandler;
+		};
+	};
+};
+
+["GROUP","Land precise (as close as possible)",["Land now"],AIC_fnc_landExactPosActionHandler,[],{
 	params ["_groupControlId"];
 	private ["_group"];
 	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
