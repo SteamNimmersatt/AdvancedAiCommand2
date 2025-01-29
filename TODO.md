@@ -1,3 +1,4 @@
+- Special Color / Symbol for squads with human players? Or maybe name of players under icon?
 - Bug: Random Heli Crash after Remote Control
 - Bug: On "Unboard other groups" the unloaded group has still the vehicle assigned after unboarding.
 - New Waypoints: Land, Dismount other groups
