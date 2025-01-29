@@ -526,6 +526,9 @@ AIC_fnc_assignVehicleActionHandler = {
 		};
 		_vehicleName = getText (configFile >> "CfgVehicles" >> typeOf _selectedVehicle >> "displayName");
 		hint ("Vehicle assigned: " + _vehicleName);
+		
+		_message=format["Vehicle assigned: %1",(_vehicleName)];
+		(leader _group)sideChat format["%1",_message];
 	} else {
 		hint ("No vehicle assigned");
 	};
@@ -599,7 +602,7 @@ AIC_fnc_unloadOtherGroupsActionHandler = {
 
 */
 
-AIC_fnc_landActionHandler = {
+AIC_fnc_landNowActionHandler = {
 	params ["_menuParams","_actionParams"];
 	_menuParams params ["_groupControlId"];
 	private ["_group"];
@@ -614,14 +617,29 @@ AIC_fnc_landActionHandler = {
 			};
 		} forEach ([_group] call AIC_fnc_getGroupAssignedVehicles);
 		if(_hasAir) then {
-			[_group] call AIC_fnc_disableAllWaypoints;	
+		
+			// Remove all waypoints
+			[_group] call AIC_fnc_disableAllWaypoints;
+			
+			// Forget targets (we want to land now!)
+			private _leader = leader _group;
+			private _targetsLeader = _leader targets [];
+			{
+				_group forgetTarget _x;
+			} forEach (_targetsLeader);
+			
+			// Create invisible landing pad
+			_pad = "Land_HelipadEmpty_F" createVehicle _selectedPosition;
+			
 			[_group, [_selectedPosition,false,"MOVE","{ if((vehicle _x) isKindOf 'Air') then { (vehicle this) land 'LAND'; }; } forEach (units (group this))"]] call AIC_fnc_addWaypoint;
+			
+			// Refresh/Redraw waypoints
 			[_groupControlId,"REFRESH_WAYPOINTS",[]] call AIC_fnc_groupControlEventHandler;
 		};
 	};
 };
 
-["GROUP","Land",[],AIC_fnc_landActionHandler,[],{
+["GROUP","Land now",[],AIC_fnc_landNowActionHandler,[],{
 	params ["_groupControlId"];
 	private ["_group"];
 	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;

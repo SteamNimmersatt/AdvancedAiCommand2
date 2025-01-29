@@ -101,6 +101,9 @@ if(isServer) then {
 				if(side _x == resistance) then {
 					["ALL_GUER",_x] call AIC_fnc_commandControlAddGroup;
 				};
+				
+				// TODO: Do not do this if the Antistasi mod is loaded
+				// if(isClass(configfile >> "CfgPatches" >> "??antistasi??"))then{
 				if(side _x == civilian) then {
 					["ALL_CIV",_x] call AIC_fnc_commandControlAddGroup;
 				};
