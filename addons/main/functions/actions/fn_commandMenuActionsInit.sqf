@@ -833,9 +833,12 @@ AIC_fnc_setLoiterTypeActionHandler = {
 	hint ("Type set to " + _loiterTypeLabel + " at " + str _radius + " meter radius");
 };
 
-["WAYPOINT","Move (default)",["Set Waypoint Type"],AIC_fnc_setWaypointTypeActionHandler,["MOVE","Move"]] call AIC_fnc_addCommandMenuAction;
-["WAYPOINT","Hold",["Set Waypoint Type"],AIC_fnc_setWaypointTypeActionHandler,["HOLD","Hold"]] call AIC_fnc_addCommandMenuAction;
-["WAYPOINT","Seek & Destroy",["Set Waypoint Type"],AIC_fnc_setWaypointTypeActionHandler,["SAD","Seek & Destroy"]] call AIC_fnc_addCommandMenuAction;
+["WAYPOINT","Move (default)",["Set Waypoint Type"],AIC_fnc_setWaypointTypeActionHandler,["MOVE","'Move'"]] call AIC_fnc_addCommandMenuAction;
+["WAYPOINT","Hold",["Set Waypoint Type"],AIC_fnc_setWaypointTypeActionHandler,["HOLD","'Hold'"]] call AIC_fnc_addCommandMenuAction;
+["WAYPOINT","Seek & Destroy",["Set Waypoint Type"],AIC_fnc_setWaypointTypeActionHandler,["SAD","'Seek & Destroy'"]] call AIC_fnc_addCommandMenuAction;
+["WAYPOINT","Unload 1st group (everyone)",["Set Waypoint Type", "Unload / Drop off"],AIC_fnc_setWaypointTypeActionHandler,["GETOUT","'Unload 1st group (everyone)'"]] call AIC_fnc_addCommandMenuAction;
+["WAYPOINT","Unload 1st group passengers (not crew positions)",["Set Waypoint Type", "Unload / Drop off"],AIC_fnc_setWaypointTypeActionHandler,["'Unload 1st group passengers (not crew positions)'"]] call AIC_fnc_addCommandMenuAction;
+["WAYPOINT","Unload other group passengers (not crew positions)",["Set Waypoint Type", "Unload / Drop off"],AIC_fnc_setWaypointTypeActionHandler,["TR UNLOAD","'Unload other group passengers (not crew positions)'"]] call AIC_fnc_addCommandMenuAction;
 ["WAYPOINT","10M Radius",["Set Waypoint Type","Loiter (Clockwise)"],AIC_fnc_setLoiterTypeActionHandler,[10,true]] call AIC_fnc_addCommandMenuAction;
 ["WAYPOINT","100M Radius",["Set Waypoint Type","Loiter (Clockwise)"],AIC_fnc_setLoiterTypeActionHandler,[100,true]] call AIC_fnc_addCommandMenuAction;
 ["WAYPOINT","250M Radius",["Set Waypoint Type","Loiter (Clockwise)"],AIC_fnc_setLoiterTypeActionHandler,[250,true]] call AIC_fnc_addCommandMenuAction;
@@ -852,6 +855,7 @@ AIC_fnc_setLoiterTypeActionHandler = {
 ["WAYPOINT","2000M Radius",["Set Waypoint Type","Loiter (C-Clockwise)"],AIC_fnc_setLoiterTypeActionHandler,[2000,false]] call AIC_fnc_addCommandMenuAction;
 ["WAYPOINT","3000M Radius",["Set Waypoint Type","Loiter (C-Clockwise)"],AIC_fnc_setLoiterTypeActionHandler,[3000,false]] call AIC_fnc_addCommandMenuAction;
 ["WAYPOINT","4000M Radius",["Set Waypoint Type","Loiter (C-Clockwise)"],AIC_fnc_setLoiterTypeActionHandler,[4000,false]] call AIC_fnc_addCommandMenuAction;
+
 
 AIC_fnc_setWaypointFlyInHeightActionHandlerScript = {
 	params ["_group","_height"]; 
