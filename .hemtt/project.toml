@@ -5,8 +5,8 @@ author = "Nimmersatt"
 
 [version]
 major = 2
-minor = 2
-patch = 1
+minor = 3
+patch = 0
 build = 0
 
 [files]
