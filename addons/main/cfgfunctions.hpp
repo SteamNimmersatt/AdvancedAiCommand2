@@ -8,6 +8,7 @@ class AICommand
 		class initAICommand {description = "";};
 		class initAICommandClient {description = "";};
 		class log {description = "";};
+		class msgSideChat {description = "";};
 	};
 	
 	class MapIcon

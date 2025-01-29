@@ -526,6 +526,9 @@ AIC_fnc_assignVehicleActionHandler = {
 		};
 		_vehicleName = getText (configFile >> "CfgVehicles" >> typeOf _selectedVehicle >> "displayName");
 		hint ("Vehicle assigned: " + _vehicleName);
+		
+		_message=format["Vehicle assigned: %1",(_vehicleName)];
+		[_group,_message] call AIC_fnc_msgSideChat;
 	} else {
 		hint ("No vehicle assigned");
 	};
