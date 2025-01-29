@@ -52,7 +52,9 @@ if(_event == "REFRESH_GROUP_CONTROLS") then {
 	
 	_groupControlsToRemove = _groupControls - _newGroupControls;
 	{
-		[_x] call AIC_fnc_removeGroupControl;
+		if(!isNil "_x") then {
+			[_x] call AIC_fnc_removeGroupControl;
+		}
 	} forEach _groupControlsToRemove;
 	
 	AIC_fnc_setCommandControlGroupsControls(_commandControlId,_newGroupControls);

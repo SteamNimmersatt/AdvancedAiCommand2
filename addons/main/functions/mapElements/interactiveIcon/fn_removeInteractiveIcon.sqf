@@ -16,6 +16,7 @@
 private ["_interactiveIconId","_interactiveIcons"];
 
 _interactiveIconId = param [0];
+if(isNil "_interactiveIconId") exitWith {};
 
 [_interactiveIconId] call AIC_fnc_deleteMapElement;
 

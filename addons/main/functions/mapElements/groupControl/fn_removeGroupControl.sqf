@@ -16,6 +16,7 @@
 private ["_groupControlId","_groupControls"];
 
 _groupControlId = param [0];
+if(isNil "_groupControlId") exitWith {};
 
 [_groupControlId] call AIC_fnc_deleteMapElement;
 
@@ -25,8 +26,8 @@ _groupControlId = param [0];
 	[_x] call AIC_fnc_removeInteractiveIcon;
 } forEach (AIC_fnc_getGroupControlWaypointIcons(_groupControlId));
 
-[_groupControlId, nil] call AIC_fnc_setGroupControlGroup;
-[_groupControlId, nil] call AIC_fnc_setGroupControlInteractiveIcon;
+[_groupControlId] call AIC_fnc_removeGroupControlGroup;
+[_groupControlId] call AIC_fnc_removeGroupControlInteractiveIcon;
 AIC_fnc_setGroupControlWaypointIcons(_groupControlId,nil);
 AIC_fnc_setGroupControlAddingWaypoints(_groupControlId,nil);
 AIC_fnc_setGroupControlWaypointRevision(_groupControlId,nil);
