@@ -90,6 +90,9 @@ if(isServer) then {
 	
 	[] spawn {
 
+		_isAntistasiActive = isClass(configFile >> "CfgPatches" >> "A3A_core");
+		"Antistasi mod is loaded. Will not show civilian groups." call AIC_fnc_log;
+
 		while {true} do {
 			{
 				if(side _x == east) then {
@@ -102,7 +105,10 @@ if(isServer) then {
 					["ALL_GUER",_x] call AIC_fnc_commandControlAddGroup;
 				};
 				if(side _x == civilian) then {
-					["ALL_CIV",_x] call AIC_fnc_commandControlAddGroup;
+					// Antistasi: Hide civilian groups (do not allow to control them)
+					if(!_isAntistasiActive) then {
+						["ALL_CIV",_x] call AIC_fnc_commandControlAddGroup;
+					}
 				};
 			} forEach allGroups;
 			sleep 5;
