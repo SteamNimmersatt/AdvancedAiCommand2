@@ -25,19 +25,19 @@ _groupIconTypes = ["inf","air","motor_inf","mech_inf","armor","plane","uav","art
 
 _wpIconTypes = ["MOVE"];
 
-AIC_UNSELECTED_GROUP_SELECTOR_ICON = ["\z\aicommand2\addons\main\images\group_selector_dashed.paa",48,48,0,_colorBlack + [0.5]] call AIC_fnc_createMapIcon;
-AIC_SELECTED_GROUP_SELECTOR_ICON = ["\z\aicommand2\addons\main\images\group_selector.paa",48,48,0,_colorBlack + [1]] call AIC_fnc_createMapIcon;
-AIC_MOUSE_OVER_GROUP_SELECTOR_ICON = ["\z\aicommand2\addons\main\images\group_selector_dashed.paa",52,52,0,_colorBlack + [0.8]] call AIC_fnc_createMapIcon;
-AIC_PICKED_UP_SELECTOR_ICON = ["\z\aicommand2\addons\main\images\group_selector.paa",52,52,1,_colorBlack + [1]] call AIC_fnc_createMapIcon;
+AIC_UNSELECTED_GROUP_SELECTOR_ICON = ["\z\aicommand2\addons\main\images\group_selector_dashed.paa",30,30,0,_colorBlack + [0.5]] call AIC_fnc_createMapIcon;
+AIC_SELECTED_GROUP_SELECTOR_ICON = ["\z\aicommand2\addons\main\images\group_selector.paa",30,30,0,_colorBlack + [1]] call AIC_fnc_createMapIcon;
+AIC_MOUSE_OVER_GROUP_SELECTOR_ICON = ["\z\aicommand2\addons\main\images\group_selector_dashed.paa",32,32,0,_colorBlack + [0.8]] call AIC_fnc_createMapIcon;
+AIC_PICKED_UP_SELECTOR_ICON = ["\z\aicommand2\addons\main\images\group_selector.paa",32,32,1,_colorBlack + [1]] call AIC_fnc_createMapIcon;
 
 {
 	_color = _x;
 	{
 		_iconType = _x;
-		missionNamespace setVariable ["AIC_UNSELECTED_GROUP_ICON_"+toUpper (_color select 0)+"_"+toUpper _iconType,(["\A3\ui_f\data\map\markers\nato\b_"+_iconType,32,32,0,(_color select 1) + [0.5]] call AIC_fnc_createMapIcon)];
-		missionNamespace setVariable ["AIC_SELECTED_GROUP_ICON_"+toUpper (_color select 0)+"_"+toUpper _iconType,(["\A3\ui_f\data\map\markers\nato\b_"+_iconType,32,32,0,(_color select 1) + [1]] call AIC_fnc_createMapIcon)];
-		missionNamespace setVariable ["AIC_MOUSE_OVER_GROUP_ICON_"+toUpper (_color select 0)+"_"+toUpper _iconType,(["\A3\ui_f\data\map\markers\nato\b_"+_iconType,32,32,0,(_color select 1) + [0.8]] call AIC_fnc_createMapIcon)];
-		missionNamespace setVariable ["AIC_PICKED_UP_GROUP_ICON_"+toUpper (_color select 0)+"_"+toUpper _iconType,(["\A3\ui_f\data\map\markers\nato\b_"+_iconType,36,36,1,(_color select 1) + [1]] call AIC_fnc_createMapIcon)];
+		missionNamespace setVariable ["AIC_UNSELECTED_GROUP_ICON_"+toUpper (_color select 0)+"_"+toUpper _iconType,(["\A3\ui_f\data\map\markers\nato\b_"+_iconType,20,20,0,(_color select 1) + [0.5]] call AIC_fnc_createMapIcon)];
+		missionNamespace setVariable ["AIC_SELECTED_GROUP_ICON_"+toUpper (_color select 0)+"_"+toUpper _iconType,(["\A3\ui_f\data\map\markers\nato\b_"+_iconType,20,20,0,(_color select 1) + [1]] call AIC_fnc_createMapIcon)];
+		missionNamespace setVariable ["AIC_MOUSE_OVER_GROUP_ICON_"+toUpper (_color select 0)+"_"+toUpper _iconType,(["\A3\ui_f\data\map\markers\nato\b_"+_iconType,20,20,0,(_color select 1) + [0.8]] call AIC_fnc_createMapIcon)];
+		missionNamespace setVariable ["AIC_PICKED_UP_GROUP_ICON_"+toUpper (_color select 0)+"_"+toUpper _iconType,(["\A3\ui_f\data\map\markers\nato\b_"+_iconType,22,22,1,(_color select 1) + [1]] call AIC_fnc_createMapIcon)];
 	} forEach _groupIconTypes;
 } forEach _colors;
 
@@ -45,10 +45,10 @@ AIC_PICKED_UP_SELECTOR_ICON = ["\z\aicommand2\addons\main\images\group_selector.
 	_color = _x;
 	{
 		_iconType = _x;
-		missionNamespace setVariable ["AIC_UNSELECTED_WP_ICON_"+toUpper (_color select 0)+"_"+toUpper _iconType,(["\z\aicommand2\addons\main\images\wp_"+toLower _iconType+"_icon.paa",20,20,0,(_color select 1) + [0.5]] call AIC_fnc_createMapIcon)];
-		missionNamespace setVariable ["AIC_SELECTED_WP_ICON_"+toUpper (_color select 0)+"_"+toUpper _iconType,(["\z\aicommand2\addons\main\images\wp_"+toLower _iconType+"_icon.paa",20,20,0,(_color select 1) + [1]] call AIC_fnc_createMapIcon)];
-		missionNamespace setVariable ["AIC_MOUSE_OVER_WP_ICON_"+toUpper (_color select 0)+"_"+toUpper _iconType,(["\z\aicommand2\addons\main\images\wp_"+toLower _iconType+"_icon.paa",22,22,0,(_color select 1) + [0.8]] call AIC_fnc_createMapIcon)];
-		missionNamespace setVariable ["AIC_PICKED_UP_WP_ICON_"+toUpper (_color select 0)+"_"+toUpper _iconType,(["\z\aicommand2\addons\main\images\wp_"+toLower _iconType+"_icon.paa",22,22,1,(_color select 1) + [1]] call AIC_fnc_createMapIcon)];
+		missionNamespace setVariable ["AIC_UNSELECTED_WP_ICON_"+toUpper (_color select 0)+"_"+toUpper _iconType,(["\z\aicommand2\addons\main\images\wp_"+toLower _iconType+"_icon.paa",12,12,0,(_color select 1) + [0.5]] call AIC_fnc_createMapIcon)];
+		missionNamespace setVariable ["AIC_SELECTED_WP_ICON_"+toUpper (_color select 0)+"_"+toUpper _iconType,(["\z\aicommand2\addons\main\images\wp_"+toLower _iconType+"_icon.paa",12,12,0,(_color select 1) + [1]] call AIC_fnc_createMapIcon)];
+		missionNamespace setVariable ["AIC_MOUSE_OVER_WP_ICON_"+toUpper (_color select 0)+"_"+toUpper _iconType,(["\z\aicommand2\addons\main\images\wp_"+toLower _iconType+"_icon.paa",14,14,0,(_color select 1) + [0.8]] call AIC_fnc_createMapIcon)];
+		missionNamespace setVariable ["AIC_PICKED_UP_WP_ICON_"+toUpper (_color select 0)+"_"+toUpper _iconType,(["\z\aicommand2\addons\main\images\wp_"+toLower _iconType+"_icon.paa",14,14,1,(_color select 1) + [1]] call AIC_fnc_createMapIcon)];
 	} forEach _wpIconTypes;
 } forEach _colors;
 
