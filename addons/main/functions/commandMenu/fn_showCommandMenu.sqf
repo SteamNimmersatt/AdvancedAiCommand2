@@ -45,14 +45,15 @@ if(_actionIndex < 0) then {
 		_index = _index + 1;
 	} forEach _actions;
 } else {
-	private ["_currentAction"];
-	_currentAction = _actions select _actionIndex;
+	private _currentAction = _actions select _actionIndex;
 	_currentPathLabel = (_currentAction select 2) select _pathPositionIndex;
 	AIC_Group_Control_Menu = [[_currentPathLabel,false]];
 	_index = 0;
 	{
 		_x params ["_type","_label","_path","_actionHandlerScript","_actionHandlerParams","_isEnabledScript"];
-		if(_menuParams call _isEnabledScript && count _path > _pathPositionIndex && _commandMenuType == _type) then {
+		private _isEnabled = _menuParams call _isEnabledScript;
+		
+		if(_isEnabled && count _path > _pathPositionIndex && _commandMenuType == _type) then {
 			if(_currentPathLabel == (_path select _pathPositionIndex)) then {
 				if(count _path > (_pathPositionIndex + 1)) then {
 					_pathLabel = _path select (_pathPositionIndex + 1);

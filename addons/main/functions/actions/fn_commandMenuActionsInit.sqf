@@ -13,6 +13,70 @@
 	Nothing
 */
 
+/*
+
+	Helper functions
+
+*/
+
+AIC_fnc_hasVehicleAssigned = {
+	params ["_groupControlId"];
+	private _group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
+	private _hasVehicleAssigned = (count ([_group] call AIC_fnc_getGroupAssignedVehicles) > 0);
+	_hasVehicleAssigned;	
+};
+
+AIC_fnc_hasAircraftAssigned = {
+	params ["_groupControlId"];
+	private _group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
+	
+	private _hasVehicleAssigned = call AIC_fnc_hasVehicleAssigned;
+	if (!_hasVehicleAssigned) exitWith {
+		false;
+	};
+	
+	private _hasAircraftAssigned = false;
+	{
+		if(_x isKindOf "Air") then {
+			_hasAircraftAssigned = true;
+		};
+	} forEach ([_group] call AIC_fnc_getGroupAssignedVehicles);
+
+	_hasAircraftAssigned;
+};
+
+AIC_fnc_isFlying = {
+	params ["_groupControlId"];
+	private _group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
+	
+	private _hasAircraftAssigned = call AIC_fnc_hasAircraftAssigned;
+	
+	private _groupName = groupId _group;
+	private _debugMsg = format ["DEBUG - Group '%1' _hasAircraftAssigned? %2.",_groupName,_hasAircraftAssigned];
+	_debugMsg call AIC_fnc_log;
+	
+	if(!_hasAircraftAssigned) exitWith {
+		false;
+	};
+	
+	// Check if one one the units is above the ground
+	private _isFlying = false;
+	{
+		private _isAboveGround = ((position _x) select 2) > 1;
+		if(_isAboveGround) then {
+			_isFlying = true;
+		};
+	} forEach ([_group] call AIC_fnc_getGroupAssignedVehicles);
+	
+	_isFlying;
+};
+
+AIC_fnc_hasGroupCargo = {
+	params ["_groupControlId"];
+	private ["_group"];
+	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
+	_group getVariable ["AIC_Has_Group_Cargo",false];
+};
 
 /*
 
@@ -61,7 +125,7 @@ AIC_fnc_setGroupCombatModeActionHandler = {
 	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 	_actionParams params ["_mode","_modeLabel"];
 	[_group,_mode] remoteExec ["setCombatMode", leader _group]; 
-	hint ("Combat mode set to " + toLower _modeLabel);
+	hint ("Combat mode set to '" + _modeLabel + "'.");
 };
 
 AIC_fnc_forgetTargetsActionHandler = {
@@ -101,7 +165,7 @@ AIC_fnc_setGroupBehaviourActionHandler = {
 	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 	_actionParams params ["_mode"];
 	[_group,_mode] remoteExec ["setBehaviour", leader _group]; 
-	hint ("Behaviour set to " + toLower _mode);
+	hint ("Behaviour set to '" + _mode + "'.");
 };
 AIC_fnc_setGroupAutoCombatActionHandler = {
 	params ["_menuParams","_actionParams"];
@@ -114,7 +178,7 @@ AIC_fnc_setGroupAutoCombatActionHandler = {
 	} else {
 		{_x disableAI "AUTOCOMBAT"} forEach (units _group);
 	};
-	hint ("AutoCombat " + toLower _mode);
+	hint ("AutoCombat set to '" + _mode + "'.");
 };
 AIC_fnc_setGroupEnableAttackActionHandler = {
 	params ["_menuParams","_actionParams"];
@@ -127,7 +191,7 @@ AIC_fnc_setGroupEnableAttackActionHandler = {
 	} else {
 		{_x enableAttack false} forEach (units _group);
 	};
-	hint ("Autonomous attacking " + toLower _mode);
+	hint ("Autonomous attacking set to '" + _mode + "'.");
 };
 
 ["GROUP","Careless",["Behaviour"],AIC_fnc_setGroupBehaviourActionHandler,["CARELESS"]] call AIC_fnc_addCommandMenuAction;
@@ -164,7 +228,7 @@ AIC_fnc_setGroupFormationActionHandler = {
 	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 	_actionParams params ["_mode"];
 	[_group,_mode] remoteExec ["setFormation", leader _group]; 
-	hint ("Formation set to " + toLower _mode);
+	hint ("Formation set to '" + _mode + "'.");
 };
 
 ["GROUP","Column",["Formation & Speed"],AIC_fnc_setGroupFormationActionHandler,["COLUMN"]] call AIC_fnc_addCommandMenuAction;
@@ -377,7 +441,7 @@ AIC_fnc_setGroupColorActionHandler = {
 	[_groupControlId,"REFRESH_GROUP_ICON",[]] call AIC_fnc_groupControlEventHandler;
 	[_groupControlId,"REFRESH_WAYPOINTS",[]] call AIC_fnc_groupControlEventHandler;
 	[_groupControlId,"REFRESH_ACTIONS",[]] call AIC_fnc_groupControlEventHandler;
-	hint ("Color set to " + toLower (_color select 0));
+	hint ("Color set to '" + (_color select 0) + "'.");
 };
 
 ["GROUP","Red",["Color"],AIC_fnc_setGroupColorActionHandler,[AIC_COLOR_RED]] call AIC_fnc_addCommandMenuAction;
@@ -440,8 +504,7 @@ AIC_fnc_splitGroupHalfActionHandler = {
 AIC_fnc_splitGroupUnitsActionHandler = {
 	params ["_menuParams","_actionParams"];
 	_menuParams params ["_groupControlId"];
-	private ["_group"];
-	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
+	private _group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 	
 	// Find all command controls to update with new split groups
 	_commandControlsToUpdate = [];
@@ -548,21 +611,7 @@ AIC_fnc_unassignVehicleActionHandler = {
 	hint ("All vehicles unassigned");
 };
 
-["GROUP","Unassign All Vehicle(s)",[],AIC_fnc_unassignVehicleActionHandler,[],{
-	params ["_groupControlId"];
-	private ["_group"];
-	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
-	private ["_canUnassign"];
-	_canUnassign = false;
-	_canUnassign = (count ([_group] call AIC_fnc_getGroupAssignedVehicles) > 0);
-	{
-		private _isVehicle = !isNull objectParent _x;
-		if (_isVehicle) then {
-			_canUnassign = true;
-		};
-	} forEach (units _group);
-	_canUnassign;
-}] call AIC_fnc_addCommandMenuAction;
+["GROUP","Unassign All Vehicle(s)",[],AIC_fnc_unassignVehicleActionHandler,[],AIC_fnc_hasVehicleAssigned] call AIC_fnc_addCommandMenuAction;
 
 AIC_fnc_unloadOtherGroupsActionHandler = {
 	params ["_menuParams","_actionParams"];
@@ -588,12 +637,7 @@ AIC_fnc_unloadOtherGroupsActionHandler = {
 	hint ((str count _unloadedGroups) + " other group(s) unloaded");
 };
 
-["GROUP","Unload Other Group(s)",[],AIC_fnc_unloadOtherGroupsActionHandler,[],{
-	params ["_groupControlId"];
-	private ["_group"];
-	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
-	_group getVariable ["AIC_Has_Group_Cargo",false];
-}] call AIC_fnc_addCommandMenuAction;	
+["GROUP","Unload Other Group(s)",[],AIC_fnc_unloadOtherGroupsActionHandler,[],AIC_fnc_hasGroupCargo] call AIC_fnc_addCommandMenuAction;	
 
 
 /*
@@ -636,22 +680,9 @@ AIC_fnc_landActionHandler = {
 	};
 };
 
-["GROUP","Land nearby (search spot within 500m)",["Land now"],AIC_fnc_landActionHandler,[],{
-	params ["_groupControlId"];
-	private ["_group"];
-	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
-	_hasAir = false;
-	{
-		if(_x isKindOf "Air") then {
-			if(((position _x) select 2) > 1) then {
-				_hasAir = true;
-			};
-		};
-	} forEach ([_group] call AIC_fnc_getGroupAssignedVehicles);
-	_hasAir;	
-}] call AIC_fnc_addCommandMenuAction;
+["GROUP","Land nearby (search spot within 500m)",["Land now"],AIC_fnc_landActionHandler,[],AIC_fnc_isFlying] call AIC_fnc_addCommandMenuAction;
 
-AIC_fnc_landExactPosActionHandler = {
+AIC_fnc_landPreciseActionHandler = {
 	params ["_menuParams","_actionParams"];
 	_menuParams params ["_groupControlId"];
 	private ["_group"];
@@ -688,20 +719,7 @@ AIC_fnc_landExactPosActionHandler = {
 	};
 };
 
-["GROUP","Land precise (as close as possible)",["Land now"],AIC_fnc_landExactPosActionHandler,[],{
-	params ["_groupControlId"];
-	private ["_group"];
-	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
-	_hasAir = false;
-	{
-		if(_x isKindOf "Air") then {
-			if(((position _x) select 2) > 1) then {
-				_hasAir = true;
-			};
-		};
-	} forEach ([_group] call AIC_fnc_getGroupAssignedVehicles);
-	_hasAir;	
-}] call AIC_fnc_addCommandMenuAction;
+["GROUP","Land precise (as close as possible)",["Land now"],AIC_fnc_landPreciseActionHandler,[],AIC_fnc_isFlying] call AIC_fnc_addCommandMenuAction;
 
 
 /*
@@ -784,7 +802,7 @@ AIC_fnc_setWaypointFormationActionHandler = {
 	_waypoint set [7,_mode];
 	[_group, _waypoint] call AIC_fnc_setWaypoint;
 	[_groupControlId,"REFRESH_WAYPOINTS",[]] call AIC_fnc_groupControlEventHandler;
-	hint ("Formation set to " + toLower _mode);
+	hint ("Formation set to '" + _mode + "'.");
 };
 
 ["WAYPOINT","Column",["Formation & Speed"],AIC_fnc_setWaypointFormationActionHandler,["COLUMN"]] call AIC_fnc_addCommandMenuAction;
@@ -804,10 +822,55 @@ AIC_fnc_setWaypointTypeActionHandler = {
 	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 	_waypoint = [_group, _waypointId] call AIC_fnc_getWaypoint;
 	_actionParams params ["_mode","_label"];
+	
+	// Set the waypoint type (see "fn_getWaypoint" for the order in the waypoint array)
 	_waypoint set [3,_mode];
+	
 	[_group, _waypoint] call AIC_fnc_setWaypoint;
 	[_groupControlId,"REFRESH_WAYPOINTS",[]] call AIC_fnc_groupControlEventHandler;
-	hint ("Type set to " + toLower _label);
+	hint ("Type set to '" + _label + "'.");
+};
+
+AIC_fnc_setWaypointTypeLandNearbyActionHandler = {
+	params ["_menuParams","_actionParams"];
+	_menuParams params ["_groupControlId","_waypointId"];
+	private ["_group","_waypoint"];
+	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
+	_waypoint = [_group, _waypointId] call AIC_fnc_getWaypoint;
+	_actionParams params ["_label"];
+	
+	// Set the waypoint type (see "fn_getWaypoint" for the order in the waypoint array)
+	_waypoint set [3,"Move"];
+	
+	// Set the waypoint "action script"
+	_waypoint set [4,"{ if((vehicle _x) isKindOf 'Air') then { (vehicle this) land 'LAND'; }; } forEach (units (group this))"];
+	
+	[_group, _waypoint] call AIC_fnc_setWaypoint;
+	[_groupControlId,"REFRESH_WAYPOINTS",[]] call AIC_fnc_groupControlEventHandler;
+	hint ("Type set to '" + _label + "'.");
+};
+
+AIC_fnc_setWaypointTypeLandPreciseActionHandler = {
+	params ["_menuParams","_actionParams"];
+	_menuParams params ["_groupControlId","_waypointId"];
+	private ["_group","_waypoint"];
+	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
+	_waypoint = [_group, _waypointId] call AIC_fnc_getWaypoint;
+	_actionParams params ["_label"];
+	
+	// Set the waypoint type (see "fn_getWaypoint" for the order in the waypoint array)
+	_waypoint set [3,"Move"];
+	
+	// Set the waypoint "action script" / "statement expression"
+	_waypoint set [4,"{ if((vehicle _x) isKindOf 'Air') then { (vehicle this) land 'LAND'; }; } forEach (units (group this))"];
+	
+	// Create invisible landing pad
+	private _waypointPosition = _waypoint select 1;
+	_pad = "Land_HelipadEmpty_F" createVehicle _waypointPosition;
+	
+	[_group, _waypoint] call AIC_fnc_setWaypoint;
+	[_groupControlId,"REFRESH_WAYPOINTS",[]] call AIC_fnc_groupControlEventHandler;
+	hint ("Type set to '" + _label + "'.");
 };
 
 AIC_fnc_setLoiterTypeActionHandler = {
@@ -817,7 +880,10 @@ AIC_fnc_setLoiterTypeActionHandler = {
 	private ["_group","_waypoint"];
 	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 	_waypoint = [_group, _waypointId] call AIC_fnc_getWaypoint;
+	
+	// Set the waypoint type (see "fn_getWaypoint" for the order in the waypoint array)
 	_waypoint set [3,"LOITER"];
+	
 	_waypoint set [10,_radius];
 	if(_clockwise) then {
 		_waypoint set [11,"CIRCLE"];
@@ -836,9 +902,20 @@ AIC_fnc_setLoiterTypeActionHandler = {
 ["WAYPOINT","Move (default)",["Set Waypoint Type"],AIC_fnc_setWaypointTypeActionHandler,["MOVE","'Move'"]] call AIC_fnc_addCommandMenuAction;
 ["WAYPOINT","Hold",["Set Waypoint Type"],AIC_fnc_setWaypointTypeActionHandler,["HOLD","'Hold'"]] call AIC_fnc_addCommandMenuAction;
 ["WAYPOINT","Seek & Destroy",["Set Waypoint Type"],AIC_fnc_setWaypointTypeActionHandler,["SAD","'Seek & Destroy'"]] call AIC_fnc_addCommandMenuAction;
-["WAYPOINT","Unload 1st group (everyone)",["Set Waypoint Type", "Unload / Drop off"],AIC_fnc_setWaypointTypeActionHandler,["GETOUT","'Unload 1st group (everyone)'"]] call AIC_fnc_addCommandMenuAction;
-["WAYPOINT","Unload 1st group passengers (not crew positions)",["Set Waypoint Type", "Unload / Drop off"],AIC_fnc_setWaypointTypeActionHandler,["'Unload 1st group passengers (not crew positions)'"]] call AIC_fnc_addCommandMenuAction;
-["WAYPOINT","Unload other group passengers (not crew positions)",["Set Waypoint Type", "Unload / Drop off"],AIC_fnc_setWaypointTypeActionHandler,["TR UNLOAD","'Unload other group passengers (not crew positions)'"]] call AIC_fnc_addCommandMenuAction;
+
+private _labelUnloadGroupCrewAndPassenger = "Unload this groups crew & passengers";
+["WAYPOINT",_labelUnloadGroupCrewAndPassenger,["Set Waypoint Type", "Unload / Drop off"],AIC_fnc_setWaypointTypeActionHandler,["GETOUT",_labelUnloadGroupCrewAndPassenger],AIC_fnc_hasVehicleAssigned] call AIC_fnc_addCommandMenuAction;
+private _labelUnloadGroupPassengers = "Unload this groups passengers";
+["WAYPOINT",_labelUnloadGroupPassengers,["Set Waypoint Type", "Unload / Drop off"],AIC_fnc_setWaypointTypeActionHandler,["UNLOAD",_labelUnloadGroupPassengers],AIC_fnc_hasVehicleAssigned] call AIC_fnc_addCommandMenuAction;
+private _labelUnloadOtherGroupPassengers = "Unload other groups passengers (not crew positions)";
+["WAYPOINT",_labelUnloadOtherGroupPassengers,["Set Waypoint Type", "Unload / Drop off"],AIC_fnc_setWaypointTypeActionHandler,["TR UNLOAD",_labelUnloadOtherGroupPassengers],AIC_fnc_hasGroupCargo] call AIC_fnc_addCommandMenuAction;
+
+private _labelLandNearby = "Land nearby (search spot within 500m)";
+["WAYPOINT",_labelLandNearby,["Set Waypoint Type","Land"],AIC_fnc_setWaypointTypeLandNearbyActionHandler,[_labelLandNearby],AIC_fnc_hasAircraftAssigned] call AIC_fnc_addCommandMenuAction;
+
+private _labelLandPrecise = "Land precise (as close as possible)";
+["WAYPOINT",_labelLandPrecise,["Set Waypoint Type","Land"],AIC_fnc_setWaypointTypeLandPreciseActionHandler,[_labelLandPrecise],AIC_fnc_hasAircraftAssigned] call AIC_fnc_addCommandMenuAction;
+
 ["WAYPOINT","10M Radius",["Set Waypoint Type","Loiter (Clockwise)"],AIC_fnc_setLoiterTypeActionHandler,[10,true]] call AIC_fnc_addCommandMenuAction;
 ["WAYPOINT","100M Radius",["Set Waypoint Type","Loiter (Clockwise)"],AIC_fnc_setLoiterTypeActionHandler,[100,true]] call AIC_fnc_addCommandMenuAction;
 ["WAYPOINT","250M Radius",["Set Waypoint Type","Loiter (Clockwise)"],AIC_fnc_setLoiterTypeActionHandler,[250,true]] call AIC_fnc_addCommandMenuAction;

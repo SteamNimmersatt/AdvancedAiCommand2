@@ -1,8 +1,8 @@
 - Special Color / Symbol for squads with human players? Or maybe name of players under icon?
+- Bug: When multiple groups are assigned the same vehicle they fight over the eats. Maybe "Get in - Crew" and "Get in - Passenger" options?
 - Bug: Random Heli Crash after Remote Control
 - Bug: On "Unboard other groups" the unloaded group has still the vehicle assigned after unboarding.
 - New Waypoints: Land, Dismount other groups
-- Landing da wo man klickt? Sucht gerade Random Heli Platz aus, oft nicht der welcher angeklickt ist
 - Create artillery support group
 - Show squad names on map ("Alpha 1-5")
 - Callouts in the chat when enemies are spotted (like the Drongos mod does)

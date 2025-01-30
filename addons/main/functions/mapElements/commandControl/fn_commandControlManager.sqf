@@ -142,7 +142,7 @@ if(isServer) then {
 
 	[] spawn {
 		while {true} do {
-			private ["_group","_groupControl","_lastWpRevision","_groupWaypoints","_groupControlWaypoints","_currentWpRevision","_groupControlWaypointArray","_wp","_wpType","_waitForCode","_wpActionScript","_wpCondition","_wpTimeout"];
+			private ["_group","_groupControl","_lastWpRevision","_groupWaypoints","_groupControlWaypoints","_currentWpRevision","_groupControlWaypointArray","_wp","_wpType","_waitForCode","_wpActionScript","_wpCondition","_wpTimeout","_wpStatementCondition","_wpStatementExpression"];
 			{
 				_group = _x;
 				_lastWpRevision = _group getVariable ["AIC_Server_Last_Wp_Revision",0];
@@ -163,7 +163,20 @@ if(isServer) then {
 								_priorWaypointDurationEnabled = true;
 							};
 							_wp = _group addWaypoint [_x select 1, 0];
-							_wp setWaypointStatements [format ["true && ((group this) getVariable ['AIC_WP_DURATION_REMANING',0]) <= 0 && {%1}",_wpCondition], "[group this, "+str (_x select 0)+"] call AIC_fnc_disableWaypoint;" + _wpActionScript];
+							
+							_wpStatementCondition = format ["true && ((group this) getVariable ['AIC_WP_DURATION_REMANING',0]) <= 0 && {%1}",_wpCondition];
+							_wpStatementExpression = "[group this, "+str (_x select 0)+"] call AIC_fnc_disableWaypoint;";
+							
+							if(_wpType == "SCRIPTED") then {
+								// In case of a wp of type "SCRIPTED" the "wpActionScript" is the path of the waypoint script to use.
+								_wp setWaypointScript _wpActionScript;
+							} else {
+								// For other wp types the "wpActionScript" is the waypoint statement expression.
+								_wpStatementExpression = _wpStatementExpression + _wpActionScript;
+							};
+														
+							_wp setWaypointStatements [_wpStatementCondition, _wpStatementExpression];
+							
 							_wp setWaypointType _wpType;
 							if(!isNil "_wpTimeout") then {
 								_wp setWaypointTimeout [_wpTimeout,_wpTimeout,_wpTimeout];

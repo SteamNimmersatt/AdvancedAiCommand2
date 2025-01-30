@@ -16,7 +16,7 @@
 			POSITION: waypoint world position,
 			BOOLEAN: waypoint disabled,
 			STRING: waypoint type,
-			STRING: waypoint action script,
+			STRING: waypoint action script ("waypoint statement expression"),
 			STRING: waypoint condition
 			NUMBER: waypoint timeout
 			STRING: waypoint formation
