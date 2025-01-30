@@ -52,6 +52,3 @@ AIC_PICKED_UP_SELECTOR_ICON = ["\z\aicommand2\addons\main\images\group_selector.
 	} forEach _wpIconTypes;
 } forEach _colors;
 
-
-A_GO_CODE_ICON = ["\z\aicommand2\addons\main\images\wp_alpha_icon.paa",15,15,0,_colorWhite + [1]] call AIC_fnc_createMapIcon;
-B_GO_CODE_ICON = ["\z\aicommand2\addons\main\images\wp_bravo_icon.paa",15,15,0,_colorWhite + [1]] call AIC_fnc_createMapIcon;
