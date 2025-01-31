@@ -51,10 +51,6 @@ AIC_fnc_isFlying = {
 	
 	private _hasAircraftAssigned = call AIC_fnc_hasAircraftAssigned;
 	
-	private _groupName = groupId _group;
-	private _debugMsg = format ["DEBUG - Group '%1' _hasAircraftAssigned? %2.",_groupName,_hasAircraftAssigned];
-	_debugMsg call AIC_fnc_log;
-	
 	if(!_hasAircraftAssigned) exitWith {
 		false;
 	};
@@ -646,7 +642,20 @@ AIC_fnc_unloadOtherGroupsActionHandler = {
 
 */
 
-AIC_fnc_landActionHandler = {
+#DEFINE _LAND_ACTION_SCRIPT = "
+private _msgSent = false;
+{
+    if ((vehicle _x) isKindOf 'Air') then {
+        if (!_msgSent) then {
+            [(group this), 'Landing now.'] call AIC_fnc_msgSideChat;
+            _msgSent = true;
+        };
+        (vehicle this) land 'LAND';
+    };
+} forEach (units (group this));
+";
+
+AIC_fnc_landNowNearbyActionHandler = {
 	params ["_menuParams","_actionParams"];
 	_menuParams params ["_groupControlId"];
 	private ["_group"];
@@ -668,11 +677,13 @@ AIC_fnc_landActionHandler = {
 			// Forget targets (we want to land now!)
 			private _leader = leader _group;
 			private _targetsLeader = _leader targets [];
+
 			{
 				_group forgetTarget _x;
 			} forEach (_targetsLeader);
 			
-			[_group, [_selectedPosition,false,"MOVE","{ if((vehicle _x) isKindOf 'Air') then { (vehicle this) land 'LAND'; }; } forEach (units (group this))"]] call AIC_fnc_addWaypoint;
+			[_group, 'Moving to the landing zone.'] call AIC_fnc_msgSideChat;
+			[_group, [_selectedPosition,false,"MOVE",_LAND_ACTION_SCRIPT]] call AIC_fnc_addWaypoint;
 			
 			// Refresh/Redraw waypoints
 			[_groupControlId,"REFRESH_WAYPOINTS",[]] call AIC_fnc_groupControlEventHandler;
@@ -680,9 +691,9 @@ AIC_fnc_landActionHandler = {
 	};
 };
 
-["GROUP","Land nearby (search spot within 500m)",["Land now"],AIC_fnc_landActionHandler,[],AIC_fnc_isFlying] call AIC_fnc_addCommandMenuAction;
+["GROUP","Land nearby (search spot within 500m)",["Land now"],AIC_fnc_landNowNearbyActionHandler,[],AIC_fnc_isFlying] call AIC_fnc_addCommandMenuAction;
 
-AIC_fnc_landPreciseActionHandler = {
+AIC_fnc_landNowPreciseActionHandler = {
 	params ["_menuParams","_actionParams"];
 	_menuParams params ["_groupControlId"];
 	private ["_group"];
@@ -711,7 +722,8 @@ AIC_fnc_landPreciseActionHandler = {
 			// Create invisible landing pad
 			_pad = "Land_HelipadEmpty_F" createVehicle _selectedPosition;
 			
-			[_group, [_selectedPosition,false,"MOVE","{ if((vehicle _x) isKindOf 'Air') then { (vehicle this) land 'LAND'; }; } forEach (units (group this))"]] call AIC_fnc_addWaypoint;
+			[_group, 'Moving to the landing zone.'] call AIC_fnc_msgSideChat;
+			[_group, [_selectedPosition,false,"MOVE",_LAND_ACTION_SCRIPT]] call AIC_fnc_addWaypoint;
 			
 			// Refresh/Redraw waypoints
 			[_groupControlId,"REFRESH_WAYPOINTS",[]] call AIC_fnc_groupControlEventHandler;
@@ -719,7 +731,7 @@ AIC_fnc_landPreciseActionHandler = {
 	};
 };
 
-["GROUP","Land precise (as close as possible)",["Land now"],AIC_fnc_landPreciseActionHandler,[],AIC_fnc_isFlying] call AIC_fnc_addCommandMenuAction;
+["GROUP","Land precisely (as close as possible)",["Land now"],AIC_fnc_landNowPreciseActionHandler,[],AIC_fnc_isFlying] call AIC_fnc_addCommandMenuAction;
 
 
 /*
@@ -843,7 +855,7 @@ AIC_fnc_setWaypointTypeLandNearbyActionHandler = {
 	_waypoint set [3,"Move"];
 	
 	// Set the waypoint "action script"
-	_waypoint set [4,"{ if((vehicle _x) isKindOf 'Air') then { (vehicle this) land 'LAND'; }; } forEach (units (group this))"];
+	_waypoint set [4,_LAND_ACTION_SCRIPT];
 	
 	[_group, _waypoint] call AIC_fnc_setWaypoint;
 	[_groupControlId,"REFRESH_WAYPOINTS",[]] call AIC_fnc_groupControlEventHandler;
@@ -862,7 +874,7 @@ AIC_fnc_setWaypointTypeLandPreciseActionHandler = {
 	_waypoint set [3,"Move"];
 	
 	// Set the waypoint "action script" / "statement expression"
-	_waypoint set [4,"{ if((vehicle _x) isKindOf 'Air') then { (vehicle this) land 'LAND'; }; } forEach (units (group this))"];
+	_waypoint set [4,_LAND_ACTION_SCRIPT];
 	
 	// Create invisible landing pad
 	private _waypointPosition = _waypoint select 1;
@@ -913,7 +925,7 @@ private _labelUnloadOtherGroupPassengers = "Unload other groups passengers (not 
 private _labelLandNearby = "Land nearby (search spot within 500m)";
 ["WAYPOINT",_labelLandNearby,["Set Waypoint Type","Land"],AIC_fnc_setWaypointTypeLandNearbyActionHandler,[_labelLandNearby],AIC_fnc_hasAircraftAssigned] call AIC_fnc_addCommandMenuAction;
 
-private _labelLandPrecise = "Land precise (as close as possible)";
+private _labelLandPrecise = "Land precisely (as close as possible)";
 ["WAYPOINT",_labelLandPrecise,["Set Waypoint Type","Land"],AIC_fnc_setWaypointTypeLandPreciseActionHandler,[_labelLandPrecise],AIC_fnc_hasAircraftAssigned] call AIC_fnc_addCommandMenuAction;
 
 ["WAYPOINT","10M Radius",["Set Waypoint Type","Loiter (Clockwise)"],AIC_fnc_setLoiterTypeActionHandler,[10,true]] call AIC_fnc_addCommandMenuAction;
