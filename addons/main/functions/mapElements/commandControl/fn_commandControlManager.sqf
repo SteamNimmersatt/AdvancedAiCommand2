@@ -84,23 +84,6 @@ if(_isHumanPlayer) then {
 					[_commandControlId,"REFRESH_GROUP_CONTROLS",[]] call AIC_fnc_commandControlEventHandler;
 				};
 
-				// Notify about lost groups
-				_groups = AIC_fnc_getCommandControlGroups(_commandControlId);
-				{
-					_group = _x;
-					_someoneAlive = false;
-					{
-						if (alive _x) then {
-							_someoneAlive = true;
-							break;
-						}
-					} forEach (units _group);
-
-					if(!_someoneAlive) then {
-						[player, format ['Lost communication with %1.', name _group]] call AIC_fnc_msgSideChat;
-					};
-				} forEach _groups;
-
 			} forEach _commandControls;
 			sleep 2;
 		};
@@ -152,7 +135,7 @@ if(isServer) then {
 					_units = [];
 					{if (alive _x) then {_units = _units + [_x]}} forEach (units _group);
 					if(count _units == 0) then {
-						[_group, 'Lost communication.'] call AIC_fnc_msgSideChat;
+						[_group, '<Communication lost>'] call AIC_fnc_msgSideChat;
 						[_commandControlId, _group] call AIC_fnc_commandControlRemoveGroup;
 					};			
 				} forEach _groups;
