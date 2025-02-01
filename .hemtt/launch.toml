@@ -1,0 +1,21 @@
+[default]
+
+workshop = [
+    "450814997",    # CBA_A3.
+    "3419106613",   # CBA_A3 addon "cache disable". Required for file patching to work.
+    "2447965207",   # Crows Zeus additions
+    "1779063631"    # Zeus Enhanced
+]
+
+file_patching = true
+
+parameters = [
+    "-debug",
+    "-showScriptErrors",
+    "-skipIntro",
+    "-noSplash",
+    "-nolauncher",
+    "-nopause",
+    "-hugepages",
+    "-world=empty"
+]
