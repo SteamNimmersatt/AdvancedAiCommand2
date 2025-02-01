@@ -642,15 +642,16 @@ AIC_fnc_unloadOtherGroupsActionHandler = {
 
 */
 
-#DEFINE _LAND_ACTION_SCRIPT = "
+landActionScript = "
 private _msgSent = false;
 {
-    if ((vehicle _x) isKindOf 'Air') then {
+    private _vehicle = vehicle _x;
+	if (_vehicle isKindOf 'Air') then {
         if (!_msgSent) then {
             [(group this), 'Landing now.'] call AIC_fnc_msgSideChat;
             _msgSent = true;
         };
-        (vehicle this) land 'LAND';
+        _vehicle land 'LAND';
     };
 } forEach (units (group this));
 ";
@@ -682,8 +683,8 @@ AIC_fnc_landNowNearbyActionHandler = {
 				_group forgetTarget _x;
 			} forEach (_targetsLeader);
 			
-			[_group, 'Moving to the landing zone.'] call AIC_fnc_msgSideChat;
-			[_group, [_selectedPosition,false,"MOVE",_LAND_ACTION_SCRIPT]] call AIC_fnc_addWaypoint;
+			[_group, 'Moving to landing zone.'] call AIC_fnc_msgSideChat;
+			[_group, [_selectedPosition,false,"MOVE",landActionScript]] call AIC_fnc_addWaypoint;
 			
 			// Refresh/Redraw waypoints
 			[_groupControlId,"REFRESH_WAYPOINTS",[]] call AIC_fnc_groupControlEventHandler;
@@ -722,8 +723,8 @@ AIC_fnc_landNowPreciseActionHandler = {
 			// Create invisible landing pad
 			_pad = "Land_HelipadEmpty_F" createVehicle _selectedPosition;
 			
-			[_group, 'Moving to the landing zone.'] call AIC_fnc_msgSideChat;
-			[_group, [_selectedPosition,false,"MOVE",_LAND_ACTION_SCRIPT]] call AIC_fnc_addWaypoint;
+			[_group, 'Moving to landing zone.'] call AIC_fnc_msgSideChat;
+			[_group, [_selectedPosition,false,"MOVE",landActionScript]] call AIC_fnc_addWaypoint;
 			
 			// Refresh/Redraw waypoints
 			[_groupControlId,"REFRESH_WAYPOINTS",[]] call AIC_fnc_groupControlEventHandler;
@@ -855,7 +856,7 @@ AIC_fnc_setWaypointTypeLandNearbyActionHandler = {
 	_waypoint set [3,"Move"];
 	
 	// Set the waypoint "action script"
-	_waypoint set [4,_LAND_ACTION_SCRIPT];
+	_waypoint set [4,landActionScript];
 	
 	[_group, _waypoint] call AIC_fnc_setWaypoint;
 	[_groupControlId,"REFRESH_WAYPOINTS",[]] call AIC_fnc_groupControlEventHandler;
@@ -874,7 +875,7 @@ AIC_fnc_setWaypointTypeLandPreciseActionHandler = {
 	_waypoint set [3,"Move"];
 	
 	// Set the waypoint "action script" / "statement expression"
-	_waypoint set [4,_LAND_ACTION_SCRIPT];
+	_waypoint set [4,landActionScript];
 	
 	// Create invisible landing pad
 	private _waypointPosition = _waypoint select 1;
