@@ -1,4 +1,7 @@
 - Special Color / Symbol for squads with human players? Or maybe name of players under icon?
+- Rearm
+- Repair
+- Garrison
 - Bug: When multiple groups are assigned the same vehicle they fight over the eats. Maybe "Get in - Crew" and "Get in - Passenger" options?
 - Bug: Random Heli Crash after Remote Control
 - Bug: On "Unboard other groups" the unloaded group has still the vehicle assigned after unboarding.
@@ -7,3 +10,4 @@
 - Show squad names on map ("Alpha 1-5")
 - Callouts in the chat when enemies are spotted (like the Drongos mod does)
 - Add CBA settings (e.g. default mode for groups)
+- "Fallback" Waypoint: Forget targets, Combat Mode "Green" (Disengang, Hold fire), Revert back to "Yellow" after reaching waypoint.
