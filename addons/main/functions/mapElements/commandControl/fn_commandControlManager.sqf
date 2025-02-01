@@ -18,7 +18,8 @@
 ["ALL_GUER"] call AIC_fnc_createCommandControl;
 ["ALL_CIV"] call AIC_fnc_createCommandControl;
 
-if(hasInterface) then {
+private _isHumanPlayer = hasInterface;
+if(_isHumanPlayer) then {
 		
 	AIC_fnc_commandControlDrawHandler = {
 	
@@ -68,17 +69,38 @@ if(hasInterface) then {
 
 	["MAP_CONTROL","Draw", "_this call AIC_fnc_commandControlDrawHandler"] spawn AIC_fnc_addManagedEventHandler;
 	
-	// Check for command control group controls revision changes
+	
 	[] spawn {
 		private ["_commandControls","_groupsRevision","_currentRevision"];
 		while {true} do {
 			_commandControls = AIC_fnc_getCommandControls();
 			{
-				_groupsRevision = AIC_fnc_getCommandControlGroupsRevision(_x);
-				_currentRevision = AIC_fnc_getCommandControlGroupsControlsRevision(_x);
+				_commandControlId = _x;
+				_groupsRevision = AIC_fnc_getCommandControlGroupsRevision(_commandControlId);
+				_currentRevision = AIC_fnc_getCommandControlGroupsControlsRevision(_commandControlId);
+
+				// Check for command control group controls revision changes
 				if(_groupsRevision != _currentRevision) then {
-					[_x,"REFRESH_GROUP_CONTROLS",[]] call AIC_fnc_commandControlEventHandler;
+					[_commandControlId,"REFRESH_GROUP_CONTROLS",[]] call AIC_fnc_commandControlEventHandler;
 				};
+
+				// Notify about lost groups
+				_groups = AIC_fnc_getCommandControlGroups(_commandControlId);
+				{
+					_group = _x;
+					_someoneAlive = false;
+					{
+						if (alive _x) then {
+							_someoneAlive = true;
+							break;
+						}
+					} forEach (units _group);
+
+					if(!_someoneAlive) then {
+						[player, format ['Lost communication with %1.', name _group]] call AIC_fnc_msgSideChat;
+					};
+				} forEach _groups;
+
 			} forEach _commandControls;
 			sleep 2;
 		};
@@ -130,6 +152,7 @@ if(isServer) then {
 					_units = [];
 					{if (alive _x) then {_units = _units + [_x]}} forEach (units _group);
 					if(count _units == 0) then {
+						[_group, 'Lost communication.'] call AIC_fnc_msgSideChat;
 						[_commandControlId, _group] call AIC_fnc_commandControlRemoveGroup;
 					};			
 				} forEach _groups;
