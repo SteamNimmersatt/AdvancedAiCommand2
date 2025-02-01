@@ -5,7 +5,7 @@ _colorGreen = [0,1,0];
 _colorBlue = [0,0,1];
 _colorYellow = [1,1,0];
 _colorPurple = [1,0,1];
-_colorPink = [1,0,0.58];
+_colorPink = [1,0.8,1];
 _colorCyan = [0,1,1];
 _colorBlack = [0,0,0];
 _colorWhite = [1,1,1];
@@ -25,10 +25,10 @@ _groupIconTypes = ["inf","air","motor_inf","mech_inf","armor","plane","uav","art
 
 _wpIconTypes = ["MOVE"];
 
-AIC_UNSELECTED_GROUP_SELECTOR_ICON = ["\z\aicommand2\addons\main\images\group_selector_dashed.paa",30,30,0,_colorBlack + [0.5]] call AIC_fnc_createMapIcon;
-AIC_SELECTED_GROUP_SELECTOR_ICON = ["\z\aicommand2\addons\main\images\group_selector.paa",30,30,0,_colorBlack + [1]] call AIC_fnc_createMapIcon;
-AIC_MOUSE_OVER_GROUP_SELECTOR_ICON = ["\z\aicommand2\addons\main\images\group_selector_dashed.paa",32,32,0,_colorBlack + [0.8]] call AIC_fnc_createMapIcon;
-AIC_PICKED_UP_SELECTOR_ICON = ["\z\aicommand2\addons\main\images\group_selector.paa",32,32,1,_colorBlack + [1]] call AIC_fnc_createMapIcon;
+AIC_UNSELECTED_GROUP_SELECTOR_ICON = ["\z\aicommand2\addons\main\images\group_selector_dashed.paa",28,28,0,_colorBlack + [0.5]] call AIC_fnc_createMapIcon;
+AIC_SELECTED_GROUP_SELECTOR_ICON = ["\z\aicommand2\addons\main\images\group_selector.paa",28,28,0,_colorBlack + [1]] call AIC_fnc_createMapIcon;
+AIC_MOUSE_OVER_GROUP_SELECTOR_ICON = ["\z\aicommand2\addons\main\images\group_selector_dashed.paa",30,30,0,_colorBlack + [0.8]] call AIC_fnc_createMapIcon;
+AIC_PICKED_UP_SELECTOR_ICON = ["\z\aicommand2\addons\main\images\group_selector.paa",30,30,1,_colorBlack + [1]] call AIC_fnc_createMapIcon;
 
 {
 	_color = _x;
