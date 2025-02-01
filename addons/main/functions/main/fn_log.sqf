@@ -15,4 +15,4 @@
 private ["_msg"];
 _msg = param [0];
 
-diag_log format ["%1 %2", "[AdvancedAiCommand2]", _msg];
+diag_log text format ["%1 - %2", "[AdvancedAiCommand2]", _msg];
