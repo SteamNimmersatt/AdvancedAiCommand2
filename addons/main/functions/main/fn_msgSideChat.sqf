@@ -16,32 +16,38 @@ private ["_entity", "_msg", "_msgSender"];
 _entity = param [0];
 _msg = param [1];
 
-// Check if the given entity is a valid player
-if (isPlayer _entity) then {
-	_msgSender = _entity;
-}
-// Check if the given entity is a valid group
-else if (_entity isKindOf "Group") then {
-	private _leader = leader _entity;
-	_msgSender = _leader;
+// Check given entity param
+private _typeName = typeName _entity;
+
+("The typename is: " + _typeName) call AIC_fnc_log;
+
+if (_typeName == "OBJECT") then {
+	if (isPlayer _entity) then {
+		_msgSender = _entity;
+	}
 } else {
-	format ["Invalid entity of type '%1' passed to fn_msgSideChat for side chat message '%2'.", typeOf _entity, _msg] call AIC_fnc_log;
-	exitWith {};
+	if (_typeName == "GROUP") then {
+		private _leader = leader _entity;
+		_msgSender = _leader;
+	}
+};
+if (isNil "_msgSender") exitWith {
+	format ["Invalid entity of type '%1' passed to fn_msgSideChat for side chat message '%2'.", typeName _entity, _msg] call AIC_fnc_log;
 };
 
 // Give radio if not present
 private _hasRadio = "ItemRadio" in assignedItems _msgSender;
 if (!_hasRadio) then {
-	_entity addItem "ItemRadio";
-	_entity assignItem "ItemRadio";
+	_msgSender addItem "ItemRadio";
+	_msgSender assignItem "ItemRadio";
 };
 
 // Send message
-_msgFormatted = format["%1 %2", "[AAC2]", _msg];
-_entity sideChat _msgFormatted;
+_msgFormatted = format["%1 %2", "[AAC2] - ", _msg];
+_msgSender sideChat _msgFormatted;
 
 // Remove radio again if it was not present before
 if (!_hasRadio) then {
-	_entity unassignItem "ItemRadio";
-	_entity removeItem "ItemRadio";
+	_msgSender unassignItem "ItemRadio";
+	_msgSender removeItem "ItemRadio";
 };
