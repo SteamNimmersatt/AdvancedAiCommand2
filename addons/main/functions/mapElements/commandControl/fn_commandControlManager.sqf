@@ -21,10 +21,7 @@
 private _isHumanPlayer = hasInterface;
 if(_isHumanPlayer) then {
 		
-	AIC_fnc_commandControlDrawHandler = {
-	
-		//_temp = diag_tickTime;
-		
+	AIC_fnc_commandControlDrawHandler = {	
 		private ["_commandControls","_inputControls","_actionControlShown"];
 		
 		_commandControls = AIC_fnc_getCommandControls();
@@ -38,35 +35,12 @@ if(_isHumanPlayer) then {
 		} forEach _inputControls;
 		
 		// Draw command controls
-		
-		{
-			// Move all command controls to the background if an action control is visible
-		
-			/*
-			if(_actionControlShown) then {
-					if(AIC_fnc_getMapElementForeground(_x)) then {
-						[_x,false] call AIC_fnc_setMapElementForeground;
-						[_x,false] call AIC_fnc_setMapElementEnabled;
-					};
-			} else {
-					if(!(AIC_fnc_getMapElementForeground(_x))) then {
-						[_x,true] call AIC_fnc_setMapElementForeground;
-						[_x,true] call AIC_fnc_setMapElementEnabled;
-					};
-			};
-			*/
-			
+		{	
 			[_x] call AIC_fnc_drawCommandControl;
 		} forEach _commandControls;
-		
-		//_temp2 = diag_tickTime;
-		
-	    // hint str (_temp2 - _temp);
-			
 	};
 
 	// Setup UI event handlers
-
 	["MAP_CONTROL","Draw", "_this call AIC_fnc_commandControlDrawHandler"] spawn AIC_fnc_addManagedEventHandler;
 	
 	
@@ -122,7 +96,6 @@ if(isServer) then {
 	};
 
 	// Check for empty groups associated with command controls and remove them
-	
 	[] spawn {
 		private ["_commandControls","_commandControlId","_groups","_groupControls","_group","_units"];
 		while {true} do {
@@ -145,7 +118,6 @@ if(isServer) then {
 	};
 	
 	// Manage group waypoints
-
 	[] spawn {
 		while {true} do {
 			private ["_group","_groupControl","_lastWpRevision","_groupWaypoints","_groupControlWaypoints","_currentWpRevision","_groupControlWaypointArray","_wp","_wpType","_waitForCode","_wpActionScript","_wpCondition","_wpTimeout","_wpStatementCondition","_wpStatementExpression"];
