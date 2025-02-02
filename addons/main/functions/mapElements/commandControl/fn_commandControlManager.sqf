@@ -203,7 +203,6 @@ if (isServer) then {
 
 	// Group casualty reporting - TODO: move somewhere else
 	[] spawn {
-		"DEBUG - Spawned 'Group casualty reporting'" call AIC_fnc_log;
 
 		// Array to track the number of units per group
 		_groupTracking = [];
@@ -231,12 +230,12 @@ if (isServer) then {
 			};
 
 			if (_index != -1) then {
-				format["DEBUG - Updating existing count for Group '%1' to '%2'.", _groupId, _newCount] call AIC_fnc_log;
+				//format["DEBUG - Updating existing count for Group '%1' to '%2'.", _groupId, _newCount] call AIC_fnc_log;
 				private _groupTrackingEntry = _groupTracking select _index;
 				_groupTrackingEntry set [1, _newCount]; // Update the count in the tracking entry (array of groupId, count)
 				_groupTracking set [_index, _groupTrackingEntry];
 			} else {
-				format["DEBUG - Adding new count for Group '%1' to '%2'. Index is '%3'.", _groupId, _newCount,_index] call AIC_fnc_log;
+				//format["DEBUG - Adding new count for Group '%1' to '%2'. Index is '%3'.", _groupId, _newCount,_index] call AIC_fnc_log;
 				private _groupTrackingEntry = [_groupId, _newCount];
 				_groupTracking pushBack _groupTrackingEntry;
 			};
@@ -274,7 +273,7 @@ if (isServer) then {
 
 					private _previousUnitCount = [_groupId] call GetUnitCount;
 
-					format["DEBUG - Group '%1' had '%2' alive units before, now has '%3'.", _groupId, _previousUnitCount, _aliveUnitsCount] call AIC_fnc_log;
+					//format["DEBUG - Group '%1' had '%2' alive units before, now has '%3'.", _groupId, _previousUnitCount, _aliveUnitsCount] call AIC_fnc_log;
 
 					if (_aliveUnitsCount != _previousUnitCount) then {
 						[_groupId, _aliveUnitsCount] call UpdateUnitCount;
