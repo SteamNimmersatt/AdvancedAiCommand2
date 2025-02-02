@@ -1,3 +1,5 @@
+- Unload - Precise / Nearby
+- Unload Warning (does not with humans)
 - Option to only show HC groups 
 - Special Color / Symbol for squads with human players? Or maybe name of players under icon?
 - Rearm
