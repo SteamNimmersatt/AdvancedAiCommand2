@@ -19,8 +19,6 @@ _msg = param [1];
 // Check given entity param
 private _typeName = typeName _entity;
 
-("The typename is: " + _typeName) call AIC_fnc_log;
-
 if (_typeName == "OBJECT") then {
 	if (isPlayer _entity) then {
 		_msgSender = _entity;
