@@ -9,15 +9,18 @@
 	Parameter(s):
 	_this select 0: GROUP - group to set waypoint
 	_this select 1: ARRAY: [
-		NUMBER: waypoint index,
-		POSITION: waypoint world position,
-		BOOLEAN: waypoint disabled,
-		STRING: waypoint type,
-		STRING: waypoint action script ("waypoint statement expression"),
-		STRING: waypoint condition
-		NUMBER: waypoint timeout
-		STRING: waypoint formation
-		NUMBER: waypoint completion radius
+		#0	NUMBER: waypoint index,
+		#1	POSITION: waypoint world position,
+		#2	BOOLEAN: waypoint disabled,
+		#3	STRING: waypoint type,
+		#4	STRING: waypoint action script ("waypoint statement expression"),
+		#5	STRING: waypoint condition
+		#6	NUMBER: waypoint timeout
+		#7	STRING: waypoint formation
+		#8	NUMBER: waypoint completion radius
+		#9	NUMBER: waypoint duration
+		#10	NUMBER: waypoint loiter waypointLoiterRadius
+		#11	STRING: waypoint loiter direction"
 	]
 
 	Returns: 
