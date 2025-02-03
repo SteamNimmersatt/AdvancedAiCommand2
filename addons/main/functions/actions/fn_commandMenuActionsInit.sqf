@@ -30,11 +30,6 @@ AIC_fnc_hasAircraftAssigned = {
 	params ["_groupControlId"];
 	private _group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 	
-	private _hasVehicleAssigned = call AIC_fnc_hasVehicleAssigned;
-	if (!_hasVehicleAssigned) exitWith {
-		false;
-	};
-	
 	private _hasAircraftAssigned = false;
 	{
 		if(_x isKindOf "Air") then {
@@ -247,19 +242,6 @@ AIC_fnc_setGroupFormationActionHandler = {
 
 */
 
-AIC_fnc_commandMenuIsAir = {
-	params ["_menuParams","_actionParams"];
-	_menuParams params ["_groupControlId"];
-	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
-	_hasAir = false;
-	{
-		if(_x isKindOf "Air") then {
-			_hasAir = true;
-		};
-	} forEach ([_group] call AIC_fnc_getGroupAssignedVehicles);
-	_hasAir;
-};
-
 AIC_fnc_setFlyInHeightActionHandler = {
 	params ["_menuParams","_actionParams"];
 	_menuParams params ["_groupControlId"];
@@ -274,18 +256,18 @@ AIC_fnc_setFlyInHeightActionHandler = {
 	hint ("Fly in height set to " + (str _height) + " meters");
 };
 
-["GROUP","10 meters",["Set Fly in Height"],AIC_fnc_setFlyInHeightActionHandler,[10],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
-["GROUP","25 meters",["Set Fly in Height"],AIC_fnc_setFlyInHeightActionHandler,[25],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
-["GROUP","50 meters",["Set Fly in Height"],AIC_fnc_setFlyInHeightActionHandler,[50],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
-["GROUP","100 meters",["Set Fly in Height"],AIC_fnc_setFlyInHeightActionHandler,[100],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
-["GROUP","250 meters",["Set Fly in Height"],AIC_fnc_setFlyInHeightActionHandler,[250],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
-["GROUP","500 meters",["Set Fly in Height"],AIC_fnc_setFlyInHeightActionHandler,[500],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
-["GROUP","750 meters",["Set Fly in Height"],AIC_fnc_setFlyInHeightActionHandler,[750],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
-["GROUP","1000 meters",["Set Fly in Height"],AIC_fnc_setFlyInHeightActionHandler,[1000],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
-["GROUP","1500 meters",["Set Fly in Height"],AIC_fnc_setFlyInHeightActionHandler,[1500],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
-["GROUP","2000 meters",["Set Fly in Height"],AIC_fnc_setFlyInHeightActionHandler,[2000],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;	
-["GROUP","2500 meters",["Set Fly in Height"],AIC_fnc_setFlyInHeightActionHandler,[2500],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
-["GROUP","3000 meters",["Set Fly in Height"],AIC_fnc_setFlyInHeightActionHandler,[3000],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
+["GROUP","10 meters",["Set Fly in Height"],AIC_fnc_setFlyInHeightActionHandler,[10],AIC_fnc_hasAircraftAssigned] call AIC_fnc_addCommandMenuAction;
+["GROUP","25 meters",["Set Fly in Height"],AIC_fnc_setFlyInHeightActionHandler,[25],AIC_fnc_hasAircraftAssigned] call AIC_fnc_addCommandMenuAction;
+["GROUP","50 meters",["Set Fly in Height"],AIC_fnc_setFlyInHeightActionHandler,[50],AIC_fnc_hasAircraftAssigned] call AIC_fnc_addCommandMenuAction;
+["GROUP","100 meters",["Set Fly in Height"],AIC_fnc_setFlyInHeightActionHandler,[100],AIC_fnc_hasAircraftAssigned] call AIC_fnc_addCommandMenuAction;
+["GROUP","250 meters",["Set Fly in Height"],AIC_fnc_setFlyInHeightActionHandler,[250],AIC_fnc_hasAircraftAssigned] call AIC_fnc_addCommandMenuAction;
+["GROUP","500 meters",["Set Fly in Height"],AIC_fnc_setFlyInHeightActionHandler,[500],AIC_fnc_hasAircraftAssigned] call AIC_fnc_addCommandMenuAction;
+["GROUP","750 meters",["Set Fly in Height"],AIC_fnc_setFlyInHeightActionHandler,[750],AIC_fnc_hasAircraftAssigned] call AIC_fnc_addCommandMenuAction;
+["GROUP","1000 meters",["Set Fly in Height"],AIC_fnc_setFlyInHeightActionHandler,[1000],AIC_fnc_hasAircraftAssigned] call AIC_fnc_addCommandMenuAction;
+["GROUP","1500 meters",["Set Fly in Height"],AIC_fnc_setFlyInHeightActionHandler,[1500],AIC_fnc_hasAircraftAssigned] call AIC_fnc_addCommandMenuAction;
+["GROUP","2000 meters",["Set Fly in Height"],AIC_fnc_setFlyInHeightActionHandler,[2000],AIC_fnc_hasAircraftAssigned] call AIC_fnc_addCommandMenuAction;	
+["GROUP","2500 meters",["Set Fly in Height"],AIC_fnc_setFlyInHeightActionHandler,[2500],AIC_fnc_hasAircraftAssigned] call AIC_fnc_addCommandMenuAction;
+["GROUP","3000 meters",["Set Fly in Height"],AIC_fnc_setFlyInHeightActionHandler,[3000],AIC_fnc_hasAircraftAssigned] call AIC_fnc_addCommandMenuAction;
 
 
 /*
@@ -976,18 +958,18 @@ _script = format ["[group this, %1] call AIC_fnc_setWaypointFlyInHeightActionHan
 	hint ("Waypoint fly in height set to " + (str _height) + " meters");
 };
 
-["WAYPOINT","10 meters",["Set Fly in Height"],AIC_fnc_setWaypointFlyInHeightActionHandler,[10],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
-["WAYPOINT","25 meters",["Set Fly in Height"],AIC_fnc_setWaypointFlyInHeightActionHandler,[25],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
-["WAYPOINT","50 meters",["Set Fly in Height"],AIC_fnc_setWaypointFlyInHeightActionHandler,[50],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
-["WAYPOINT","100 meters",["Set Fly in Height"],AIC_fnc_setWaypointFlyInHeightActionHandler,[100],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
-["WAYPOINT","250 meters",["Set Fly in Height"],AIC_fnc_setWaypointFlyInHeightActionHandler,[250],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
-["WAYPOINT","500 meters",["Set Fly in Height"],AIC_fnc_setWaypointFlyInHeightActionHandler,[500],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
-["WAYPOINT","750 meters",["Set Fly in Height"],AIC_fnc_setWaypointFlyInHeightActionHandler,[750],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
-["WAYPOINT","1000 meters",["Set Fly in Height"],AIC_fnc_setWaypointFlyInHeightActionHandler,[1000],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
-["WAYPOINT","1500 meters",["Set Fly in Height"],AIC_fnc_setWaypointFlyInHeightActionHandler,[1500],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
-["WAYPOINT","2000 meters",["Set Fly in Height"],AIC_fnc_setWaypointFlyInHeightActionHandler,[2000],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
-["WAYPOINT","2500 meters",["Set Fly in Height"],AIC_fnc_setWaypointFlyInHeightActionHandler,[2500],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
-["WAYPOINT","3000 meters",["Set Fly in Height"],AIC_fnc_setWaypointFlyInHeightActionHandler,[3000],AIC_fnc_commandMenuIsAir] call AIC_fnc_addCommandMenuAction;
+["WAYPOINT","10 meters",["Set Fly in Height"],AIC_fnc_setWaypointFlyInHeightActionHandler,[10],AIC_fnc_hasAircraftAssigned] call AIC_fnc_addCommandMenuAction;
+["WAYPOINT","25 meters",["Set Fly in Height"],AIC_fnc_setWaypointFlyInHeightActionHandler,[25],AIC_fnc_hasAircraftAssigned] call AIC_fnc_addCommandMenuAction;
+["WAYPOINT","50 meters",["Set Fly in Height"],AIC_fnc_setWaypointFlyInHeightActionHandler,[50],AIC_fnc_hasAircraftAssigned] call AIC_fnc_addCommandMenuAction;
+["WAYPOINT","100 meters",["Set Fly in Height"],AIC_fnc_setWaypointFlyInHeightActionHandler,[100],AIC_fnc_hasAircraftAssigned] call AIC_fnc_addCommandMenuAction;
+["WAYPOINT","250 meters",["Set Fly in Height"],AIC_fnc_setWaypointFlyInHeightActionHandler,[250],AIC_fnc_hasAircraftAssigned] call AIC_fnc_addCommandMenuAction;
+["WAYPOINT","500 meters",["Set Fly in Height"],AIC_fnc_setWaypointFlyInHeightActionHandler,[500],AIC_fnc_hasAircraftAssigned] call AIC_fnc_addCommandMenuAction;
+["WAYPOINT","750 meters",["Set Fly in Height"],AIC_fnc_setWaypointFlyInHeightActionHandler,[750],AIC_fnc_hasAircraftAssigned] call AIC_fnc_addCommandMenuAction;
+["WAYPOINT","1000 meters",["Set Fly in Height"],AIC_fnc_setWaypointFlyInHeightActionHandler,[1000],AIC_fnc_hasAircraftAssigned] call AIC_fnc_addCommandMenuAction;
+["WAYPOINT","1500 meters",["Set Fly in Height"],AIC_fnc_setWaypointFlyInHeightActionHandler,[1500],AIC_fnc_hasAircraftAssigned] call AIC_fnc_addCommandMenuAction;
+["WAYPOINT","2000 meters",["Set Fly in Height"],AIC_fnc_setWaypointFlyInHeightActionHandler,[2000],AIC_fnc_hasAircraftAssigned] call AIC_fnc_addCommandMenuAction;
+["WAYPOINT","2500 meters",["Set Fly in Height"],AIC_fnc_setWaypointFlyInHeightActionHandler,[2500],AIC_fnc_hasAircraftAssigned] call AIC_fnc_addCommandMenuAction;
+["WAYPOINT","3000 meters",["Set Fly in Height"],AIC_fnc_setWaypointFlyInHeightActionHandler,[3000],AIC_fnc_hasAircraftAssigned] call AIC_fnc_addCommandMenuAction;
 
 AIC_fnc_setWaypointDurationActionHandler = {
 	params ["_menuParams","_actionParams"];
