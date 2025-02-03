@@ -384,7 +384,9 @@ AIC_fnc_remoteControlActionHandler = {
 	AIC_Remote_Control_To_Unit_Event_Handler = _rcUnit addEventHandler ["HandleDamage", "[] call AIC_fnc_terminateRemoteControl; _this select 2;"];
 	AIC_Remote_Control_Delete_Handler = ["MAIN_DISPLAY","KeyDown", "if(_this select 1 == 211) then { [] call AIC_fnc_terminateRemoteControl; }"] call AIC_fnc_addEventHandler;
 	
-	BIS_fnc_feedback_allowPP = false;
+	// Disable effects (which might be active for the player at the time)
+	// DISABLED_BIS_fnc_feedback_allowPP = false; // TODO causes a warning, disabled for now
+	
 	selectPlayer _rcUnit;
 	(vehicle _rcUnit) switchCamera "External";
 	openMap false;
@@ -400,7 +402,10 @@ AIC_fnc_terminateRemoteControl = {
 	selectPlayer (missionNamespace getVariable ["AIC_Remote_Control_From_Unit",player]);
 	missionNamespace setVariable ["AIC_Remote_Control_From_Unit",nil];
 	(vehicle player) switchCamera cameraView;
-	BIS_fnc_feedback_allowPP = true;
+
+	// Enable effects again
+	// DISABLED_BIS_fnc_feedback_allowPP = true; // TODO causes a warning, disabled for now
+
 	["RemoteControl",["","Remote Control Terminated"]] call BIS_fnc_showNotification;
 };
 
@@ -905,7 +910,7 @@ AIC_fnc_setLoiterTypeActionHandler = {
 	};
 	[_group, _waypoint] call AIC_fnc_setWaypoint;
 	[_groupControlId,"REFRESH_WAYPOINTS",[]] call AIC_fnc_groupControlEventHandler;
-	_loiterTypeLabel = "loiter clockwise";
+	private _loiterTypeLabel = "loiter clockwise";
 	if(!_clockwise) then {
 		_loiterTypeLabel = "loiter counter clockwise";
 	};
@@ -964,7 +969,7 @@ AIC_fnc_setWaypointFlyInHeightActionHandler = {
 	private ["_group","_waypoint"];
 	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 	_waypoint = [_group, _waypointId] call AIC_fnc_getWaypoint;
-  _script = format ["[group this, %1] call AIC_fnc_setWaypointFlyInHeightActionHandlerScript",_height];
+_script = format ["[group this, %1] call AIC_fnc_setWaypointFlyInHeightActionHandlerScript",_height];
 	_waypoint set [4,_script];
 	_waypoint set [12,_height];
 	[_group, _waypoint] call AIC_fnc_setWaypoint;
