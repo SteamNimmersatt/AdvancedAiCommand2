@@ -16,6 +16,5 @@ parameters = [
     "-noSplash",
     "-nolauncher",
     "-nopause",
-    "-hugepages",
     "-world=empty"
 ]
