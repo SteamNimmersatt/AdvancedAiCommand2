@@ -23,8 +23,7 @@ AIC_INIT = true;
 
 params [["_autoConfigureCommanders",true]];
 
-diag_log "Initializing mod AdvancedAiCommand2.";
-//"Initializing mod." call AIC_fnc_log;  // TODO causes an error for some reason. Include problem?
+[AIC_LOGLEVEL_INFO, "Initializing mod."] call AIC_fnc_log;
 
 // Start up Advanced AI Command scripts
 [] call AIC_fnc_mapIconDefinitions;
@@ -49,17 +48,18 @@ _groupsModules = allMissionObjects "AdvancedAICommand_Groups";
 
 _configurationMode = "ALL_COMMANDERS_ALL_GROUPS";
 if(count _commandersModules > 0) then {
-	"Found modules of type 'AdvancedAICommand_Commanders'. Will configure these commanders." call AIC_fnc_log;
+	[AIC_LOGLEVEL_INFO, "Found modules of type 'AdvancedAICommand_Commanders'. Will configure these commanders."] call AIC_fnc_log;
+
 	if(count _groupsModules > 0) then {
-		"Found modules of type 'AdvancedAICommand_Groups'. Will assign the specific groups to the commanders." call AIC_fnc_log;
+		[AIC_LOGLEVEL_INFO, "Found modules of type 'AdvancedAICommand_Groups'. Will assign the specific groups to the commanders."] call AIC_fnc_log;
 		_configurationMode = "SPECIFIED_COMMANDERS_SPECIFIED_GROUPS"
 	} else {
-		"Found NO modules of type 'AdvancedAICommand_Groups'. Will assign all local-side groups to the commanders." call AIC_fnc_log;
+		[AIC_LOGLEVEL_INFO, "Found NO modules of type 'AdvancedAICommand_Groups'. Will assign all local-side groups to the commanders."] call AIC_fnc_log;
 		_configurationMode = "SPECIFIED_COMMANDERS_ALL_GROUPS"
 	};
 } else {
-	// "Could not find any modules of type 'AdvancedAICommand_Commanders'. Will make everyone a commander." call AIC_fnc_log; // TODO causes an error for some reason. Include problem?
 	// TODO: Respect future CBA setting.
+	[AIC_LOGLEVEL_INFO, "Could not find any modules of type 'AdvancedAICommand_Commanders'. Will make everyone a commander."] call AIC_fnc_log;
 };
 
 if(_configurationMode == "SPECIFIED_COMMANDERS_SPECIFIED_GROUPS") then {

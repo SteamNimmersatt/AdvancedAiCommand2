@@ -30,7 +30,7 @@ if (_typeName == "OBJECT") then {
 	}
 };
 if (isNil "_msgSender") exitWith {
-	format ["Invalid entity of type '%1' passed to fn_msgSideChat for side chat message '%2'.", typeName _entity, _msg] call AIC_fnc_log;
+	[AIC_LOGLEVEL_ERROR, format ["Invalid entity of type '%1' passed to fn_msgSideChat for side chat message '%2'.", typeName _entity, _msg]] call AIC_fnc_log;
 };
 
 // Give radio if not present

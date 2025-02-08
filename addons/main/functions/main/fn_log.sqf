@@ -12,7 +12,20 @@
 	
 */
 
-private ["_msg"];
-_msg = param [0];
+private _logLevelNumeric = param [0];
+private _msg = param [1];
 
-diag_log text format ["%1 - %2", "[AdvancedAiCommand2]", _msg];
+// TODO CBA setting
+private _logLevelSetting = 1;
+
+if (_logLevelNumeric < _logLevelSetting) exitWith {}; // Don't log if the message is below our current log level setting.
+
+private _logLevelText = switch (_logLevelNumeric) do {
+	case AIC_LOGLEVEL_DEBUG: {"DEBUG"};
+	case AIC_LOGLEVEL_INFO: {"INFO"};
+	case AIC_LOGLEVEL_WARNING: {"WARNING"};
+	case AIC_LOGLEVEL_ERROR: {"ERROR"};
+	default {"INVALID LOG LEVEL"};
+};
+
+diag_log text format ["%1 - %2 - %3", "[AdvancedAiCommand2]", _logLevelText, _msg];

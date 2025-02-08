@@ -17,11 +17,11 @@
 
 private _group = param [0, nil];
 if (isNil "_group") exitWith {
-	"ERROR - fn_setWaypoint was called a nil group argument." call AIC_fnc_log;
+	[AIC_LOGLEVEL_ERROR, "fn_setWaypoint was called with a nil group argument."] call AIC_fnc_log;
 };
 private _waypoint = param [1, nil];
 if (isNil "_waypoint") exitWith {
-	"ERROR - fn_setWaypoint was called with a nil waypoint arguent." call AIC_fnc_log;
+	[AIC_LOGLEVEL_ERROR, "fn_setWaypoint was called with a nil waypoint arguent."] call AIC_fnc_log;
 };
 
 private _waypointIndex = _waypoint select 0;

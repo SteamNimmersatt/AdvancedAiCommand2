@@ -81,18 +81,16 @@ if (_isHumanPlayer) then {
 			};
 
 			if (_index != -1) then {
-				// format["DEBUG - Updating existing count for Group '%1' to '%2'.", _groupId, _newCount] call AIC_fnc_log;
 				private _groupTrackingEntry = _groupTracking select _index;
 				_groupTrackingEntry set [1, _newCount]; // Update the count in the tracking entry (array of groupId, count)
 				_groupTracking set [_index, _groupTrackingEntry];
 			} else {
-				// format["DEBUG - Adding new count for Group '%1' to '%2'. Index is '%3'.", _groupId, _newCount, _index] call AIC_fnc_log;
 				private _groupTrackingEntry = [_groupId, _newCount];
 				_groupTracking pushBack _groupTrackingEntry;
 			};
 		};
 
-		// get the unit count for a group
+		// Get the unit count for a group
 		GetUnitCount = {
 			private _groupId = _this select 0;
 			private _result = -1;
@@ -129,9 +127,6 @@ if (_isHumanPlayer) then {
 					} forEach _units;
 
 					private _previousUnitCount = [_groupId] call GetUnitCount;
-
-					// format["DEBUG - Group '%1' had '%2' alive units before, now has '%3'.", _groupId, _previousUnitCount, _aliveUnitsCount] call AIC_fnc_log;
-
 					if (_aliveUnitsCount != _previousUnitCount) then {
 						[_groupId, _aliveUnitsCount] call UpdateUnitCount;
 						if (_previousUnitCount > _aliveUnitsCount) then {
@@ -150,7 +145,9 @@ if (isServer) then {
 	// Add new groups to command control
 	[] spawn {
 		_isAntistasiActive = isClass(configFile >> "CfgPatches" >> "A3A_core");
-		"Antistasi mod is loaded. Will not show civilian groups." call AIC_fnc_log;
+		if (_isAntistasiActive) then {
+			[AIC_LOGLEVEL_INFO, "Antistasi mod is loaded. Will not show civilian groups."] call AIC_fnc_log;
+		};
 
 		while { true } do {
 			{
@@ -246,8 +243,7 @@ if (isServer) then {
 							private _wpExactPlacement = -1;
 							private _wpObject = _group addWaypoint [_wpPosition, _wpExactPlacement];
 
-							format["DEBUG - The waypoint type is '%1'.", str _wpType] call AIC_fnc_log;
-
+							// Set waypoint type
 							_wpObject setWaypointType _wpType;
 
 							// The "_wpStatement" is the expression which will be executed when the "_wpStatementCondition" becomes true
@@ -278,7 +274,7 @@ if (isServer) then {
 							};
 
 							if (_wpType == "LOITER") then {
-								format["DEBUG - Setting up loiter waypoint. _wpLoiterRadius=%1, _wpLoiterDirection=%2.", _wpLoiterRadius, _wpLoiterDirection] call AIC_fnc_log;
+								[AIC_LOGLEVEL_DEBUG, format["Setting up loiter waypoint. _wpLoiterRadius=%1, _wpLoiterDirection=%2.", _wpLoiterRadius, _wpLoiterDirection]] call AIC_fnc_log;
 								if (!isNil "_wpLoiterRadius") then {
 									_wpObject setWaypointLoiterRadius _wpLoiterRadius;
 								};
@@ -289,7 +285,7 @@ if (isServer) then {
 
 							// Wp statement - do this at the end to ensure the statement includes everything.
 							_wpStatement = _wpStatement + _wpStatementOriginal;
-							format["DEBUG - Waypoint of type '%1' has condition '%2' and statement: '%3'.", _wpType, _wpStatementCondition, _wpStatement] call AIC_fnc_log;
+							[AIC_LOGLEVEL_DEBUG, format["Waypoint of type '%1' has condition '%2' and statement: '%3'.", _wpType, _wpStatementCondition, _wpStatement]] call AIC_fnc_log;
 							_wpObject setWaypointStatements [_wpStatementCondition, _wpStatement];
 						};
 					} forEach _groupControlWaypointArray;
@@ -302,10 +298,7 @@ if (isServer) then {
 
 				if (count _groupControlWaypointArray > 0) then {
 					private _nextActiveWaypoint = _groupControlWaypointArray select 0;
-
 					private _wpDuration = _nextActiveWaypoint select AIC_Waypoint_Array_Pos_Duration;
-
-					format["DEBUG - _nextActiveWaypoint array size: '%1'.", count _nextActiveWaypoint] call AIC_fnc_log;
 
 					if (_wpDuration > 0 && _group getVariable ["AIC_WP_DURATION_REMANING", 0] <= 0) then {
 						_group setVariable ["AIC_WP_DURATION_REMANING", _wpDuration];

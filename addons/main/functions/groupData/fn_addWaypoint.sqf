@@ -17,48 +17,23 @@
 
 AIC_fnc_initArrayItem = {
 	params ["_array", "_indexToInitialize", "_initializationValue"];
-
-	// TODO remove
-	format ["AIC_fnc_initArrayItem: Start. _indexToInitialize: '%1' _initializationValue: '%2'.", _indexToInitialize, _initializationValue] call AIC_fnc_log;
-
 	private _arrayLength = count _array;
 
 	if (_arrayLength > _indexToInitialize) then {
-
-		// TODO remove
-		"AIC_fnc_initArrayItem: Array is long enough to store item." call AIC_fnc_log;
-
 		private _item = _array select _indexToInitialize;
-
-		// TODO remove
-		format ["AIC_fnc_initArrayItem: Current value of _item: '%1'.", str _item] call AIC_fnc_log;
-		
 		if (isNil "_item") then {
-
-			// TODO remove
-			"AIC_fnc_initArrayItem: _item is null or nil." call AIC_fnc_log;
-			
 			_array set [_indexToInitialize, _initializationValue];
 		}
 	} else {
-
-		// TODO remove
-		"AIC_fnc_initArrayItem: Array is NOT long enough to store item." call AIC_fnc_log;
-
 		_array pushBack _initializationValue;
 		_array set [_indexToInitialize, _initializationValue];
 	};
-
 };
 
 AIC_fnc_addWaypointInitNilWaypointParams = {
 	params ["_waypointParams"];
-
 	private _arrayLength = count _waypointParams;
 	private _defaultVal = "";
-
-	// TODO remove
-	format ["addWaypointInitNilWaypointParams, _arrayLength: '%1', AIC_Waypoint_Array_Pos_Type: '%2'.", _arrayLength, AIC_Waypoint_Array_Pos_Type] call AIC_fnc_log;
 
 	private _wpDisabledDefaultVal = false;
 	[_waypointParams, AIC_Waypoint_Array_Pos_Disabled, _wpDisabledDefaultVal] call AIC_fnc_initArrayItem;
@@ -74,7 +49,6 @@ AIC_fnc_addWaypointInitNilWaypointParams = {
 
 	private _wpDurationDefaultVal = 0;
 	[_waypointParams, AIC_Waypoint_Array_Pos_Duration, _wpDurationDefaultVal] call AIC_fnc_initArrayItem;
-
 };
 
 
@@ -83,15 +57,15 @@ private _waypointParams = param [1];
 
 private _wpIndex = _waypointParams select AIC_Waypoint_Array_Pos_Index;
 if (!isNil "_wpIndex") exitWith {
-	private _msg = "ERROR - fn_addWaypoint was given a waypoint with index != nil (AIC_Waypoint_Array_Pos_Index). The index must be nil.";
-	_msg call AIC_fnc_log;
+	private _msg = "fn_addWaypoint was given a waypoint with index != nil (AIC_Waypoint_Array_Pos_Index). The index must be nil.";
+	[AIC_LOGLEVEL_ERROR, _msg] call AIC_fnc_log;
 	throw msg;
 };
 
 private _wpPosition = _waypointParams select AIC_Waypoint_Array_Pos_Position;
 if (isNil "_wpPosition") exitWith {
-	private _msg = "ERROR - fn_addWaypoint was given a waypoint params without a position (AIC_Waypoint_Array_Pos_Position).";
-	_msg call AIC_fnc_log;
+	private _msg = "fn_addWaypoint was given a waypoint params without a position (AIC_Waypoint_Array_Pos_Position).";
+	[AIC_LOGLEVEL_ERROR, _msg] call AIC_fnc_log;
 	throw msg;
 };
 
@@ -114,10 +88,7 @@ _allWaypointsArray pushBack _waypointParams;
 _revision = _revision + 1;
 _group setVariable ["AIC_Waypoints", [_revision, _allWaypointsArray], true];
 
-private _logMsg = "fn_addWaypoint added a waypoint.";
-_logMsg call AIC_fnc_log;
-
 private _logMsg = "fn_addWaypoint added a waypoint: " + ([_waypointParams] call AIC_fnc_toStringWaypoint);
-_logMsg call AIC_fnc_log;
+[AIC_LOGLEVEL_DEBUG, _logMsg] call AIC_fnc_log;
 
 _waypointParams;
