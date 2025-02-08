@@ -221,19 +221,19 @@ if (isServer) then {
 							// _x is an array of waypoint properties (see waypoint.h)
 							private _waypoint = _x;
 
-							private _wpIndex = _waypoint select AIC_Waypoint_Array_Pos_Index;
-							private _wpPosition = _waypoint select AIC_Waypoint_Array_Pos_Position;
-							private _wpDisabled = _waypoint select AIC_Waypoint_Array_Pos_Disabled;
-							private _wpType = _waypoint select AIC_Waypoint_Array_Pos_Type;
-							private _wpStatement = _waypoint select AIC_Waypoint_Array_Pos_Statement;
-							private _wpCondition = _waypoint select AIC_Waypoint_Array_Pos_Condition;
-							private _wpTimeout = _waypoint select AIC_Waypoint_Array_Pos_Timeout;
-							private _wpFormation = _waypoint select AIC_Waypoint_Array_Pos_Formation;
-							private _wpCompletionRadius = _waypoint select AIC_Waypoint_Array_Pos_CompletionRadius;
-							private _wpDuration = _waypoint select AIC_Waypoint_Array_Pos_Duration;
-							private _wpLoiterRadius = _waypoint select AIC_Waypoint_Array_Pos_LoiterRadius;
-							private _wpLoiterDirection = _waypoint select AIC_Waypoint_Array_Pos_LoiterDirection;
-							private _wpFlyInHeight = _waypoint select AIC_Waypoint_Array_Pos_FlyInHeight;
+							private _wpIndex = _waypoint select AIC_Waypoint_ArrayIndex_Index;
+							private _wpPosition = _waypoint select AIC_Waypoint_ArrayIndex_Position;
+							private _wpDisabled = _waypoint select AIC_Waypoint_ArrayIndex_Disabled;
+							private _wpType = _waypoint select AIC_Waypoint_ArrayIndex_Type;
+							private _wpStatement = _waypoint select AIC_Waypoint_ArrayIndex_Statement;
+							private _wpCondition = _waypoint select AIC_Waypoint_ArrayIndex_Condition;
+							private _wpTimeout = _waypoint select AIC_Waypoint_ArrayIndex_Timeout;
+							private _wpFormation = _waypoint select AIC_Waypoint_ArrayIndex_Formation;
+							private _wpCompletionRadius = _waypoint select AIC_Waypoint_ArrayIndex_CompletionRadius;
+							private _wpDuration = _waypoint select AIC_Waypoint_ArrayIndex_Duration;
+							private _wpLoiterRadius = _waypoint select AIC_Waypoint_ArrayIndex_LoiterRadius;
+							private _wpLoiterDirection = _waypoint select AIC_Waypoint_ArrayIndex_LoiterDirection;
+							private _wpFlyInHeight = _waypoint select AIC_Waypoint_ArrayIndex_FlyInHeight;
 
 							if (_wpDuration > 0) then {
 								_priorWaypointDurationEnabled = true;
@@ -298,7 +298,7 @@ if (isServer) then {
 
 				if (count _groupControlWaypointArray > 0) then {
 					private _nextActiveWaypoint = _groupControlWaypointArray select 0;
-					private _wpDuration = _nextActiveWaypoint select AIC_Waypoint_Array_Pos_Duration;
+					private _wpDuration = _nextActiveWaypoint select AIC_Waypoint_ArrayIndex_Duration;
 
 					if (_wpDuration > 0 && _group getVariable ["AIC_WP_DURATION_REMANING", 0] <= 0) then {
 						_group setVariable ["AIC_WP_DURATION_REMANING", _wpDuration];
@@ -308,7 +308,7 @@ if (isServer) then {
 					};
 					_group setVariable ["AIC_WP_DURATION_REMANING", (_group getVariable ["AIC_WP_DURATION_REMANING", 0]) - 2, true];
 					if (_wpDuration > 0 && _group getVariable ["AIC_WP_DURATION_REMANING", 0] <= 0) then {
-						_nextActiveWaypoint set [AIC_Waypoint_Array_Pos_Duration, 0];
+						_nextActiveWaypoint set [AIC_Waypoint_ArrayIndex_Duration, 0];
 						[_group, _nextActiveWaypoint] call AIC_fnc_setWaypoint;
 					};
 				};

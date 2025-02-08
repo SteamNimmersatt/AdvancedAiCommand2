@@ -37,7 +37,7 @@ if (isNil "_allWaypointsArray") exitWith {
 private _activeWaypoints = [];
 {
 	private _waypoint = _x;
-	private _isDisabled = _waypoint select AIC_Waypoint_Array_Pos_Disabled;
+	private _isDisabled = _waypoint select AIC_Waypoint_ArrayIndex_Disabled;
 	if (!_isDisabled) then {
 		_activeWaypoints pushBack _waypoint;
 	};

@@ -799,7 +799,7 @@ AIC_fnc_setWaypointFormationActionHandler = {
 	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 	_waypoint = [_group, _waypointId] call AIC_fnc_getWaypoint;
 	_actionParams params ["_mode"];
-	_waypoint set [AIC_Waypoint_Array_Pos_Formation,_mode];
+	_waypoint set [AIC_Waypoint_ArrayIndex_Formation,_mode];
 	[_group, _waypoint] call AIC_fnc_setWaypoint;
 	[_groupControlId,"REFRESH_WAYPOINTS",[]] call AIC_fnc_groupControlEventHandler;
 	hint ("Formation set to '" + _mode + "'.");
@@ -822,7 +822,7 @@ AIC_fnc_setWaypointTypeActionHandler = {
 	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 	_waypoint = [_group, _waypointId] call AIC_fnc_getWaypoint;
 	_actionParams params ["_type","_label"];
-	_waypoint set [AIC_Waypoint_Array_Pos_Type,_type];
+	_waypoint set [AIC_Waypoint_ArrayIndex_Type,_type];
 	[_group, _waypoint] call AIC_fnc_setWaypoint;
 	[_groupControlId,"REFRESH_WAYPOINTS",[]] call AIC_fnc_groupControlEventHandler;
 	hint ("Type set to '" + _label + "'.");
@@ -835,8 +835,8 @@ AIC_fnc_setWaypointTypeLandNearbyActionHandler = {
 	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 	_waypoint = [_group, _waypointId] call AIC_fnc_getWaypoint;
 	_actionParams params ["_label"];
-	_waypoint set [AIC_Waypoint_Array_Pos_Type,"MOVE"];
-	_waypoint set [AIC_Waypoint_Array_Pos_Statement,landActionScript];
+	_waypoint set [AIC_Waypoint_ArrayIndex_Type,"MOVE"];
+	_waypoint set [AIC_Waypoint_ArrayIndex_Statement,landActionScript];
 	[_group, _waypoint] call AIC_fnc_setWaypoint;
 	[_groupControlId,"REFRESH_WAYPOINTS",[]] call AIC_fnc_groupControlEventHandler;
 	hint ("Type set to '" + _label + "'.");
@@ -849,8 +849,8 @@ AIC_fnc_setWaypointTypeLandPreciseActionHandler = {
 	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 	_waypoint = [_group, _waypointId] call AIC_fnc_getWaypoint;
 	_actionParams params ["_label"];
-	_waypoint set [AIC_Waypoint_Array_Pos_Type, "MOVE"];
-	_waypoint set [AIC_Waypoint_Array_Pos_Statement, landActionScript];
+	_waypoint set [AIC_Waypoint_ArrayIndex_Type, "MOVE"];
+	_waypoint set [AIC_Waypoint_ArrayIndex_Statement, landActionScript];
 	
 	// Create invisible landing pad
 	private _waypointPosition = _waypoint select 1;
@@ -868,12 +868,12 @@ AIC_fnc_setLoiterTypeActionHandler = {
 	private ["_group","_waypoint"];
 	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 	_waypoint = [_group, _waypointId] call AIC_fnc_getWaypoint;
-	_waypoint set [AIC_Waypoint_Array_Pos_Type, "LOITER"];
-	_waypoint set [AIC_Waypoint_Array_Pos_LoiterRadius,_radius];
+	_waypoint set [AIC_Waypoint_ArrayIndex_Type, "LOITER"];
+	_waypoint set [AIC_Waypoint_ArrayIndex_LoiterRadius,_radius];
 	if(_clockwise) then {
-		_waypoint set [AIC_Waypoint_Array_Pos_LoiterDirection,"CIRCLE"];
+		_waypoint set [AIC_Waypoint_ArrayIndex_LoiterDirection,"CIRCLE"];
 	} else {
-		_waypoint set [AIC_Waypoint_Array_Pos_LoiterDirection,"CIRCLE_L"];
+		_waypoint set [AIC_Waypoint_ArrayIndex_LoiterDirection,"CIRCLE_L"];
 	};
 	[_group, _waypoint] call AIC_fnc_setWaypoint;
 	[_groupControlId,"REFRESH_WAYPOINTS",[]] call AIC_fnc_groupControlEventHandler;
@@ -936,7 +936,7 @@ AIC_fnc_setWaypointFlyInHeightActionHandler = {
 	private ["_group","_waypoint"];
 	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 	_waypoint = [_group, _waypointId] call AIC_fnc_getWaypoint;
-	_waypoint set [AIC_Waypoint_Array_Pos_FlyInHeight,_height];
+	_waypoint set [AIC_Waypoint_ArrayIndex_FlyInHeight,_height];
 	[_group, _waypoint] call AIC_fnc_setWaypoint;
 	hint ("Waypoint fly in height set to " + (str _height) + " meters");
 };
@@ -961,7 +961,7 @@ AIC_fnc_setWaypointDurationActionHandler = {
 	private ["_group","_waypoint"];
 	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 	_waypoint = [_group, _waypointId] call AIC_fnc_getWaypoint;
-	_waypoint set [AIC_Waypoint_Array_Pos_Duration, _duration * 60];
+	_waypoint set [AIC_Waypoint_ArrayIndex_Duration, _duration * 60];
 	[_group, _waypoint] call AIC_fnc_setWaypoint;
 	hint ("Waypoint duration set to " + (str _duration) + " mins");
 };
