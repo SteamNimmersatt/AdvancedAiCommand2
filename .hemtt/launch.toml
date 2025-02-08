@@ -10,11 +10,7 @@ workshop = [
 file_patching = true
 
 parameters = [
-    "-debug",
-    "-showScriptErrors",
-    "-skipIntro",
-    "-noSplash",
-    "-nolauncher",
+    "-noLauncher",
     "-nopause",
     "-world=empty"
 ]
