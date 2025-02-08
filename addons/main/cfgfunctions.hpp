@@ -26,6 +26,7 @@ class AICommand
 		class getAllWaypoints {description = "";};
 		class getWaypoint {description = "";};
 		class setWaypoint {description = "";};
+		class toStringWaypoint {description = "";};
 		class disableWaypoint {description = "";};
 		class disableAllWaypoints {description = "";};
 		class setGroupColor {description = "";};

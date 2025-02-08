@@ -20,6 +20,9 @@ private ["_group","_waypointIndex"];
 _group = param [0];
 _waypointIndex = param [1];
 
+private _logMsg = "fn_disableWaypoint - Disabling a waypoint. Index: " + str _waypointIndex;
+_logMsg call AIC_fnc_log;
+
 private ["_waypoint"];
 
 _waypoint = [_group, _waypointIndex] call AIC_fnc_getWaypoint;

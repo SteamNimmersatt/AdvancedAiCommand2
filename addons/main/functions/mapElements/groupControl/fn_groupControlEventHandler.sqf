@@ -80,7 +80,8 @@ if(isNil "_groupControlId") then {
 
 	if(_event == "LEFT_MOUSE_BUTTON_DOWN_MAP" ) then {
 		if(AIC_fnc_getGroupControlAddingWaypoints(_groupControlId)) then {
-			[_group, [(AIC_fnc_getMouseMapPosition()),false,"MOVE"]] call AIC_fnc_addWaypoint;
+			private _waypointParams = [nil, (AIC_fnc_getMouseMapPosition()), false, "MOVE"];
+			[_group, _waypointParams] call AIC_fnc_addWaypoint;
 			[_groupControlId,"REFRESH_WAYPOINTS",[]] call AIC_fnc_groupControlEventHandler;
 		};
 	};

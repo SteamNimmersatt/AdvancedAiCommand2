@@ -1,4 +1,4 @@
-#include "..\functions.h"
+#include "\z\aicommand2\addons\main\functions\functions.h"
 
 /*
 	Author: [SA] Duda

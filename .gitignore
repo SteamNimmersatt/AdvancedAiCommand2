@@ -5,3 +5,4 @@ hemtt
 /releases
 .aider.chat.history.md
 .aider*
+build_launch.sh

@@ -31,19 +31,6 @@ if!(_group in _groupsUnderCommand) then {
 	_groupsUnderCommand pushBack _group;
 	AIC_fnc_setCommandControlGroups(_commandId,_groupsUnderCommand);
 	
-	// Construct initial set of waypoints for group if they're not already created (for testing purposes)
-	/*
-	_allWaypoints = [_group] call AIC_fnc_getAllWaypoints;
-	_revision = _allWaypoints select 0;
-	if(_revision == 0) then {
-		{
-			if( _x select 1 > 0) then {
-				[_group, [getWPPos _x, false,"MOVE"]] call AIC_fnc_addWaypoint;
-			};
-		} forEach waypoints _group;
-	};
-	*/
-	
 };
 
 

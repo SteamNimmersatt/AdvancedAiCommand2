@@ -1,4 +1,4 @@
-#include "..\..\functions.h"
+#include "\z\aicommand2\addons\main\functions\functions.h"
 
 /*
 	Author: [SA] Duda
@@ -62,7 +62,6 @@ if (_isHumanPlayer) then {
 
 	// Group casualty reporting - TODO: move somewhere else
 	[] spawn {
-
 		// Array to track the number of units per group
 		_groupTracking = [];
 
@@ -82,18 +81,18 @@ if (_isHumanPlayer) then {
 			};
 
 			if (_index != -1) then {
-				//format["DEBUG - Updating existing count for Group '%1' to '%2'.", _groupId, _newCount] call AIC_fnc_log;
+				// format["DEBUG - Updating existing count for Group '%1' to '%2'.", _groupId, _newCount] call AIC_fnc_log;
 				private _groupTrackingEntry = _groupTracking select _index;
 				_groupTrackingEntry set [1, _newCount]; // Update the count in the tracking entry (array of groupId, count)
 				_groupTracking set [_index, _groupTrackingEntry];
 			} else {
-				//format["DEBUG - Adding new count for Group '%1' to '%2'. Index is '%3'.", _groupId, _newCount,_index] call AIC_fnc_log;
+				// format["DEBUG - Adding new count for Group '%1' to '%2'. Index is '%3'.", _groupId, _newCount, _index] call AIC_fnc_log;
 				private _groupTrackingEntry = [_groupId, _newCount];
 				_groupTracking pushBack _groupTrackingEntry;
 			};
 		};
 
-		// Get the unit count for a group
+		// get the unit count for a group
 		GetUnitCount = {
 			private _groupId = _this select 0;
 			private _result = -1;
@@ -110,9 +109,9 @@ if (_isHumanPlayer) then {
 			private _commandControls = AIC_fnc_getCommandControls();
 			{
 				private _commandControlId = _x;
-				
+
 				// Skip if not visible to the player
-				if(!AIC_fnc_getMapElementVisible(_commandControlId)) then {
+				if (!AIC_fnc_getMapElementVisible(_commandControlId)) then {
 					continue;
 				};
 
@@ -131,7 +130,7 @@ if (_isHumanPlayer) then {
 
 					private _previousUnitCount = [_groupId] call GetUnitCount;
 
-					//format["DEBUG - Group '%1' had '%2' alive units before, now has '%3'.", _groupId, _previousUnitCount, _aliveUnitsCount] call AIC_fnc_log;
+					// format["DEBUG - Group '%1' had '%2' alive units before, now has '%3'.", _groupId, _previousUnitCount, _aliveUnitsCount] call AIC_fnc_log;
 
 					if (_aliveUnitsCount != _previousUnitCount) then {
 						[_groupId, _aliveUnitsCount] call UpdateUnitCount;
@@ -204,72 +203,110 @@ if (isServer) then {
 	// Manage group waypoints
 	[] spawn {
 		while { true } do {
-			private ["_group", "_groupControl", "_lastWpRevision", "_groupWaypoints", "_groupControlWaypoints", "_currentWpRevision", "_groupControlWaypointArray", "_wp", "_wpType", "_waitForCode", "_wpActionScript", "_wpCondition", "_wpTimeout", "_wpStatementCondition", "_wpStatementExpression"];
 			{
-				_group = _x;
-				_lastWpRevision = _group getVariable ["AIC_Server_Last_Wp_Revision", 0];
-				_groupWaypoints = waypoints _group;
-				_groupControlWaypoints = [_group] call AIC_fnc_getAllActiveWaypoints;
-				_currentWpRevision = _groupControlWaypoints select 0;
-				_groupControlWaypointArray = _groupControlWaypoints select 1;
+				private _group = _x;
+				private _lastWpRevision = _group getVariable ["AIC_Server_Last_Wp_Revision", 0];
+				private _groupWaypoints = waypoints _group;
+				private _groupControlWaypoints = [_group] call AIC_fnc_getAllActiveWaypoints;
+				private _currentWpRevision = _groupControlWaypoints select 0;
+				private _groupControlWaypointArray = _groupControlWaypoints select 1;
+
 				if (_currentWpRevision != _lastWpRevision) then {
 					while { (count (waypoints _group)) > 0 } do {
 						deleteWaypoint ((waypoints _group) select 0);
 					};
-					private ["_priorWaypointDurationEnabled"];
-					_priorWaypointDurationEnabled = false;
+
+					private _priorWaypointDurationEnabled = false;
+
+					// Loop over the waypoints
 					{
 						if (!_priorWaypointDurationEnabled) then {
-							_x params ["_wpIndex", "_wpPosition", "_wpDisabled", ["_wpType", "MOVE"], ["_wpActionScript", ""], ["_wpCondition", "true"], "_wpTimeout", "_wpFormation", "_wpCompletionRadius", ["_wpDuration", 0], "_wpLoiterRadius", "_wpLoiterDirection"];
+							// _x is an array of waypoint properties (see waypoint.h)
+							private _waypoint = _x;
+
+							private _wpIndex = _waypoint select AIC_Waypoint_Array_Pos_Index;
+							private _wpPosition = _waypoint select AIC_Waypoint_Array_Pos_Position;
+							private _wpDisabled = _waypoint select AIC_Waypoint_Array_Pos_Disabled;
+							private _wpType = _waypoint select AIC_Waypoint_Array_Pos_Type;
+							private _wpStatement = _waypoint select AIC_Waypoint_Array_Pos_Statement;
+							private _wpCondition = _waypoint select AIC_Waypoint_Array_Pos_Condition;
+							private _wpTimeout = _waypoint select AIC_Waypoint_Array_Pos_Timeout;
+							private _wpFormation = _waypoint select AIC_Waypoint_Array_Pos_Formation;
+							private _wpCompletionRadius = _waypoint select AIC_Waypoint_Array_Pos_CompletionRadius;
+							private _wpDuration = _waypoint select AIC_Waypoint_Array_Pos_Duration;
+							private _wpLoiterRadius = _waypoint select AIC_Waypoint_Array_Pos_LoiterRadius;
+							private _wpLoiterDirection = _waypoint select AIC_Waypoint_Array_Pos_LoiterDirection;
+							private _wpFlyInHeight = _waypoint select AIC_Waypoint_Array_Pos_FlyInHeight;
+
 							if (_wpDuration > 0) then {
 								_priorWaypointDurationEnabled = true;
 							};
-							_wp = _group addWaypoint [_x select 1, 0];
 
-							_wpStatementCondition = format ["true && ((group this) getVariable ['AIC_WP_DURATION_REMANING', 0]) <= 0 && {
+							// Add waypoint object to group
+							private _wpExactPlacement = -1;
+							private _wpObject = _group addWaypoint [_wpPosition, _wpExactPlacement];
+
+							format["DEBUG - The waypoint type is '%1'.", str _wpType] call AIC_fnc_log;
+
+							_wpObject setWaypointType _wpType;
+
+							// The "_wpStatement" is the expression which will be executed when the "_wpStatementCondition" becomes true
+							private _wpStatementOriginal = _wpStatement; // we will append the given original statement at the end of this block
+							_wpStatement = "";
+							private _wpStatementCondition = format ["true && ((group this) getVariable ['AIC_WP_DURATION_REMANING', 0]) <= 0 && {
 								%1
 							}", _wpCondition];
-							_wpStatementExpression = "[group this, "+str (_x select 0)+"] call AIC_fnc_disableWaypoint;
-							";
 
-							if (_wpType == "SCRIPTED") then {
-								// In case of a wp of type "SCRIPTED" the "wpActionScript" is the path of the waypoint script to use.
-								_wp setWaypointScript _wpActionScript;
-							} else {
-								// For other wp types the "wpActionScript" is the waypoint statement expression.
-								_wpStatementExpression = _wpStatementExpression + _wpActionScript;
+							// Disable the waypoint internally in AAC2 as soon as it has been fulfilled
+							private _disableWaypointStatement = format["[group this, %1] call AIC_fnc_disableWaypoint;
+							", _wpIndex];
+							_wpStatement = _wpStatement + _disableWaypointStatement;
+
+							if (!isNil "_wpFlyInHeight") then {
+								private _flyInHeightStatement = format ["[group this, %1] call AIC_fnc_setWaypointFlyInHeightActionHandlerScript;
+								", _wpFlyInHeight];
+								_wpStatement = _wpStatement + _flyInHeightStatement;
 							};
-
-							_wp setWaypointStatements [_wpStatementCondition, _wpStatementExpression];
-
-							_wp setWaypointType _wpType;
 							if (!isNil "_wpTimeout") then {
-								_wp setWaypointTimeout [_wpTimeout, _wpTimeout, _wpTimeout];
+								_wpObject setWaypointTimeout [_wpTimeout, _wpTimeout, _wpTimeout];
 							};
 							if (!isNil "_wpFormation") then {
-								_wp setWaypointFormation _wpFormation;
+								_wpObject setWaypointFormation _wpFormation;
 							};
 							if (!isNil "_wpCompletionRadius") then {
-								_wp setWaypointCompletionRadius _wpCompletionRadius;
+								_wpObject setWaypointCompletionRadius _wpCompletionRadius;
 							};
-							if (!isNil "_wpLoiterRadius") then {
-								_wp setWaypointLoiterRadius _wpLoiterRadius;
+
+							if (_wpType == "LOITER") then {
+								format["DEBUG - Setting up loiter waypoint. _wpLoiterRadius=%1, _wpLoiterDirection=%2.", _wpLoiterRadius, _wpLoiterDirection] call AIC_fnc_log;
+								if (!isNil "_wpLoiterRadius") then {
+									_wpObject setWaypointLoiterRadius _wpLoiterRadius;
+								};
+								if (!isNil "_wpLoiterDirection") then {
+									_wpObject setWaypointLoiterType _wpLoiterDirection;
+								};
 							};
-							if (!isNil "_wpLoiterDirection") then {
-								_wp setWaypointLoiterType _wpLoiterDirection;
-							};
+
+							// Wp statement - do this at the end to ensure the statement includes everything.
+							_wpStatement = _wpStatement + _wpStatementOriginal;
+							format["DEBUG - Waypoint of type '%1' has condition '%2' and statement: '%3'.", _wpType, _wpStatementCondition, _wpStatement] call AIC_fnc_log;
+							_wpObject setWaypointStatements [_wpStatementCondition, _wpStatement];
 						};
 					} forEach _groupControlWaypointArray;
+
 					if (count (waypoints _group)==0) then {
 						_group addWaypoint [position leader _group, 0];
 					};
 					_group setVariable ["AIC_Server_Last_Wp_Revision", _currentWpRevision];
 				};
 
-				private ["_nextActiveWaypoint"];
 				if (count _groupControlWaypointArray > 0) then {
-					_nextActiveWaypoint = _groupControlWaypointArray select 0;
-					_nextActiveWaypoint params ["_wpIndex", "_wpPosition", "_wpDisabled", ["_wpType", "MOVE"], ["_wpActionScript", ""], ["_wpCondition", "true"], "_wpTimeout", "_wpFormation", "_wpCompletionRadius", ["_wpDuration", 0], "_wpLoiterRadius", "_wpLoiterDirection"];
+					private _nextActiveWaypoint = _groupControlWaypointArray select 0;
+
+					private _wpDuration = _nextActiveWaypoint select AIC_Waypoint_Array_Pos_Duration;
+
+					format["DEBUG - _nextActiveWaypoint array size: '%1'.", count _nextActiveWaypoint] call AIC_fnc_log;
+
 					if (_wpDuration > 0 && _group getVariable ["AIC_WP_DURATION_REMANING", 0] <= 0) then {
 						_group setVariable ["AIC_WP_DURATION_REMANING", _wpDuration];
 					};
@@ -278,13 +315,13 @@ if (isServer) then {
 					};
 					_group setVariable ["AIC_WP_DURATION_REMANING", (_group getVariable ["AIC_WP_DURATION_REMANING", 0]) - 2, true];
 					if (_wpDuration > 0 && _group getVariable ["AIC_WP_DURATION_REMANING", 0] <= 0) then {
-						_nextActiveWaypoint set [9, 0];
+						_nextActiveWaypoint set [AIC_Waypoint_Array_Pos_Duration, 0];
 						[_group, _nextActiveWaypoint] call AIC_fnc_setWaypoint;
 					};
 				};
 			} forEach allGroups;
+
 			sleep 2;
 		};
 	};
-
 };

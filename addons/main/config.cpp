@@ -8,7 +8,7 @@ class CfgPatches
 	};
 };
 
-class cfgFunctions {
+class CfgFunctions {
 	#include "cfgfunctions.hpp"
 	#include "cfgfunctionsaddon.hpp"
 };

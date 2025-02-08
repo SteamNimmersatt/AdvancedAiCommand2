@@ -1,4 +1,4 @@
-#include "functions.h"
+#include "\z\aicommand2\addons\main\functions\functions.h"
 
 /*
 	Author: [SA] Duda
@@ -23,6 +23,9 @@ AIC_INIT = true;
 
 params [["_autoConfigureCommanders",true]];
 
+diag_log "Initializing mod AdvancedAiCommand2.";
+//"Initializing mod." call AIC_fnc_log;  // TODO causes an error for some reason. Include problem?
+
 // Start up Advanced AI Command scripts
 [] call AIC_fnc_mapIconDefinitions;
 [] call AIC_fnc_commandControlManager;
@@ -46,13 +49,17 @@ _groupsModules = allMissionObjects "AdvancedAICommand_Groups";
 
 _configurationMode = "ALL_COMMANDERS_ALL_GROUPS";
 if(count _commandersModules > 0) then {
+	"Found modules of type 'AdvancedAICommand_Commanders'. Will configure these commanders." call AIC_fnc_log;
 	if(count _groupsModules > 0) then {
-		// Specific commanders assigned to specific groups
+		"Found modules of type 'AdvancedAICommand_Groups'. Will assign the specific groups to the commanders." call AIC_fnc_log;
 		_configurationMode = "SPECIFIED_COMMANDERS_SPECIFIED_GROUPS"
 	} else {
-		// Specific commanders assigned to all local-side groups
+		"Found NO modules of type 'AdvancedAICommand_Groups'. Will assign all local-side groups to the commanders." call AIC_fnc_log;
 		_configurationMode = "SPECIFIED_COMMANDERS_ALL_GROUPS"
 	};
+} else {
+	// "Could not find any modules of type 'AdvancedAICommand_Commanders'. Will make everyone a commander." call AIC_fnc_log; // TODO causes an error for some reason. Include problem?
+	// TODO: Respect future CBA setting.
 };
 
 if(_configurationMode == "SPECIFIED_COMMANDERS_SPECIFIED_GROUPS") then {
