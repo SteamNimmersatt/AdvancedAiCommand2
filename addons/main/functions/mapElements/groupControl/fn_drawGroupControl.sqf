@@ -31,7 +31,7 @@ AIC_fnc_setInteractiveIconPosition(_icon,_groupPosition);
 
 // Draw the interactive icon at the group's position
 
-[_icon] call AIC_fnc_drawInteractiveIcon;
+[_icon, _group] call AIC_fnc_drawInteractiveIcon;
 
 // Draw waypoints
 
