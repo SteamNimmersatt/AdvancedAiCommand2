@@ -31,47 +31,53 @@ private _iconMapHeight = _iconProperties select 4;
 private _iconShadow = _iconProperties select 5;
 private _iconColor = _iconProperties select 6;
 
-private _iconTextFont = "PuristaLight";
-private _iconTextSize = 0.05;
-private _iconTextAlignment = "right";
 
 
-// If the icon is a group selector icon ("circle around nato icon"), draw the name of the group next to it.
-private _iconText = "";
-private _isGroupSelectorIcon = "group_selector" in (str _iconImage);
-if (_isGroupSelectorIcon) then {
-	_iconText = _groupId;
+[AIC_LOGLEVEL_INFO, format["drawMapIcon - _iconText='%1', _isInForeground='%2', _isGroupSelectorIcon='%3', _iconImage='%4'", str _iconText, str _isInForeground, str _isGroupSelectorIcon, str _iconImage]] call AIC_fnc_log;
+
+// Draw icons softer?
+if (!_isInForeground ) then {
+	_iconColor = [_iconColor select 0, _iconColor select 1, _iconColor select 2, (_iconColor select 3) * 0.5];
 };
 
-// _iconId contains "GROUP_ICON" ?
+// Draw the icon
+AIC_MAP_CONTROL drawIcon [
+	_iconImage,
+	_iconColor,
+	_iconPosition,
+	_iconWidth,
+	_iconHeight,
+	0, // angle
+	"", // text next to the icon
+	_iconShadow
+];
 
-if (_isInForeground) then {
+// Draw the name of the group next to the icon
+private _isGroupSelectorIcon = "group_selector" in (str _iconImage); // "group selector icon" = circle around nato icon
+private _isMarkerIcon = "marker" in (str _iconImage); // nato style marker icon
+if (_isMarkerIcon) then {
+	private _text = _groupId;
+	private _font = "PuristaLight";
+	private _textSize = 0.05;
+	private _textAlignment = "right";
+	//private _positionX = (_iconPosition select 0) + (_iconWidth / 2);
+	private _positionX = (_iconPosition select 0) + 10;
+	private _positionY = (_iconPosition select 1);
+	private _position = [_positionX, _positionY];
+	private _color = [_iconColor select 0, _iconColor select 1, _iconColor select 2, 1]; // Same color as icon but fully opaque.
+	private _shadow = 2; // outline around text
+
 	AIC_MAP_CONTROL drawIcon [
-		_iconImage,
-		_iconColor,
-		_iconPosition,
-		_iconWidth,
-		_iconHeight,
-		0, // angle
-		_iconText,
-		_iconShadow,
-		_iconTextSize,
-		_iconTextFont,
-		_iconTextAlignment
-	];
-} else {
-	private _iconColorMod = [_iconColor select 0, _iconColor select 1, _iconColor select 2, (_iconColor select 3) * 0.5];
-	AIC_MAP_CONTROL drawIcon [
-		_iconImage,
-		_iconColorMod,
-		_iconPosition,
-		_iconWidth,
-		_iconHeight,
-		0, // angle
-		_iconText,
-		_iconShadow,
-		_iconTextSize,
-		_iconTextFont,
-		_iconTextAlignment
-	];
-};
+			"#(rgb,1,1,1)color(1,1,1,1)",
+			_color, // green: [0,1,0,1],
+			_position,
+			0,
+			0,
+			0,
+			_text,
+			2, // shadow. 2=outline around text
+			_textSize,
+			_font,
+			_textAlignment
+		]
+}
