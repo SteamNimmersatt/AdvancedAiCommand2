@@ -32,9 +32,6 @@ private _iconShadow = _iconProperties select 5;
 private _iconColor = _iconProperties select 6;
 
 
-
-[AIC_LOGLEVEL_INFO, format["drawMapIcon - _iconText='%1', _isInForeground='%2', _isGroupSelectorIcon='%3', _iconImage='%4'", str _iconText, str _isInForeground, str _isGroupSelectorIcon, str _iconImage]] call AIC_fnc_log;
-
 // Draw icons softer?
 if (!_isInForeground ) then {
 	_iconColor = [_iconColor select 0, _iconColor select 1, _iconColor select 2, (_iconColor select 3) * 0.5];
