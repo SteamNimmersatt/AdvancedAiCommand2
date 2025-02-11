@@ -18,10 +18,10 @@ https://steamcommunity.com/sharedfiles/filedetails/?id=3250858334
 
 ## Editing code while Arma3 is running
 * Run the game via "hemtt launch" (Windows: "hemtt.exe launch")
-** This will create a symbolic link in the Arma3 game directory to the source code of the git repository.
-** It will build the mod and run the game as defined in the settings in "hemtt/launch.toml".
-* After a code change you need to restart the mission to see the change. (The game will recompile the functions because we've defined "recompile = 1" on each class/function definition.
-** You need to restart the game if you've added any files. You will also need to restart in some other special cases like new addon settings.
+  * This will create a symbolic link in the Arma3 game directory to the source code of the git repository.
+  * It will build the mod and run the game as defined in "hemtt/launch.toml".
+* After a code change you need to restart the mission to see the change.
+  * You need to restart the game if you've added any files. You will also need to restart in some other special cases like new addon settings.
 
 ---
 
