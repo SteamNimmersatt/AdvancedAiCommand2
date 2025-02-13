@@ -4,6 +4,27 @@ https://steamcommunity.com/sharedfiles/filedetails/?id=3250858334
 
 ---
 
+# Development
+
+## Initial setup
+* Download [hemtt]([https://www.google.com](https://github.com/BrettMayson/HEMTT/releases)) and place it in the root directory of the git repository.
+* Subscribe to the development mods listed in file "hemtt/launch.toml", section "workshop".
+
+## Building the mod
+* Run "hemtt dev" (Windows: "hemtt.exe dev") to create a dev build.
+* Run "hemtt release" to create a signed release build.
+* See the [full hemtt documentation](https://hemtt.dev/) for more information.
+
+
+## Editing code while Arma3 is running
+* Run the game via "hemtt launch" (Windows: "hemtt.exe launch")
+  * This will create a symbolic link in the Arma3 game directory to the source code of the git repository.
+  * It will build the mod and run the game as defined in "hemtt/launch.toml".
+* After a code change you need to restart the mission to see the change.
+  * You need to restart the game if you've added any files. You will also need to restart in some other special cases like new addon settings.
+
+---
+
 The MIT License (MIT)
 
 Copyright (c) 2016 Seth Duda
