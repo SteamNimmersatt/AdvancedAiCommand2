@@ -21,7 +21,7 @@ private _allWaypointsContainer = _group getVariable ["AIC_Waypoints",[0,[]]];
 
 if (count _allWaypointsContainer < 1) then {
 	private _errorMsg = "ERROR - fn_getAllActiveWaypoints encountered an empty _allWaypointsContainer array.";
-	_errorMsg call AIC_fnc_log;
+	[AIC_LOGLEVEL_ERROR, _errorMsg] call AIC_fnc_log;
 	throw _errorMsg;
 };
 
@@ -30,7 +30,7 @@ private _allWaypointsArray = _allWaypointsContainer select 1;
 
 if (isNil "_allWaypointsArray") exitWith {
 	private _errorMsg = "ERROR - fn_getAllActiveWaypoints - _allWaypointsArray is nil.";
-	_errorMsg call AIC_fnc_log;
+	[AIC_LOGLEVEL_ERROR, _errorMsg] call AIC_fnc_log;
 	throw _errorMsg;
 };
 
