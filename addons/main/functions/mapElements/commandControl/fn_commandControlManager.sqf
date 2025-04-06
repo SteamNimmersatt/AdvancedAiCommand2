@@ -60,8 +60,17 @@ if (_isHumanPlayer) then {
 		};
 	};
 
-	// Group casualty reporting - TODO: move somewhere else
+	// Group casualty reporting
+	// TODO: currently disabled because it also reports despawning units. Annoying e.g. for Antistasi.
+	// TODO: move somewhere else
 	[] spawn {
+
+		// TODO: currently disabled because it also reports despawning units. Annoying e.g. for Antistasi.
+		while { true } do {
+			sleep 9999999;
+		};
+
+
 		// Array to track the number of units per group
 		_groupTracking = [];
 
