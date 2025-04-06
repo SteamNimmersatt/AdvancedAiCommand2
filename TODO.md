@@ -1,3 +1,4 @@
+- Waypoint "seek & destroy". Set units to "open fire" (combat mode red) when waypoint is reached.
 - Drongos Air Operations: Show warning? Hide units in aircraft?
 - Unload Warning (does not work with human players)
 - Option to only show HC groups 
