@@ -1,5 +1,5 @@
-- Unload - Precise / Nearby
-- Unload Warning (does not with humans)
+- Drongos Air Operations: Show warning? Hide units in aircraft?
+- Unload Warning (does not work with human players)
 - Option to only show HC groups 
 - Special Color / Symbol for squads with human players? Or maybe name of players under icon?
 - Rearm
