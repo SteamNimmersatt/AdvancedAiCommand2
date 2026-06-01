@@ -31,8 +31,7 @@ for "_fieldIndex" from 0 to (_arrayLength - 1) do {
 		case AIC_Waypoint_ArrayIndex_Duration: {"Duration"};
 		case AIC_Waypoint_ArrayIndex_LoiterRadius: {"LoiterRadius"};
 		case AIC_Waypoint_ArrayIndex_LoiterDirection: {"LoiterDirection"};
-		case AIC_Waypoint_ArrayIndex_FlyInHeight: {"FlyInHeight"};
-				case AIC_Waypoint_ArrayIndex_FlyInHeightAsl: {"FlyInHeightAsl"};
+		case AIC_Waypoint_ArrayIndex_FlyInHeightAsl: {"FlyInHeightAsl"};
 				default {""};
 	};
 	_logString = _logString + format ["%1='%2'. ", _fieldName, _waypoint select _fieldIndex];

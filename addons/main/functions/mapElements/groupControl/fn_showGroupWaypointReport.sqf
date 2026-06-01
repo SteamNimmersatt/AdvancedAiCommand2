@@ -20,12 +20,8 @@ if(_wpDuration > 0) then {
 	_wpInfo = _wpInfo + format [_textSmall,"Duration (mins)", (str floor (_wpDuration/60)) ,_sizeSmall];
 };
 
-if(!isNil "_wpFlyInHeight") then {
-	_wpInfo = _wpInfo + format [_textSmall,"Height (meters, AGL)", _wpFlyInHeight,_sizeSmall];
-};
-
 if(!isNil "_wpFlyInHeightAsl") then {
-	_wpInfo = _wpInfo + format [_textSmall,"Height (meters, ASL)", _wpFlyInHeightAsl,_sizeSmall];
+	_wpInfo = _wpInfo + format [_textSmall,"Height (meters ASL)", _wpFlyInHeightAsl,_sizeSmall];
 };
 
 _text = parseText (

@@ -268,16 +268,10 @@ if (isServer) then {
 							", _wpIndex];
 							_wpStatement = _wpStatement + _disableWaypointStatement;
 
-							if (!isNil "_wpFlyInHeight" && isNil "_wpFlyInHeightAsl") then {
-									private _flyInHeightStatement = format ["[group this, %1] call AIC_fnc_setWaypointFlyInHeightAglActionHandlerScript;
-    ", _wpFlyInHeight];
-									_wpStatement = _wpStatement + _flyInHeightStatement;
-								};
-								if (!isNil "_wpFlyInHeightAsl" && isNil "_wpFlyInHeight") then {
-									private _flyInHeightAslStatement = format ["[group this, %1] call AIC_fnc_setWaypointFlyInHeightAslActionHandlerScript;
-    ", _wpFlyInHeightAsl];
-									_wpStatement = _wpStatement + _flyInHeightAslStatement;
-								};
+							// Always use ASL — flyInHeightASL is dominant (flyInHeight=10 is just a subordinate floor)
+														private _flyInHeightStatement = format ["[group this, %1] call AIC_fnc_setWaypointFlyInHeightActionHandlerScript;
+							    ", _wpFlyInHeightAsl];
+														_wpStatement = _wpStatement + _flyInHeightStatement;
 							if (!isNil "_wpTimeout") then {
 								_wpObject setWaypointTimeout [_wpTimeout, _wpTimeout, _wpTimeout];
 							};
@@ -327,27 +321,17 @@ if (isServer) then {
 						[_group, _nextActiveWaypoint] call AIC_fnc_setWaypoint;
 					};
 
-					// Store altitude for fallback in case waypoints are lost
-					private _wpFlyInHeight = _nextActiveWaypoint select AIC_Waypoint_ArrayIndex_FlyInHeight;
-					private _wpFlyInHeightAsl = _nextActiveWaypoint select AIC_Waypoint_ArrayIndex_FlyInHeightAsl;
-					if (!isNil "_wpFlyInHeight" && isNil "_wpFlyInHeightAsl") then {
-						_group setVariable ["AIC_Last_FlyInHeight", _wpFlyInHeight];
-						_group setVariable ["AIC_Last_FlyInHeightAsl", nil];
-					};
-					if (!isNil "_wpFlyInHeightAsl" && isNil "_wpFlyInHeight") then {
-						_group setVariable ["AIC_Last_FlyInHeightAsl", _wpFlyInHeightAsl];
-						_group setVariable ["AIC_Last_FlyInHeight", nil];
-					};
-				} else {
-					// No waypoints: apply last stored altitude if available (fallback before losing waypoint)
-					private _lastFlyInHeight = _group getVariable ["AIC_Last_FlyInHeight", nil];
-					private _lastFlyInHeightAsl = _group getVariable ["AIC_Last_FlyInHeightAsl", nil];
-					if (!isNil "_lastFlyInHeight" && isNil "_lastFlyInHeightAsl") then {
-						[_group, _lastFlyInHeight] call AIC_fnc_setWaypointFlyInHeightAglActionHandlerScript;
-					};
-					if (!isNil "_lastFlyInHeightAsl" && isNil "_lastFlyInHeight") then {
-						[_group, _lastFlyInHeightAsl] call AIC_fnc_setWaypointFlyInHeightAslActionHandlerScript;
-					};
+					// Store altitude for fallback (always ASL)
+											private _wpFlyInHeightAsl = _nextActiveWaypoint select AIC_Waypoint_ArrayIndex_FlyInHeightAsl;
+											if (!isNil "_wpFlyInHeightAsl") then {
+												_group setVariable ["AIC_Last_FlyInHeightAsl", _wpFlyInHeightAsl];
+											};
+										} else {
+											// No waypoints: apply last stored ASL altitude if available
+											private _lastFlyInHeightAsl = _group getVariable ["AIC_Last_FlyInHeightAsl", nil];
+											if (!isNil "_lastFlyInHeightAsl") then {
+												[_group, _lastFlyInHeightAsl] call AIC_fnc_setWaypointFlyInHeightActionHandlerScript;
+											};
 				};
 			} forEach allGroups;
 
