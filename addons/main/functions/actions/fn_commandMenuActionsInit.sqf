@@ -263,8 +263,11 @@ AIC_fnc_setFlyInHeightAslActionHandler = {
 	_actionParams params ["_height"];
 	{
 		if(_x isKindOf "Air") then {
-			[_x, 10] remoteExec ["flyInHeight", _x]; // set to a low value because arma will use the higher value of flyInHeight and flyInHeightASL -- this ensures ASL is the dominant mode.
-			[_x, [_height, _height, _height]] remoteExec ["flyInHeightASL", _x];
+			[{
+				params ["_v","_h"];
+				_v flyInHeightASL [_h, _h, _h];
+				_v flyInHeight 100;
+			}, [_x, _height], _x] remoteExec ["call", _x];
 		};
 	} forEach ([_group] call AIC_fnc_getGroupAssignedVehicles);
 	hint ("Fly in height set to " + (str _height) + " meters above sea level");
@@ -1008,13 +1011,16 @@ private _labelLandPrecise = "Land precisely (as close as possible)";
 // Only ASL — flyInHeight=10 (subordinate), flyInHeightASL=[_height,_height,_height] (dominant)
 // Arma uses max(flyInHeight, flyInHeightASL) so ASL wins at any height > 10
 AIC_fnc_setWaypointFlyInHeightActionHandlerScript = {
-	params ["_group","_height"]; 
- 	{ 
- 		if(_x isKindOf "Air") then { 
- 			[_x, 10] remoteExec ["flyInHeight", _x];
- 			[_x, [_height, _height, _height]] remoteExec ["flyInHeightASL", _x];
- 		};
- 	} forEach ([_group] call AIC_fnc_getGroupAssignedVehicles);
+	params ["_group","_height"];
+	{
+		if(_x isKindOf "Air") then {
+			[{
+				params ["_v","_h"];
+				_v flyInHeightASL [_h, _h, _h];
+				_v flyInHeight 100;
+			}, [_x, _height], _x] remoteExec ["call", _x];
+		};
+	} forEach ([_group] call AIC_fnc_getGroupAssignedVehicles);
 };
 
 AIC_fnc_setWaypointFlyInHeightActionHandler = {
@@ -1029,6 +1035,9 @@ AIC_fnc_setWaypointFlyInHeightActionHandler = {
 	_waypoint set [AIC_Waypoint_ArrayIndex_FlyInHeight, nil];
 	_waypoint set [AIC_Waypoint_ArrayIndex_FlyInHeightAsl, _height];
 	[_group, _waypoint] call AIC_fnc_setWaypoint;
+	// Stamp the native Arma loiter altitude so the engine does not override flyInHeightASL on loiter entry
+	private _wpIndex = _waypoint select AIC_Waypoint_ArrayIndex_Index;
+	[_group, _wpIndex] setWaypointLoiterAltitude _height;
 	// Apply altitude to aircraft immediately
 	[_group, _height] call AIC_fnc_setWaypointFlyInHeightActionHandlerScript;
 	hint ("Waypoint fly in height set to " + (str _height) + "m ASL");

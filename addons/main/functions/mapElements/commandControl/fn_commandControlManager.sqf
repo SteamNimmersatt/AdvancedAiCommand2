@@ -268,12 +268,13 @@ if (isServer) then {
 							", _wpIndex];
 							_wpStatement = _wpStatement + _disableWaypointStatement;
 
-							// Only inject fly-in-height statement if altitude is actually set on this waypoint
-														if (!isNil "_wpFlyInHeightAsl") then {
-															private _flyInHeightStatement = format ["[group this, %1] call AIC_fnc_setWaypointFlyInHeightActionHandlerScript;
-							    ", _wpFlyInHeightAsl];
-															_wpStatement = _wpStatement + _flyInHeightStatement;
-														};
+							// Stamp the native loiter altitude now so the engine does not override flyInHeightASL on loiter entry
+								if (!isNil "_wpFlyInHeightAsl") then {
+									_wpObject setWaypointLoiterAltitude _wpFlyInHeightAsl;
+									private _flyInHeightStatement = format ["[group this, %1] call AIC_fnc_setWaypointFlyInHeightActionHandlerScript;
+							", _wpFlyInHeightAsl];
+									_wpStatement = _wpStatement + _flyInHeightStatement;
+								};
 							if (!isNil "_wpTimeout") then {
 								_wpObject setWaypointTimeout [_wpTimeout, _wpTimeout, _wpTimeout];
 							};
