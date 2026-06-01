@@ -49,6 +49,22 @@ if( _event == "DROPPED" ) then {
 	_position = _params select 0;
 	_waypoint set [1,_position];
 	[_group, _waypoint] call AIC_fnc_setWaypoint;
+
+	// Apply altitude immediately on waypoint move (fallback to internal if no altitude set)
+	private _wpFlyInHeight = _waypoint select AIC_Waypoint_ArrayIndex_FlyInHeight;
+	private _wpFlyInHeightAsl = _waypoint select AIC_Waypoint_ArrayIndex_FlyInHeightAsl;
+	if (isNil "_wpFlyInHeight" && isNil "_wpFlyInHeightAsl") then {
+		// No altitude set - use internal defaults (250 AGL / 250 ASL)
+		{ if (_x isKindOf "Air") then { [_x, 10] remoteExec ["flyInHeight", _x]; [_x, [10,10,10]] remoteExec ["flyInHeightASL", _x]; }; } forEach ([_group] call AIC_fnc_getGroupAssignedVehicles);
+	} else {
+		if (!isNil "_wpFlyInHeight" && isNil "_wpFlyInHeightAsl") then {
+			[_group, _wpFlyInHeight] call AIC_fnc_setWaypointFlyInHeightAglActionHandlerScript;
+		};
+		if (!isNil "_wpFlyInHeightAsl" && isNil "_wpFlyInHeight") then {
+			[_group, _wpFlyInHeightAsl] call AIC_fnc_setWaypointFlyInHeightAslActionHandlerScript;
+		};
+	};
+
 	[_groupControlId,"REFRESH_WAYPOINTS",[]] call AIC_fnc_groupControlEventHandler;
 };
 

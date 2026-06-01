@@ -12,3 +12,4 @@
 #define AIC_Waypoint_ArrayIndex_LoiterRadius 10      // TYPE: NUMBER
 #define AIC_Waypoint_ArrayIndex_LoiterDirection 11   // TYPE: STRING
 #define AIC_Waypoint_ArrayIndex_FlyInHeight 12       // TYPE: NUMBER
+#define AIC_Waypoint_ArrayIndex_FlyInHeightAsl 13   // TYPE: NUMBER

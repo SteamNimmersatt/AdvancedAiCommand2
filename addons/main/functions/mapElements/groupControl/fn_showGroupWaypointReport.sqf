@@ -3,7 +3,7 @@
 params ["_groupControlId","_waypointId"];
 _group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 _waypoint = [_group, _waypointId] call AIC_fnc_getWaypoint;
-_waypoint params ["_wpIndex","_wpPosition","_wpDisabled",["_wpType","MOVE"],["_wpActionScript",""],["_wpCondition","true"],"_wpTimeout","_wpFormation","_wpCompletionRadius",["_wpDuration",0],"_wpLoiterRadius","_wpLoiterDirection","_wpFlyInHeight"];
+_waypoint params ["_wpIndex","_wpPosition","_wpDisabled",["_wpType","MOVE"],["_wpActionScript",""],["_wpCondition","true"],"_wpTimeout","_wpFormation","_wpCompletionRadius",["_wpDuration",0],"_wpLoiterRadius","_wpLoiterDirection","_wpFlyInHeight","_wpFlyInHeightAsl"];
 							
 _sizeLarge = 1.0;
 _sizeSmall = 0.9;
@@ -21,7 +21,11 @@ if(_wpDuration > 0) then {
 };
 
 if(!isNil "_wpFlyInHeight") then {
-	_wpInfo = _wpInfo + format [_textSmall,"Height (meters)", _wpFlyInHeight,_sizeSmall];
+	_wpInfo = _wpInfo + format [_textSmall,"Height (meters, AGL)", _wpFlyInHeight,_sizeSmall];
+};
+
+if(!isNil "_wpFlyInHeightAsl") then {
+	_wpInfo = _wpInfo + format [_textSmall,"Height (meters, ASL)", _wpFlyInHeightAsl,_sizeSmall];
 };
 
 _text = parseText (
