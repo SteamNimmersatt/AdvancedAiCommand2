@@ -268,10 +268,12 @@ if (isServer) then {
 							", _wpIndex];
 							_wpStatement = _wpStatement + _disableWaypointStatement;
 
-							// Always use ASL — flyInHeightASL is dominant (flyInHeight=10 is just a subordinate floor)
-														private _flyInHeightStatement = format ["[group this, %1] call AIC_fnc_setWaypointFlyInHeightActionHandlerScript;
+							// Only inject fly-in-height statement if altitude is actually set on this waypoint
+														if (!isNil "_wpFlyInHeightAsl") then {
+															private _flyInHeightStatement = format ["[group this, %1] call AIC_fnc_setWaypointFlyInHeightActionHandlerScript;
 							    ", _wpFlyInHeightAsl];
-														_wpStatement = _wpStatement + _flyInHeightStatement;
+															_wpStatement = _wpStatement + _flyInHeightStatement;
+														};
 							if (!isNil "_wpTimeout") then {
 								_wpObject setWaypointTimeout [_wpTimeout, _wpTimeout, _wpTimeout];
 							};
