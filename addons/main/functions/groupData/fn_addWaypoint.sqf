@@ -49,6 +49,14 @@ AIC_fnc_addWaypointInitNilWaypointParams = {
 
 	private _wpDurationDefaultVal = 0;
 	[_waypointParams, AIC_Waypoint_ArrayIndex_Duration, _wpDurationDefaultVal] call AIC_fnc_initArrayItem;
+
+	// Default ASL altitude for new waypoints (500m). Without this, index 13 is nil
+	// and the sync loop's `select 13` triggers a zero-divisor in the compiled
+	// bytecode (HEMTT sqfc) when the waypoint array is shorter than 14 elements.
+	// A 500m default is safe for typical Arma terrain and matches the recommended
+	// minimum operational altitude.
+	private _wpFlyInHeightAslDefaultVal = 500;
+	[_waypointParams, AIC_Waypoint_ArrayIndex_FlyInHeightAsl, _wpFlyInHeightAslDefaultVal] call AIC_fnc_initArrayItem;
 };
 
 
