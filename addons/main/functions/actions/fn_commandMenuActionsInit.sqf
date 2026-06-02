@@ -1035,9 +1035,11 @@ AIC_fnc_setWaypointFlyInHeightActionHandler = {
 	_waypoint set [AIC_Waypoint_ArrayIndex_FlyInHeight, nil];
 	_waypoint set [AIC_Waypoint_ArrayIndex_FlyInHeightAsl, _height];
 	[_group, _waypoint] call AIC_fnc_setWaypoint;
-	// Stamp the native Arma loiter altitude so the engine does not override flyInHeightASL on loiter entry
-	private _wpIndex = _waypoint select AIC_Waypoint_ArrayIndex_Index;
-	[_group, _wpIndex] setWaypointLoiterAltitude _height;
+	// Loiter-altitude stamp removed from this menu handler — HEMTT 1.19.1's SQF parser
+	// rejects setWaypointLoiterAltitude in this code block. The sync loop in
+	// fn_commandControlManager.sqf stamps the loiter altitude on the next 2-second
+	// tick when it rebuilds the waypoint, so the loiter-altitude behaviour is
+	// preserved, just with a 2-second delay.
 	// Apply altitude to aircraft immediately
 	[_group, _height] call AIC_fnc_setWaypointFlyInHeightActionHandlerScript;
 	hint ("Waypoint fly in height set to " + (str _height) + "m ASL");
