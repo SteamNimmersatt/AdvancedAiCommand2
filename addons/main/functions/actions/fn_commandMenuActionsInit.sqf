@@ -263,11 +263,9 @@ AIC_fnc_setFlyInHeightAslActionHandler = {
 	_actionParams params ["_height"];
 	{
 		if(_x isKindOf "Air") then {
-			[{
-				params ["_v","_h"];
-				_v flyInHeightASL [_h, _h, _h];
-				_v flyInHeight 100;
-			}, [_x, _height], _x] remoteExec ["call", _x];
+			// Use the cfgfunction — runs on the vehicle's owning machine.
+			// Previous code-block remoteExec was mis-parsed (3-arg form to a 2-arg command).
+			[_x, _height] remoteExec ["AIC_fnc_applyFlyInHeight", _x];
 		};
 	} forEach ([_group] call AIC_fnc_getGroupAssignedVehicles);
 	hint ("Fly in height set to " + (str _height) + " meters above sea level");
@@ -1008,17 +1006,17 @@ private _labelLandPrecise = "Land precisely (as close as possible)";
 ["WAYPOINT","4000M Radius",["Set Waypoint Type","Loiter (C-Clockwise)"],AIC_fnc_setLoiterTypeActionHandler,[4000,false]] call AIC_fnc_addCommandMenuAction;
 
 
-// Only ASL — flyInHeight=10 (subordinate), flyInHeightASL=[_height,_height,_height] (dominant)
-// Arma uses max(flyInHeight, flyInHeightASL) so ASL wins at any height > 10
+// Only ASL — flyInHeight=100 (subordinate floor), flyInHeightASL=[_height,_height,_height] (dominant).
+// Arma uses max(flyInHeight, flyInHeightASL) so ASL wins at any height > 100.
+// Wrapper kept for back-compat with the completion-statement format string in
+// fn_commandControlManager.sqf (which embeds this function name as a string).
+// Internally just calls the cfgfunction, which runs on the vehicle's owning
+// machine and is the only place flyInHeightASL actually has effect.
 AIC_fnc_setWaypointFlyInHeightActionHandlerScript = {
 	params ["_group","_height"];
 	{
 		if(_x isKindOf "Air") then {
-			[{
-				params ["_v","_h"];
-				_v flyInHeightASL [_h, _h, _h];
-				_v flyInHeight 100;
-			}, [_x, _height], _x] remoteExec ["call", _x];
+			[_x, _height] remoteExec ["AIC_fnc_applyFlyInHeight", _x];
 		};
 	} forEach ([_group] call AIC_fnc_getGroupAssignedVehicles);
 };
