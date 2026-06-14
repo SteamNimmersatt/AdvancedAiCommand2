@@ -49,6 +49,13 @@ if( _event == "DROPPED" ) then {
 	_position = _params select 0;
 	_waypoint set [1,_position];
 	[_group, _waypoint] call AIC_fnc_setWaypoint;
+
+	// Apply altitude immediately on waypoint move (always ASL)
+	private _wpFlyInHeightAsl = _waypoint select AIC_Waypoint_ArrayIndex_FlyInHeightAsl;
+	if (!isNil "_wpFlyInHeightAsl") then {
+		[_group, _wpFlyInHeightAsl] call AIC_fnc_setWaypointFlyInHeightActionHandlerScript;
+	};
+
 	[_groupControlId,"REFRESH_WAYPOINTS",[]] call AIC_fnc_groupControlEventHandler;
 };
 

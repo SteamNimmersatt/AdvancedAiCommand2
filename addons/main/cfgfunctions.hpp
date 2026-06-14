@@ -68,6 +68,7 @@ class AICommand
 		class selectGroupControlGroup {description = ""; recompile = 1};
 		class selectGroupControlPosition {description = ""; recompile = 1};
 		class selectGroupControlVehicle {description = ""; recompile = 1};
+		class applyFlyInHeight {description = ""; recompile = 1};
 	};
 	
 	

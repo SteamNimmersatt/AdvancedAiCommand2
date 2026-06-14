@@ -243,6 +243,7 @@ if (isServer) then {
 							private _wpLoiterRadius = _waypoint select AIC_Waypoint_ArrayIndex_LoiterRadius;
 							private _wpLoiterDirection = _waypoint select AIC_Waypoint_ArrayIndex_LoiterDirection;
 							private _wpFlyInHeight = _waypoint select AIC_Waypoint_ArrayIndex_FlyInHeight;
+							private _wpFlyInHeightAsl = _waypoint select AIC_Waypoint_ArrayIndex_FlyInHeightAsl;
 
 							if (_wpDuration > 0) then {
 								_priorWaypointDurationEnabled = true;
@@ -267,11 +268,13 @@ if (isServer) then {
 							", _wpIndex];
 							_wpStatement = _wpStatement + _disableWaypointStatement;
 
-							if (!isNil "_wpFlyInHeight") then {
-								private _flyInHeightStatement = format ["[group this, %1] call AIC_fnc_setWaypointFlyInHeightActionHandlerScript;
-								", _wpFlyInHeight];
-								_wpStatement = _wpStatement + _flyInHeightStatement;
-							};
+							// Stamp the native loiter altitude now so the engine does not override flyInHeightASL on loiter entry
+								if (!isNil "_wpFlyInHeightAsl") then {
+									_wpObject setWaypointLoiterAltitude _wpFlyInHeightAsl;
+									private _flyInHeightStatement = format ["[group this, %1] call AIC_fnc_setWaypointFlyInHeightActionHandlerScript;
+							", _wpFlyInHeightAsl];
+									_wpStatement = _wpStatement + _flyInHeightStatement;
+								};
 							if (!isNil "_wpTimeout") then {
 								_wpObject setWaypointTimeout [_wpTimeout, _wpTimeout, _wpTimeout];
 							};
@@ -320,6 +323,18 @@ if (isServer) then {
 						_nextActiveWaypoint set [AIC_Waypoint_ArrayIndex_Duration, 0];
 						[_group, _nextActiveWaypoint] call AIC_fnc_setWaypoint;
 					};
+
+					// Store altitude for fallback (always ASL)
+											private _wpFlyInHeightAsl = _nextActiveWaypoint select AIC_Waypoint_ArrayIndex_FlyInHeightAsl;
+											if (!isNil "_wpFlyInHeightAsl") then {
+												_group setVariable ["AIC_Last_FlyInHeightAsl", _wpFlyInHeightAsl];
+											};
+										} else {
+											// No waypoints: apply last stored ASL altitude if available
+											private _lastFlyInHeightAsl = _group getVariable ["AIC_Last_FlyInHeightAsl", nil];
+											if (!isNil "_lastFlyInHeightAsl") then {
+												[_group, _lastFlyInHeightAsl] call AIC_fnc_setWaypointFlyInHeightActionHandlerScript;
+											};
 				};
 			} forEach allGroups;
 
