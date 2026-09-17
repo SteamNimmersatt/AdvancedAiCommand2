@@ -16,6 +16,22 @@ if(!isNil "_wpFormation") then {
 	_wpInfo = _wpInfo + format [_textSmall,"Formation",_wpFormation,_sizeSmall];
 };
 
+// Loiter waypoints are placed as either clockwise or counter-clockwise, but the report
+// showed only "LOITER", leaving the direction and radius guessable solely from watching
+// the aircraft fly.
+if(!isNil "_wpLoiterRadius") then {
+	_wpInfo = _wpInfo + format [_textSmall,"Loiter radius (m)",_wpLoiterRadius,_sizeSmall];
+};
+
+if(!isNil "_wpLoiterDirection") then {
+	private _loiterDirectionLabel = if (_wpLoiterDirection isEqualTo "CIRCLE_L") then {
+		"Counter-clockwise"
+	} else {
+		"Clockwise"
+	};
+	_wpInfo = _wpInfo + format [_textSmall,"Loiter direction",_loiterDirectionLabel,_sizeSmall];
+};
+
 if(_wpDuration > 0) then {
 	_wpInfo = _wpInfo + format [_textSmall,"Duration (mins)", (str floor (_wpDuration/60)) ,_sizeSmall];
 };

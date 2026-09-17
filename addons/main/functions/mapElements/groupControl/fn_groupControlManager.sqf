@@ -103,6 +103,13 @@ if(isDedicated || !hasInterface) exitWith {};
 		{
 			_groupControlId = _x;
 			_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
+			// AIC_fnc_getGroupControlGroup returns nil for a control that has since been
+			// removed - e.g. the group was wiped out, so the command control dropped it.
+			// This has to be checked before the value is used: "leader nil" throws, and so
+			// does "isNull nil", which is why the guard further down could not catch it.
+			if (isNil "_group" || {isNull _group}) then {
+				continue;
+			};
 			_groupLeader = leader _group;
 			{
 				if( _groupLeader in _x && (group driver _x) == _group ) then {
@@ -114,11 +121,6 @@ if(isDedicated || !hasInterface) exitWith {};
 					} forEach (crew _x);
 					if(_hasOtherGroups) then {
 						_newGroupsAsDrivers pushBack _groupControlId;
-
-						if (isNull _group) then {
-							continue;
-						};
-
 						_group setVariable ["AIC_Has_Group_Cargo",true];
 					};
 				};
@@ -131,7 +133,7 @@ if(isDedicated || !hasInterface) exitWith {};
 		} forEach _groupControls;
 		{
 			_group = [_x] call AIC_fnc_getGroupControlGroup;
-			if (isNull _group) then {
+			if (isNil "_group" || {isNull _group}) then {
 				continue;
 			};
 

@@ -38,8 +38,18 @@ private _activeWaypoints = [];
 {
 	private _waypoint = _x;
 	private _wpState = _waypoint select AIC_Waypoint_ArrayIndex_State;
-	// Active waypoints are those in "active" state; also treat old boolean true as "disabled" for backward compat
-	if (_wpState == AIC_Waypoint_State_Active || {_wpState isEqualType false && {!_wpState}}) then {
+	// Active waypoints are those in "active" state. A waypoint written by older code may
+	// still carry a boolean, where false meant "not disabled", i.e. active.
+	//
+	// The type has to be checked BEFORE comparing: "==" throws on mismatched types, so
+	// the boolean fallback that used to sit on the right of the "||" was unreachable -
+	// the comparison on the left threw first.
+	private _isActive = if (_wpState isEqualType "") then {
+		_wpState isEqualTo AIC_Waypoint_State_Active
+	} else {
+		_wpState isEqualTo false
+	};
+	if (_isActive) then {
 		_activeWaypoints pushBack _waypoint;
 	};
 } forEach _allWaypointsArray;

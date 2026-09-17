@@ -589,7 +589,13 @@ AIC_fnc_landNowNearbyActionHandler = {
 			} forEach (_targetsLeader);
 			
 			[_group, 'Moving to landing zone.'] call AIC_fnc_msgSideChat;
-			[_group, [nil, _selectedPosition, false, "MOVE", landActionScript]] call AIC_fnc_addWaypoint;
+			// The state must be a state constant, not the boolean the old scheme used -
+			// downstream code compares it against strings and throws on a boolean.
+			private _landWaypoint = [_group, [nil, _selectedPosition, AIC_Waypoint_State_Active, "MOVE", landActionScript]] call AIC_fnc_addWaypoint;
+			// fn_addWaypoint deliberately leaves the revision alone, so bump it here: the
+			// disableAllWaypoints call above only bumps when the group had waypoints to
+			// disable, and without a bump the server never rebuilds and never lands.
+			[_group, _landWaypoint] call AIC_fnc_setWaypoint;
 			
 			// Refresh/Redraw waypoints
 			[_groupControlId,"REFRESH_WAYPOINTS",[]] call AIC_fnc_groupControlEventHandler;
@@ -627,7 +633,13 @@ AIC_fnc_landNowPreciseActionHandler = {
 			private _pad = "Land_HelipadEmpty_F" createVehicle _selectedPosition;
 			
 			[_group, 'Moving to landing zone.'] call AIC_fnc_msgSideChat;
-			[_group, [nil, _selectedPosition, false, "MOVE", landActionScript]] call AIC_fnc_addWaypoint;
+			// The state must be a state constant, not the boolean the old scheme used -
+			// downstream code compares it against strings and throws on a boolean.
+			private _landWaypoint = [_group, [nil, _selectedPosition, AIC_Waypoint_State_Active, "MOVE", landActionScript]] call AIC_fnc_addWaypoint;
+			// fn_addWaypoint deliberately leaves the revision alone, so bump it here: the
+			// disableAllWaypoints call above only bumps when the group had waypoints to
+			// disable, and without a bump the server never rebuilds and never lands.
+			[_group, _landWaypoint] call AIC_fnc_setWaypoint;
 			
 			// Refresh/Redraw waypoints
 			[_groupControlId,"REFRESH_WAYPOINTS",[]] call AIC_fnc_groupControlEventHandler;

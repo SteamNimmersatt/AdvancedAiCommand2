@@ -52,12 +52,17 @@ AIC_fnc_addWaypointInitNilWaypointParams = {
 
 	// No default fly-in height — new waypoints should not enforce any altitude
 	// unless the player explicitly set one (group-level or waypoint-level).
-	// Enforce that the waypoint array has the required indices to prevent
-	// zero-divisor errors in HEMTT sqfc compiled bytecode.
-	private _wpFlyInHeightAslDefaultVal = nil;
-	[_waypointParams, AIC_Waypoint_ArrayIndex_FlyInHeightAsl, _wpFlyInHeightAslDefaultVal] call AIC_fnc_initArrayItem;
-	private _wpFlyInHeightDefaultVal = nil;
-	[_waypointParams, AIC_Waypoint_ArrayIndex_FlyInHeight, _wpFlyInHeightDefaultVal] call AIC_fnc_initArrayItem;
+	// The array still has to carry those indices, to prevent zero-divisor errors in
+	// HEMTT sqfc compiled bytecode.
+	//
+	// This cannot go through AIC_fnc_initArrayItem: assigning nil to a variable in SQF
+	// leaves that variable undefined, so building the [_waypointParams, index, value]
+	// argument array threw "Undefined variable" on every single waypoint placed.
+	// Growing the array leaves the new slots nil, which is exactly what is wanted here.
+	private _requiredLength = AIC_Waypoint_ArrayIndex_FlyInHeightAsl + 1;
+	if (count _waypointParams < _requiredLength) then {
+		_waypointParams resize _requiredLength;
+	};
 };
 
 

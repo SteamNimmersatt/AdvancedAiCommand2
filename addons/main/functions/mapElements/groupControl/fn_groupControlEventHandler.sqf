@@ -150,7 +150,11 @@ if(isNil "_groupControlId") then {
 		// Filter out deleted waypoints before iteration so _waypointIconIndex stays synchronized with _waypointIcons
 		private _visibleWaypoints = [];
 		{
-			if ((_x select AIC_Waypoint_ArrayIndex_State) != AIC_Waypoint_State_Deleted) then {
+			// Check the type first: "!=" throws on mismatched types, and a waypoint written
+			// by older code can still carry a boolean state, which is never "deleted".
+			private _wpState = _x select AIC_Waypoint_ArrayIndex_State;
+			private _isDeleted = (_wpState isEqualType "") && {_wpState isEqualTo AIC_Waypoint_State_Deleted};
+			if (!_isDeleted) then {
 				_visibleWaypoints pushBack _x;
 			};
 		} forEach _waypointsArray;
