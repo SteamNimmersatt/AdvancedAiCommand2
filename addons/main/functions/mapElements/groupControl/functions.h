@@ -17,6 +17,15 @@
 #define AIC_fnc_setGroupControlAddingWaypoints(_controlId,_isAdding) missionNamespace setVariable [format ["AIC_Group_Control_%1_Adding_Waypoints",(_controlId)],_isAdding]
 
 /*
+	Gets and sets the waypoint type used for waypoints placed by the user while
+	"adding waypoints" is active. Defaults to "MOVE", which is the behaviour of the
+	plain "Add Waypoints" action. Set to another type by "Add Waypoints (Advanced)".
+	Data type: STRING - Arma waypoint type (see setWaypointType)
+*/
+#define AIC_fnc_getGroupControlAddWaypointType(_controlId) missionNamespace getVariable [format ["AIC_Group_Control_%1_Add_Wp_Type",(_controlId)],"MOVE"]
+#define AIC_fnc_setGroupControlAddWaypointType(_controlId,_wpType) missionNamespace setVariable [format ["AIC_Group_Control_%1_Add_Wp_Type",(_controlId)],(_wpType)]
+
+/*
 	Gets and sets a list of all group controls
 	Data type: ARRAY - [
 		STRING - Group Control Id, ...

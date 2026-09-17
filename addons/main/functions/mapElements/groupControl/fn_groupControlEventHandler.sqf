@@ -91,6 +91,8 @@ if(isNil "_groupControlId") then {
 			_group setVariable ["AIC_Waypoints", _waypointsContainer, true];
 
 			AIC_fnc_setGroupControlAddingWaypoints(_groupControlId,false);
+			// Reset the "Add Waypoints (Advanced)" waypoint type back to the default
+			AIC_fnc_setGroupControlAddWaypointType(_groupControlId,"MOVE");
 			[_groupControlId,"REFRESH_WAYPOINTS",[]] call AIC_fnc_groupControlEventHandler;
 			missionNamespace setVariable [format ["AIC_Group_Control_%1_Pending_Config_Wp",_groupControlId], -1];
 		};
@@ -102,8 +104,10 @@ if(isNil "_groupControlId") then {
 			private _oldPendingWp = missionNamespace getVariable [format ["AIC_Group_Control_%1_Pending_Config_Wp",_groupControlId], -1];
 			// Clear previous pending config before adding a new waypoint
 			missionNamespace setVariable [format ["AIC_Group_Control_%1_Pending_Config_Wp",_groupControlId], -1];
-			// Create waypoint in "drafted" state (via third param)
-			private _waypointParams = [nil, (AIC_fnc_getMouseMapPosition()), AIC_Waypoint_State_Drafted, "MOVE"];
+			// Create waypoint in "drafted" state (via third param). The type is "MOVE"
+			// unless the player picked one via "Add Waypoints (Advanced)".
+			private _newWaypointType = AIC_fnc_getGroupControlAddWaypointType(_groupControlId);
+			private _waypointParams = [nil, (AIC_fnc_getMouseMapPosition()), AIC_Waypoint_State_Drafted, _newWaypointType];
 			private _addedWaypoint = [_group, _waypointParams] call AIC_fnc_addWaypoint;
 			[_groupControlId,"REFRESH_WAYPOINTS",[]] call AIC_fnc_groupControlEventHandler;
 			// Track the last placed waypoint as pending configuration and open its menu

@@ -234,6 +234,37 @@ if (isServer) then {
 
 					private _priorWaypointDurationEnabled = false;
 
+					// A "CYCLE" waypoint turns the group's waypoints into an endless patrol.
+					// AAC2 normally disables each waypoint once the group reaches it, which
+					// would take the loop apart after a single pass, so while a cycle waypoint
+					// is present every waypoint of this group stays active. The patrol then
+					// runs until the player issues new orders, which bumps the revision and
+					// rebuilds the waypoint list from scratch as usual.
+					private _hasCycleWaypoint = (_groupControlWaypointArray findIf {
+						(_x select AIC_Waypoint_ArrayIndex_Type) == "CYCLE"
+					}) >= 0;
+
+					// Arma jumps to the nearest waypoint the moment a cycle waypoint is
+					// reached, so anything sequenced after it is never visited. New waypoints
+					// are appended to the end of the group's list, which would put them behind
+					// an existing cycle, so the cycle waypoints are built last and everything
+					// else keeps the order the player placed it in. The player's own ordering
+					// is left untouched - only the order the Arma waypoints are created in
+					// changes, and each waypoint still carries its original index.
+					private _waypointsToBuild = _groupControlWaypointArray;
+					if (_hasCycleWaypoint) then {
+						private _cycleWaypoints = [];
+						private _otherWaypoints = [];
+						{
+							if ((_x select AIC_Waypoint_ArrayIndex_Type) == "CYCLE") then {
+								_cycleWaypoints pushBack _x;
+							} else {
+								_otherWaypoints pushBack _x;
+							};
+						} forEach _groupControlWaypointArray;
+						_waypointsToBuild = _otherWaypoints + _cycleWaypoints;
+					};
+
 					// Loop over the waypoints
 					{
 						if (!_priorWaypointDurationEnabled) then {
@@ -314,10 +345,13 @@ if (isServer) then {
 								%1
 							}", _wpCondition];
 
-							// Disable the waypoint internally in AAC2 as soon as it has been fulfilled
-							private _disableWaypointStatement = format["[group this, %1] call AIC_fnc_disableWaypoint;
+							// Disable the waypoint internally in AAC2 as soon as it has been fulfilled.
+							// Skipped while the group is patrolling a cycle, so the loop survives.
+							if (!_hasCycleWaypoint) then {
+								private _disableWaypointStatement = format["[group this, %1] call AIC_fnc_disableWaypoint;
 							", _wpIndex];
-							_wpStatement = _wpStatement + _disableWaypointStatement;
+								_wpStatement = _wpStatement + _disableWaypointStatement;
+							};
 
 						// Apply fly-in height at waypoint arrival
 							if (!isNil "_wpFlyInHeightAsl") then {
@@ -366,7 +400,7 @@ if (isServer) then {
 							[AIC_LOGLEVEL_DEBUG, format["Waypoint of type '%1' has condition '%2' and statement: '%3'.", _wpType, _wpStatementCondition, _wpStatement]] call AIC_fnc_log;
 							_wpObject setWaypointStatements [_wpStatementCondition, _wpStatement];
 						};
-					} forEach _groupControlWaypointArray;
+					} forEach _waypointsToBuild;
 
 				if ((waypoints _group) isEqualTo []) then {
 						_group addWaypoint [position leader _group, 0];

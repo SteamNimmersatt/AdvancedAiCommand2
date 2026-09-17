@@ -76,9 +76,19 @@ AIC_fnc_isDefending = {
 AIC_fnc_addWaypointsActionHandler = {
 	params ["_menuParams","_actionParams"];
 	_menuParams params ["_groupControlId"];
-	private ["_group"];
-	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
+
+	// "_actionParams" optionally contains "_type" and "_label". When they are omitted
+	// (the plain "Add Waypoints" entry) waypoints are placed as "MOVE", as before.
+	// When they are given, every waypoint placed during this session gets that type
+	// straight away, instead of having to re-open each waypoint to change it.
+	_actionParams params [["_type","MOVE"],["_label","Move"]];
+
+	AIC_fnc_setGroupControlAddWaypointType(_groupControlId,_type);
 	AIC_fnc_setGroupControlAddingWaypoints(_groupControlId,true);
+
+	if (_type != "MOVE") then {
+		systemChat format ["[AAC2] - Placing '%1' waypoints. Every waypoint you add now uses this type. Right-click to finish.", _label];
+	};
 };
 
 AIC_fnc_clearAllWaypointsActionHandler = {
@@ -356,47 +366,97 @@ AIC_fnc_joinGroupActionHandler = {
 AIC_fnc_splitGroupHalfActionHandler = {
 	params ["_menuParams","_actionParams"];
 	_menuParams params ["_groupControlId"];
-	private ["_group"];
-	_group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
-	_group2 = createGroup (side _group);
-	_joinNewGroup = false;
+
+	private _group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
+	private _units = units _group;
+
+	if (count _units < 2) exitWith {
+		hint "This group is too small to be split.";
+	};
+
+	private _newGroup = createGroup [side _group, true];
+	if (isNull _newGroup) exitWith {
+		hint "Could not create a new group. The group limit for this side has been reached.";
+		[AIC_LOGLEVEL_ERROR, "AIC_fnc_splitGroupHalfActionHandler - createGroup returned grpNull."] call AIC_fnc_log;
+	};
+
+	// Collect the command controls the original group belongs to, so the new half can
+	// be registered with them right away (same as when splitting into individual units).
+	// Without this the new group only becomes commandable once the server's polling loop
+	// happens to pick it up, which is why half the squad appeared to be lost.
+	private _commandControls = AIC_fnc_getCommandControls();
+	private _commandControlsToUpdate = [];
 	{
-		if(_joinNewGroup) then {
-			[_x] joinSilent _group2;
-			_joinNewGroup = false;
-		} else {	
-			_joinNewGroup = true;
+		private _commandControlId = _x;
+		private _groups = AIC_fnc_getCommandControlGroups(_commandControlId);
+		if (_group in _groups) then {
+			_commandControlsToUpdate pushBack _commandControlId;
 		};
-	} forEach (units _group);
-	hint ("Group Split in Half");
+	} forEach _commandControls;
+
+	// Move every second unit into the new group. Index 0 is the group leader, so the
+	// original group keeps its leader and both halves end up roughly the same size.
+	private _unitsToMove = [];
+	{
+		if (_forEachIndex mod 2 == 1) then {
+			_unitsToMove pushBack _x;
+		};
+	} forEach _units;
+	_unitsToMove joinSilent _newGroup;
+
+	// Carry over the parent group's AAC2 colour and stance so the new half keeps
+	// behaving the same way until it is given orders of its own.
+	[_newGroup, [_group] call AIC_fnc_getGroupColor] call AIC_fnc_setGroupColor;
+	_newGroup setBehaviour (behaviour (leader _group));
+	_newGroup setCombatMode (combatMode _group);
+
+	{
+		[_x, _newGroup] call AIC_fnc_commandControlAddGroup;
+	} forEach _commandControlsToUpdate;
+
+	hint format ["Group split in half. New group: %1", groupId _newGroup];
 };
 
 AIC_fnc_splitGroupUnitsActionHandler = {
 	params ["_menuParams","_actionParams"];
 	_menuParams params ["_groupControlId"];
 	private _group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
-	
+	private _groupColor = [_group] call AIC_fnc_getGroupColor;
+	private _groupBehaviour = behaviour (leader _group);
+	private _groupCombatMode = combatMode _group;
+
 	// Find all command controls to update with new split groups
-	_commandControlsToUpdate = [];
-	_commandControls = AIC_fnc_getCommandControls();
+	private _commandControlsToUpdate = [];
+	private _commandControls = AIC_fnc_getCommandControls();
 	{
-		_commandControlId = _x;
-		_groups = AIC_fnc_getCommandControlGroups(_commandControlId);
+		private _commandControlId = _x;
+		private _groups = AIC_fnc_getCommandControlGroups(_commandControlId);
 		if(_group in _groups) then {
 			_commandControlsToUpdate pushBack _commandControlId;
 		};
 	} forEach _commandControls;
-	
+
 	{
-		_group = createGroup (side _x);
-		[_x] joinSilent _group;
+		private _unit = _x;
+		private _newGroup = createGroup [side _unit, true];
+		if (isNull _newGroup) exitWith {
+			hint "Could not create a new group. The group limit for this side has been reached.";
+			[AIC_LOGLEVEL_ERROR, "AIC_fnc_splitGroupUnitsActionHandler - createGroup returned grpNull."] call AIC_fnc_log;
+		};
+		[_unit] joinSilent _newGroup;
+
+		// Carry over the parent group's AAC2 colour and stance.
+		[_newGroup, _groupColor] call AIC_fnc_setGroupColor;
+		_newGroup setBehaviour _groupBehaviour;
+		_newGroup setCombatMode _groupCombatMode;
+
 		{
-			[_x,_group] call AIC_fnc_commandControlAddGroup;
+			[_x,_newGroup] call AIC_fnc_commandControlAddGroup;
 		} forEach _commandControlsToUpdate;
 	} forEach (units _group);
-	
+
 	hint ("Group Split into Individual Units");
-	
+
 };
 
 AIC_fnc_assignVehicleActionHandler = {
@@ -635,14 +695,52 @@ AIC_fnc_setWaypointTypeActionHandler = {
 	private _group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
 	private _waypoint = [_group, _waypointId] call AIC_fnc_getWaypoint;
 
-	// "_actionParams" contains "_type", "_label"
-	_actionParams params ["_type",["_label", "ERROR LABEL UNDEFINED!"]];
+	// "_actionParams" contains "_type", "_label" and optionally "_note" (an extra
+	// explanation shown in side chat for waypoint types whose behaviour is not obvious)
+	_actionParams params ["_type",["_label", "ERROR LABEL UNDEFINED!"],["_note",""]];
 
 	_waypoint set [AIC_Waypoint_ArrayIndex_Type,_type];
 	[_group, _waypoint] call AIC_fnc_setWaypoint;
 	[_groupControlId,"REFRESH_WAYPOINTS",[]] call AIC_fnc_groupControlEventHandler;
 
 	hint ("Type set to '" + _label + "'.");
+
+	if (_note != "") then {
+		systemChat ("[AAC2] - " + _note);
+	};
+};
+
+/*
+	Sets a waypoint to "CYCLE", which turns the group's waypoints into an endless patrol.
+
+	AAC2 normally disables each waypoint once the group has reached it. That would take
+	the loop apart after a single pass, so fn_commandControlManager keeps every waypoint
+	of a group active for as long as one of them is a cycle waypoint. The patrol then
+	runs until the player issues new orders, which rebuilds the waypoint list as usual.
+*/
+AIC_fnc_setWaypointTypeCycleActionHandler = {
+	params ["_menuParams","_actionParams"];
+	_menuParams params ["_groupControlId","_waypointId"];
+
+	private _group = [_groupControlId] call AIC_fnc_getGroupControlGroup;
+	private _waypoint = [_group, _waypointId] call AIC_fnc_getWaypoint;
+
+	_waypoint set [AIC_Waypoint_ArrayIndex_Type, "CYCLE"];
+	[_group, _waypoint] call AIC_fnc_setWaypoint;
+	[_groupControlId,"REFRESH_WAYPOINTS",[]] call AIC_fnc_groupControlEventHandler;
+
+	hint "Type set to 'Cycle'.";
+
+	// Count every waypoint that still exists — waypoints being placed right now are
+	// "drafted" rather than "active", so getAllActiveWaypoints would under-count here.
+	private _waypointCount = count ((([_group] call AIC_fnc_getAllWaypoints) select 1) select {
+		(_x select AIC_Waypoint_ArrayIndex_State) != AIC_Waypoint_State_Deleted
+	});
+	if (_waypointCount < 2) then {
+		systemChat "[AAC2] - A cycle waypoint needs at least one other waypoint to loop back to. Place it next to the waypoint the patrol should return to.";
+	} else {
+		systemChat "[AAC2] - Cycle waypoint set. The group patrols its waypoints until you give it new orders.";
+	};
 };
 
 AIC_fnc_setDefendWpTypeActionHandler = {
@@ -819,6 +917,19 @@ private _labelLandPrecise = "Land precisely (as close as possible)";
 
 
 /*
+	Labels and side-chat explanations for the additional waypoint types.
+	See https://community.bistudio.com/wiki/Waypoint_types
+*/
+private _labelWpSentry = "Sentry (wait, then engage on contact)";
+private _noteWpSentry = "Sentry: the group holds at the waypoint until it identifies an enemy, then engages and continues.";
+private _labelWpGuard = "Guard (take over a guard point)";
+private _noteWpGuard = "Guard: the group takes over the nearest free guard point, otherwise it holds this position.";
+private _labelWpDismiss = "Dismiss (stand down, react on contact)";
+private _noteWpDismiss = "Dismiss: the group relaxes and wanders around the waypoint, but forms up again as soon as it makes contact.";
+private _labelWpCycle = "Cycle (loop waypoints as a patrol)";
+
+
+/*
 	WP Type "Loiter"
 */
 
@@ -883,6 +994,16 @@ AIC_fnc_setWaypointDurationActionHandler = {
 
 // Add Waypoints
 ["GROUP","Add Waypoints",[],AIC_fnc_addWaypointsActionHandler] call AIC_fnc_addCommandMenuAction;
+
+// Add Waypoints of a given type directly, without having to re-open every waypoint
+// afterwards to change its type ("Add Advanced WP", requested in issue #27).
+["GROUP","Move",["Add Waypoints (Advanced)"],AIC_fnc_addWaypointsActionHandler,["MOVE","Move"]] call AIC_fnc_addCommandMenuAction;
+["GROUP","Seek & Destroy",["Add Waypoints (Advanced)"],AIC_fnc_addWaypointsActionHandler,["SAD","Seek & Destroy"]] call AIC_fnc_addCommandMenuAction;
+["GROUP","Hold",["Add Waypoints (Advanced)"],AIC_fnc_addWaypointsActionHandler,["HOLD","Hold"]] call AIC_fnc_addCommandMenuAction;
+["GROUP",_labelWpSentry,["Add Waypoints (Advanced)"],AIC_fnc_addWaypointsActionHandler,["SENTRY","Sentry"]] call AIC_fnc_addCommandMenuAction;
+["GROUP",_labelWpGuard,["Add Waypoints (Advanced)"],AIC_fnc_addWaypointsActionHandler,["GUARD","Guard"]] call AIC_fnc_addCommandMenuAction;
+["GROUP",_labelWpDismiss,["Add Waypoints (Advanced)"],AIC_fnc_addWaypointsActionHandler,["DISMISS","Dismiss"]] call AIC_fnc_addCommandMenuAction;
+["GROUP",_labelWpCycle,["Add Waypoints (Advanced)"],AIC_fnc_addWaypointsActionHandler,["CYCLE","Cycle"]] call AIC_fnc_addCommandMenuAction;
 
 // Clear all waypoints
 ["GROUP","Confirm Clear All",["Clear All Waypoints"],AIC_fnc_clearAllWaypointsActionHandler] call AIC_fnc_addCommandMenuAction;
@@ -1029,12 +1150,31 @@ AIC_fnc_setWaypointDurationActionHandler = {
 // Add more Waypoints
 ["WAYPOINT","Add Waypoints",[],AIC_fnc_addWaypointsActionHandler] call AIC_fnc_addCommandMenuAction;
 
+// Add more Waypoints of a given type (see the identical GROUP menu entries above)
+["WAYPOINT","Move",["Add Waypoints (Advanced)"],AIC_fnc_addWaypointsActionHandler,["MOVE","Move"]] call AIC_fnc_addCommandMenuAction;
+["WAYPOINT","Seek & Destroy",["Add Waypoints (Advanced)"],AIC_fnc_addWaypointsActionHandler,["SAD","Seek & Destroy"]] call AIC_fnc_addCommandMenuAction;
+["WAYPOINT","Hold",["Add Waypoints (Advanced)"],AIC_fnc_addWaypointsActionHandler,["HOLD","Hold"]] call AIC_fnc_addCommandMenuAction;
+["WAYPOINT",_labelWpSentry,["Add Waypoints (Advanced)"],AIC_fnc_addWaypointsActionHandler,["SENTRY","Sentry"]] call AIC_fnc_addCommandMenuAction;
+["WAYPOINT",_labelWpGuard,["Add Waypoints (Advanced)"],AIC_fnc_addWaypointsActionHandler,["GUARD","Guard"]] call AIC_fnc_addCommandMenuAction;
+["WAYPOINT",_labelWpDismiss,["Add Waypoints (Advanced)"],AIC_fnc_addWaypointsActionHandler,["DISMISS","Dismiss"]] call AIC_fnc_addCommandMenuAction;
+["WAYPOINT",_labelWpCycle,["Add Waypoints (Advanced)"],AIC_fnc_addWaypointsActionHandler,["CYCLE","Cycle"]] call AIC_fnc_addCommandMenuAction;
+
 // Set WP Type (General)
 ["WAYPOINT","Move (default)",["Set Waypoint Type"],AIC_fnc_setWaypointTypeActionHandler,["MOVE","'Move'"]] call AIC_fnc_addCommandMenuAction;
 ["WAYPOINT","Attack (CBA)",["Set Waypoint Type","Offensive WP Types"],AIC_fnc_setWaypointAttackActionHandler,[]] call AIC_fnc_addCommandMenuAction;
 ["WAYPOINT","Seek & Destroy",["Set Waypoint Type","Offensive WP Types"],AIC_fnc_setWaypointTypeActionHandler,["SAD","'Seek & Destroy'"]] call AIC_fnc_addCommandMenuAction;
+["WAYPOINT",_labelWpSentry,["Set Waypoint Type","Offensive WP Types"],AIC_fnc_setWaypointTypeActionHandler,["SENTRY","'Sentry'",_noteWpSentry]] call AIC_fnc_addCommandMenuAction;
 ["WAYPOINT","Defend - Garrison / Patrol (CBA)",["Set Waypoint Type","Defensive WP Types"],AIC_fnc_setDefendWpTypeActionHandler,["DEFEND","'Defend - Garrison / Patrol (CBA)'"]] call AIC_fnc_addCommandMenuAction;
 ["WAYPOINT","Hold",["Set Waypoint Type","Defensive WP Types"],AIC_fnc_setWaypointTypeActionHandler,["HOLD","'Hold'"]] call AIC_fnc_addCommandMenuAction;
+["WAYPOINT",_labelWpGuard,["Set Waypoint Type","Defensive WP Types"],AIC_fnc_setWaypointTypeActionHandler,["GUARD","'Guard'",_noteWpGuard]] call AIC_fnc_addCommandMenuAction;
+["WAYPOINT",_labelWpDismiss,["Set Waypoint Type","Defensive WP Types"],AIC_fnc_setWaypointTypeActionHandler,["DISMISS","'Dismiss'",_noteWpDismiss]] call AIC_fnc_addCommandMenuAction;
+
+// Set WP Type "Cycle" - turns the group's waypoints into an endless patrol
+["WAYPOINT",_labelWpCycle,["Set Waypoint Type","Special WP Types"],AIC_fnc_setWaypointTypeCycleActionHandler,[]] call AIC_fnc_addCommandMenuAction;
+
+// Deliberately not offered: "GETIN" / "GETIN NEAREST" duplicate (and get in the way of)
+// the existing "Assign Vehicle" action, and "SUPPORT" is unreliable in Arma 3 itself.
+// See the pull request description for the details.
 
 // Delete WP
 ["WAYPOINT","Delete Waypoint",[],AIC_fnc_deleteWaypointHandler] call AIC_fnc_addCommandMenuAction;
