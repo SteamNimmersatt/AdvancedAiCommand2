@@ -46,7 +46,7 @@ AIC_fnc_commandMenuAction = {
 	
 };
 
-AIC_Command_Menu_Action_Button_Last_Pressed = -1;
+AIC_Command_Menu_Action_Button_Last_Pressed = diag_tickTime;
 AIC_Command_Menu_Last_Input_Primary_Mouse = false;
 
 AIC_fnc_commandMenuEventHandler = {
