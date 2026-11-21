@@ -22,6 +22,15 @@ if(isDedicated || !hasInterface) exitWith {};
 ["MAP_CONTROL","MouseMoving", "[nil, ""MouseMoving"",_this] call AIC_fnc_groupControlEventHandler"] spawn AIC_fnc_addManagedEventHandler;
 ["MAP_CONTROL","MouseHolding", "[nil, ""MouseHolding"",_this] call AIC_fnc_groupControlEventHandler"] spawn AIC_fnc_addManagedEventHandler;
 
+addMissionEventHandler ["Map", {
+	params ["_opened"];
+	if (!_opened) then {
+		{
+			[_x, "RIGHT_MOUSE_BUTTON_CLICK_MAP", []] call AIC_fnc_groupControlEventHandler;
+		} forEach (AIC_fnc_getGroupControls());
+	};
+}];
+
 // Manage updates to group waypoints
 
 [] spawn {

@@ -75,7 +75,7 @@ if(isNil "_groupControlId") then {
 	if(_event == "RIGHT_MOUSE_BUTTON_CLICK_MAP" ) then {
 		if(AIC_fnc_getGroupControlAddingWaypoints(_groupControlId)) then {
 			// Activate all pending waypoints — player has finished editing
-			private _waypointsContainer = _group getVariable "AIC_Waypoints";
+			private _waypointsContainer = _group getVariable ["AIC_Waypoints", [0, []]];
 			private _allWaypoints = _waypointsContainer select 1;
 			{
 				private _wpState = _x select AIC_Waypoint_ArrayIndex_State;
