@@ -24,22 +24,22 @@ AIC_fnc_commandMenuAction = {
 	private ["_scriptString"];
 	_scriptString = param [0];
 	
-	private ["_startTime","_timeOut","_inputObserved"];
+	private ["_startTime","_timeOut","_actionKeyPressed"];
 	_startTime = diag_tickTime;
 	_timeOut = false;
-	_inputObserved = false;
+	_actionKeyPressed = false;
 	
-	while {!_timeOut && !_inputObserved} do {
+	while {!_timeOut && !_actionKeyPressed} do {
 		if( diag_tickTime - _startTime > 0.5 ) then {
 			_timeOut = true;
 		};
 		if( abs (diag_tickTime - AIC_Command_Menu_Action_Button_Last_Pressed) < 0.5 ) then {
-			_inputObserved = true;
+			_actionKeyPressed = true;
 		};
 		sleep 0.01;
 	};
 	
-	if(_inputObserved && {!AIC_Command_Menu_Last_Input_Primary_Mouse}) then {
+	if(_actionKeyPressed && {!AIC_Command_Menu_Last_Input_Primary_Mouse}) then {
 		_script = compile _scriptString; 
 		[] spawn _script;
 	};
